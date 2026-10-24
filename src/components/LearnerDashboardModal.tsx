@@ -195,7 +195,7 @@ export const LearnerDashboardModal: React.FC<LearnerDashboardModalProps> = ({
           </div>
 
           {/* Quick Metrics Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-7 gap-3">
             <div className="p-3.5 rounded-xl border border-slate-200 bg-[#F8FAFC]">
               <span className="text-[10px] font-extrabold uppercase text-slate-500 block">
                 Days Completed
@@ -220,6 +220,18 @@ export const LearnerDashboardModal: React.FC<LearnerDashboardModalProps> = ({
               </span>
               <span className="text-lg font-black text-[#1E3A8A] font-mono mt-0.5 block">
                 {progress.completedChallengeIds?.length || 0}
+              </span>
+            </div>
+
+            <div className="p-3.5 rounded-xl border border-slate-200 bg-[#F8FAFC]">
+              <span className="text-[10px] font-extrabold uppercase text-slate-500 block">
+                DSA Patterns (100)
+              </span>
+              <span className="text-lg font-black text-cyan-700 font-mono mt-0.5 block">
+                {progress.patternQuizScore !== undefined ? `${progress.patternQuizScore}%` : 'Pending'}
+              </span>
+              <span className="text-[9px] font-mono text-slate-500">
+                {progress.patternQuizCompleted ? '✓ Completed' : '100 Scenarios'}
               </span>
             </div>
 

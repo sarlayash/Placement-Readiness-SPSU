@@ -157,14 +157,14 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
 
   useEffect(() => {
     if (!currentChallenge) return;
-    const saved = progress.savedCode[currentChallenge.id]?.[ideLang];
+    const saved = progress?.savedCode?.[currentChallenge.id]?.[ideLang];
     if (saved) {
       setEditorCode(saved);
     } else {
-      setEditorCode(currentChallenge.starterCode[ideLang]);
+      setEditorCode(currentChallenge.starterCode?.[ideLang] || '');
     }
     setTestRunResult(null);
-  }, [currentChallenge, ideLang, progress.savedCode]);
+  }, [currentChallenge, ideLang, progress?.savedCode]);
 
   const handleCopy = (id: string, text: string) => {
     navigator.clipboard.writeText(text);
@@ -181,7 +181,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
 
   const handleLoadReferenceSolution = () => {
     if (!currentChallenge) return;
-    const refCode = currentChallenge.solutionCode[ideLang];
+    const refCode = currentChallenge.solutionCode?.[ideLang] || '';
     setEditorCode(refCode);
     onSaveUserCode(currentChallenge.id, ideLang, refCode);
     setConsoleLog(
@@ -197,8 +197,8 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
     if (!currentChallenge) return;
 
     const cleanCode = editorCode.trim();
-    const starterClean = currentChallenge.starterCode[ideLang].trim();
-    const solutionClean = currentChallenge.solutionCode[ideLang].trim();
+    const starterClean = (currentChallenge.starterCode?.[ideLang] || '').trim();
+    const solutionClean = (currentChallenge.solutionCode?.[ideLang] || '').trim();
 
     // Verify meaningful implementation or solution match
     const hasLogicKeywords =
@@ -258,10 +258,11 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
       return;
     }
     let correct = 0;
-    dayPlan.preAssessment.forEach((q) => {
+    const totalPre = dayPlan.preAssessment?.length || 0;
+    dayPlan.preAssessment?.forEach((q) => {
       if (preAnswers[q.id] === q.correctIndex) correct++;
     });
-    const pct = Math.round((correct / dayPlan.preAssessment.length) * 100);
+    const pct = totalPre > 0 ? Math.round((correct / totalPre) * 100) : 100;
     setPreSubmitted(true);
     onSavePreScore(dayPlan.day, pct);
     if (pct >= 80) {
@@ -281,10 +282,11 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
       return;
     }
     let correct = 0;
-    dayPlan.postAssessment.forEach((q) => {
+    const totalPost = dayPlan.postAssessment?.length || 0;
+    dayPlan.postAssessment?.forEach((q) => {
       if (postAnswers[q.id] === q.correctIndex) correct++;
     });
-    const pct = Math.round((correct / dayPlan.postAssessment.length) * 100);
+    const pct = totalPost > 0 ? Math.round((correct / totalPost) * 100) : 100;
     setPostSubmitted(true);
     onSavePostScore(dayPlan.day, pct);
     if (pct >= 80) {
@@ -297,7 +299,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
     }
   };
 
-  const badgeUnlockedAt = progress.unlockedBadges[dayPlan.day];
+  const badgeUnlockedAt = progress?.unlockedBadges?.[dayPlan.day];
   const isBadgeUnlocked = Boolean(badgeUnlockedAt);
   const isUnlocked = isDayUnlocked(dayPlan.day, progress);
   const isCurrentCompleted = isDayCompleted(dayPlan.day, progress);
@@ -1402,7 +1404,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
                       <button
                         type="button"
                         onClick={() => {
-                          setEditorCode(currentChallenge.starterCode[ideLang]);
+                          setEditorCode(currentChallenge.starterCode?.[ideLang] || '');
                           setTestRunResult(null);
                         }}
                         className="p-1.5 rounded-lg bg-[#112240] hover:bg-[#1E3A8A] text-[#BFDBFE] hover:text-white transition-colors cursor-pointer"

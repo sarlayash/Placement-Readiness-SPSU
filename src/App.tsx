@@ -478,6 +478,9 @@ export function App() {
         <IndustryPatternQuizModal
           isOpen={showPatternQuiz}
           onClose={() => setShowPatternQuiz(false)}
+          user={user}
+          progress={progress}
+          onUpdateProgress={setProgress}
         />
       )}
 

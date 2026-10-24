@@ -3,6 +3,9 @@ import {
   INDUSTRY_DSA_SCENARIOS_100,
   IndustryScenarioQuizItem,
 } from '../data/industryDsaPatterns100';
+import { GoogleUser, UserProgress } from '../types';
+import { syncLearnerProgress } from '../utils/learnerRegistry';
+import { saveStoredProgress } from '../utils/storage';
 import {
   Award,
   CheckCircle2,
@@ -24,11 +27,17 @@ import {
 interface IndustryPatternQuizModalProps {
   isOpen: boolean;
   onClose: () => void;
+  user?: GoogleUser | null;
+  progress?: UserProgress;
+  onUpdateProgress?: (updated: UserProgress) => void;
 }
 
 export const IndustryPatternQuizModal: React.FC<IndustryPatternQuizModalProps> = ({
   isOpen,
   onClose,
+  user,
+  progress,
+  onUpdateProgress,
 }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, number>>({});
@@ -96,10 +105,31 @@ export const IndustryPatternQuizModal: React.FC<IndustryPatternQuizModalProps> =
 
   const handleSelectOption = (optionIndex: number) => {
     if (selectedAnswers[activeScenario.id] !== undefined) return; // Locked once answered
-    setSelectedAnswers((prev) => ({
-      ...prev,
+    const nextAnswers = {
+      ...selectedAnswers,
       [activeScenario.id]: optionIndex,
-    }));
+    };
+    setSelectedAnswers(nextAnswers);
+
+    // Sync score to progress and Firebase
+    if (progress && onUpdateProgress) {
+      const nextAttempted = Object.keys(nextAnswers).length;
+      const nextCorrect = Object.entries(nextAnswers).filter(([id, ansIdx]) => {
+        const sc = INDUSTRY_DSA_SCENARIOS_100.find((s) => s.id === Number(id));
+        return sc && sc.correctIndex === ansIdx;
+      }).length;
+      const nextPct = nextAttempted > 0 ? Math.round((nextCorrect / nextAttempted) * 100) : 0;
+      const updated: UserProgress = {
+        ...progress,
+        patternQuizScore: nextPct,
+        patternQuizCompleted: nextAttempted >= 10,
+      };
+      onUpdateProgress(updated);
+      saveStoredProgress(updated, user?.email);
+      if (user) {
+        syncLearnerProgress(user, updated);
+      }
+    }
   };
 
   const handleResetQuiz = () => {

@@ -16,7 +16,10 @@ import {
   ShieldCheck,
   Terminal,
   Lock,
+  Quote,
+  Sparkles,
 } from 'lucide-react';
+import mentorKapilImg from '../assets/mentor-kapil.jpg';
 import { downloadBadgePNG, downloadBadgePDF } from '../utils/exportCredentials';
 import { isDayUnlocked, isDayCompleted } from '../utils/dayLocking';
 
@@ -53,6 +56,102 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
 
   return (
     <div className="space-y-10 pb-16">
+      {/* 1. Official Note from Mentor Kapil Banner with Image - Top of Landing Page */}
+      <section className="rounded-3xl bg-gradient-to-br from-[#0A192F] via-[#112240] to-[#0A192F] text-white border-2 border-[#1E3A8A] p-6 sm:p-10 shadow-2xl relative overflow-hidden">
+        {/* Ambient background accents */}
+        <div className="absolute top-0 right-0 w-80 h-80 bg-blue-500/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 left-0 w-80 h-80 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
+
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center relative z-10">
+          {/* Mentor Image Card */}
+          <div className="lg:col-span-5 flex flex-col items-center">
+            <div className="relative group max-w-xs sm:max-w-sm w-full">
+              <div className="absolute -inset-1 bg-gradient-to-r from-[#93C5FD] via-amber-300 to-[#1E3A8A] rounded-3xl blur-md opacity-50 group-hover:opacity-80 transition duration-500" />
+              <div className="relative rounded-3xl overflow-hidden border-2 border-white/20 bg-white shadow-2xl">
+                <img
+                  src={mentorKapilImg}
+                  alt="Mentor Kapil - SPSU Udaipur Placement Mentorship"
+                  className="w-full h-auto object-cover object-top block transition-transform duration-500 group-hover:scale-[1.02]"
+                />
+              </div>
+            </div>
+            <div className="mt-3.5 text-center">
+              <div className="text-base font-black tracking-wide text-white uppercase font-mono">
+                Kapil
+              </div>
+              <div className="text-xs text-[#93C5FD] font-semibold mt-0.5">
+                Official Mentor & Signatory • SPSU Udaipur Placement Readiness
+              </div>
+            </div>
+          </div>
+
+          {/* Mentor Note Letter & Philosophy */}
+          <div className="lg:col-span-7 space-y-5">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1E3A8A]/70 border border-[#93C5FD]/40 text-xs font-mono font-bold text-[#93C5FD]">
+              <Sparkles className="w-4 h-4 text-amber-300" />
+              <span>OFFICIAL MENTOR ADDRESS • SPSU UDAIPUR</span>
+            </div>
+
+            <div className="space-y-1.5">
+              <h2 className="text-2xl sm:text-4xl lg:text-5xl font-black text-white tracking-tight leading-tight">
+                Note from Mentor Kapil
+              </h2>
+              <div className="text-xs sm:text-sm font-mono text-[#BFDBFE] font-bold">
+                A Personal Message to Every Placement & Engineering Aspirant
+              </div>
+            </div>
+
+            {/* Mentor's Iconic Callout Quote */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-[#081426]/90 border-l-4 border-amber-400 border-y border-r border-[#1E3A8A] space-y-2">
+              <div className="flex items-center gap-2 text-amber-300 text-xs font-mono uppercase tracking-wider font-extrabold">
+                <Quote className="w-4 h-4 rotate-180" />
+                <span>Mentor's Core Philosophy</span>
+              </div>
+              <blockquote className="text-base sm:text-lg lg:text-xl font-serif italic text-white leading-relaxed">
+                “People are more than predictions.<br className="hidden sm:inline" />
+                Contributions are more than metrics.<br className="hidden sm:inline" />
+                And gratitude is more than an algorithm.”
+              </blockquote>
+            </div>
+
+            {/* Mentor's Letter */}
+            <div className="space-y-3 text-xs sm:text-sm text-[#BFDBFE] leading-relaxed">
+              <p>
+                <strong className="text-white">Welcome, future engineers and leaders of SPSU Udaipur.</strong> Preparing for high-stakes technical placements is never about rote memorization or surface-level tricks. Real engineering readiness demands <strong className="text-white underline">conceptual clarity</strong>, the discipline to <strong className="text-white underline">trace code execution step-by-step</strong>, and the tenacity to build solutions from first principles across <strong className="text-white">C, C++, Java, and Python</strong>.
+              </p>
+              <p>
+                We have structured this 10-day roadmap with a deterministic <strong className="text-white">30% Theory & 70% Practical Execution</strong> ratio. Each day is locked sequentially until you conquer its challenges, pass the 50-MCQ assessments with genuine code analysis, and verify every single section.
+              </p>
+              <p>
+                Treat every problem with respect, write clean code, and hold yourself to the highest standard of excellence. I am with you at every step of this journey.
+              </p>
+            </div>
+
+            {/* Action Buttons */}
+            <div className="pt-2 flex flex-wrap items-center gap-3">
+              <button
+                type="button"
+                onClick={() => onSelectDay(1, 'notes')}
+                className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-[#EFF6FF] text-[#0A192F] font-black text-xs sm:text-sm transition-all cursor-pointer shadow-md hover:scale-[1.02]"
+              >
+                <Terminal className="w-4 h-4 text-[#1E3A8A]" />
+                <span>Begin Day 1 with Mentor Kapil</span>
+                <ChevronRight className="w-4 h-4" />
+              </button>
+
+              <button
+                type="button"
+                onClick={onOpenCertificate}
+                className="inline-flex items-center gap-2 px-4 py-3 rounded-xl bg-[#112240] hover:bg-[#1E3A8A] border border-white/30 text-white font-bold text-xs sm:text-sm transition-all cursor-pointer"
+              >
+                <Award className="w-4 h-4 text-[#93C5FD]" />
+                <span>Official Kapil Certificate</span>
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Hero Banner: Navy Blue & White Theme */}
       <section className="rounded-3xl bg-[#0A192F] text-white border-2 border-[#1E3A8A] p-6 sm:p-10 shadow-xl relative overflow-hidden">
         <div className="max-w-4xl space-y-4 relative z-10">

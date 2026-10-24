@@ -147,7 +147,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                   ID: {certId}
                 </div>
                 <div className="text-[11px] font-bold text-[#0A192F]">
-                  Real Progress: {unlockedBadgesCount}/10 Badges • {progress.completedChallengeIds.length} Labs
+                  Real Progress: {unlockedBadgesCount}/10 Badges • {progress.completedChallengeIds?.length || 0} Labs
                 </div>
               </div>
 
@@ -164,11 +164,11 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
 
               {/* Right: Sole Signatory — Kapil */}
               <div className="text-right space-y-1">
-                <div className="font-serif italic text-3xl font-bold text-[#0A192F] border-b-2 border-[#0A192F] inline-block px-4 pb-1">
-                  Kapil
+                <div className="font-serif italic text-2xl font-bold text-[#1E3A8A] border-b-2 border-[#0A192F] inline-block px-4 pb-1">
+                  Mentor Kapil
                 </div>
-                <div className="text-sm font-black text-[#0A192F] uppercase tracking-wider">
-                  Kapil
+                <div className="text-xs font-black text-[#0A192F] uppercase tracking-wider">
+                  PLACEMENT MENTOR – KAPIL
                 </div>
                 <div className="text-xs font-bold text-[#1E3A8A]">
                   Placement Mentor (Independent Technical Mentor)

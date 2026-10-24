@@ -286,11 +286,11 @@ export function renderCertificateCanvas(
     ctx.fillRect(cx, cy, 24, 24);
   });
 
-  // 3. Subtle Watermark
+  // 3. Subtle Clean Watermark (Ultra-light to prevent text bleed)
   ctx.save();
-  ctx.translate(width / 2, height / 2);
-  ctx.font = '900 140px "Inter", sans-serif';
-  ctx.fillStyle = 'rgba(10, 25, 47, 0.03)';
+  ctx.translate(width / 2, height / 2 - 20);
+  ctx.font = '900 130px "Inter", sans-serif';
+  ctx.fillStyle = 'rgba(10, 25, 47, 0.012)';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
   ctx.fillText('SPSU • KAPIL', 0, 0);
@@ -408,7 +408,7 @@ export function renderCertificateCanvas(
   ctx.fillStyle = '#0A192F';
   ctx.font = '700 16px "Inter", sans-serif';
   ctx.fillText(
-    `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 10 Daily Badges Unlocked • ${progress.completedChallengeIds.length} Practical Labs Solved`,
+    `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 10 Daily Badges Unlocked • ${progress.completedChallengeIds?.length || 0} Practical Labs Solved`,
     140,
     955
   );
@@ -447,30 +447,30 @@ export function renderCertificateCanvas(
   ctx.font = '700 12px "JetBrains Mono", monospace';
   ctx.fillText('VERIFIED SEAL', sealX, sealY + 32);
 
-  // Right Column: Sole Signatory — Kapil (Strictly NO fake people as signatories)
+  // Right Column: Sole Signatory — Placement Mentor Kapil (Independent Technical Mentor)
   ctx.textAlign = 'right';
-  ctx.fillStyle = '#0A192F';
-  ctx.font = 'italic bold 48px Georgia, serif';
-  ctx.fillText('Kapil', width - 140, 845);
+  ctx.fillStyle = '#1E3A8A';
+  ctx.font = 'italic bold 44px Georgia, serif';
+  ctx.fillText('Mentor Kapil', width - 140, 842);
 
   ctx.strokeStyle = '#0A192F';
   ctx.lineWidth = 2.5;
   ctx.beginPath();
-  ctx.moveTo(width - 420, 865);
+  ctx.moveTo(width - 440, 865);
   ctx.lineTo(width - 140, 865);
   ctx.stroke();
 
   ctx.fillStyle = '#0A192F';
-  ctx.font = '900 24px "Inter", sans-serif';
-  ctx.fillText('Kapil', width - 140, 898);
+  ctx.font = '900 20px "Inter", sans-serif';
+  ctx.fillText('PLACEMENT MENTOR – KAPIL', width - 140, 896);
 
   ctx.fillStyle = '#1E3A8A';
-  ctx.font = '700 16px "Inter", sans-serif';
-  ctx.fillText('Placement Mentor (Independent Technical Mentor)', width - 140, 924);
+  ctx.font = '700 15px "Inter", sans-serif';
+  ctx.fillText('Placement Mentor (Independent Technical Mentor)', width - 140, 922);
 
   ctx.fillStyle = '#475569';
-  ctx.font = '600 15px "Inter", sans-serif';
-  ctx.fillText('SPSU Udaipur Placement Readiness Boot Camp', width - 140, 948);
+  ctx.font = '600 14px "Inter", sans-serif';
+  ctx.fillText('SPSU Udaipur Placement Readiness Boot Camp', width - 140, 946);
 
   return canvas;
 }

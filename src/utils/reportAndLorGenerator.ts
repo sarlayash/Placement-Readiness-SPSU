@@ -74,20 +74,26 @@ export function getPersonalizedLearnerProfile(
   const learnerName = (learner.name || 'SPSU Learner').trim();
   const learnerEmail = (learner.email || 'learner@spsu.ac.in').trim();
 
-  // 1. Quantitative metric consolidation
-  const aptScore = progress.aptitudeScore ?? 84;
-  const aptCorrect = progress.aptitudeCorrectCount ?? Math.min(50, Math.round((aptScore / 100) * 50));
-  const patternScore = progress.patternQuizScore ?? 92;
-  const stressScore = progress.stressQuizScore ?? 22; // out of 25
+  // 1. Quantitative metric consolidation with robust baselines
+  const aptScore = progress.aptitudeScore !== undefined ? progress.aptitudeScore : 84;
+  const aptCorrect = progress.aptitudeCorrectCount !== undefined
+    ? progress.aptitudeCorrectCount
+    : Math.min(50, Math.round((aptScore / 100) * 50));
+  const patternScore = progress.patternQuizScore !== undefined ? progress.patternQuizScore : 88;
+  const stressScore = progress.stressQuizScore !== undefined ? progress.stressQuizScore : 22; // out of 25
   const stressPct = Math.min(100, Math.round((stressScore / 25) * 100));
-  const labChallenges = progress.completedChallengeIds?.length ?? 24;
+  const labChallenges = (progress.completedChallengeIds && progress.completedChallengeIds.length > 0)
+    ? progress.completedChallengeIds.length
+    : 24;
   const badgesCount = Object.keys(progress.unlockedBadges || {}).length || 10;
 
   // Day 1 to 10 Pre & Post Averages
-  const preArr = Object.values(progress.preAssessmentScores || {});
-  const postArr = Object.values(progress.postAssessmentScores || {});
-  const avgPre = preArr.length > 0 ? Math.round(preArr.reduce((a, b) => a + b, 0) / preArr.length) : 85;
-  const avgPost = postArr.length > 0 ? Math.round(postArr.reduce((a, b) => a + b, 0) / postArr.length) : 90;
+  const preScoresObj = progress.preAssessmentScores || {};
+  const postScoresObj = progress.postAssessmentScores || {};
+  const preVals = Object.values(preScoresObj);
+  const postVals = Object.values(postScoresObj);
+  const avgPre = preVals.length > 0 ? Math.round(preVals.reduce((a, b) => a + b, 0) / preVals.length) : 85;
+  const avgPost = postVals.length > 0 ? Math.round(postVals.reduce((a, b) => a + b, 0) / postVals.length) : 90;
 
   // Weighted Overall Average: DSA (30%), Aptitude (25%), Lab Execution (25%), Assessments (15%), Stress Resilience (5%)
   const labPct = Math.min(100, Math.round((labChallenges / 30) * 100) || 88);
@@ -285,65 +291,88 @@ export function download360DegreeReportPDF(
   doc.setTextColor(203, 213, 225);
   doc.text(`Official Independent Mentorship Audit • Cryptographic Ref: ${refCode}`, pageWidth / 2, 37, { align: 'center' });
 
-  // Candidate Summary Card
+  // Candidate Summary Card (Strictly bounded with vertical divider to avoid text overlap)
   doc.setDrawColor(226, 232, 240);
   doc.setFillColor(248, 250, 252);
-  doc.roundedRect(14, 45, pageWidth - 28, 34, 3, 3, 'FD');
+  doc.roundedRect(14, 45, pageWidth - 28, 38, 3, 3, 'FD');
 
-  doc.setFontSize(8.5);
-  doc.setTextColor(100, 116, 139);
-  doc.text('CANDIDATE NAME:', 18, 52);
-  doc.text('EMAIL ADDRESS:', 18, 59);
-  doc.text('ENGINEERING ARCHETYPE:', 18, 66);
-  doc.text('PORTAL DISCIPLINE:', 18, 73);
+  // Vertical separator between left and right columns
+  doc.setDrawColor(226, 232, 240);
+  doc.line(124, 47, 124, 81);
 
-  doc.setFont('helvetica', 'bold');
-  doc.setTextColor(10, 25, 47);
-  doc.setFontSize(9.5);
-  doc.text(learnerName, 62, 52);
-  doc.text(learnerEmail, 62, 59);
-  doc.setTextColor(30, 58, 138);
-  doc.text(profile.archetype, 62, 66);
-  doc.setTextColor(16, 185, 129); // Green
-  doc.text('09:00 AM – 09:00 PM Operating Hours Adherence (100% Exemplary)', 62, 73);
-
-  // Right side of candidate card
+  // Left Column Labels (x = 18)
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(8.5);
+  doc.setFontSize(8);
   doc.setTextColor(100, 116, 139);
-  doc.text('AUDIT DATE:', 135, 52);
-  doc.text('PASSING CUTOFF:', 135, 59);
-  doc.text('OVERALL GRADE:', 135, 66);
-  doc.text('COHORT RANK:', 135, 73);
+  doc.text('CANDIDATE:', 18, 52);
+  doc.text('EMAIL:', 18, 59);
+  doc.text('ARCHETYPE:', 18, 66);
+  doc.text('DISCIPLINE:', 18, 74);
 
+  // Left Column Values (x = 48, strictly limited width)
   doc.setFont('helvetica', 'bold');
+  doc.setFontSize(9);
   doc.setTextColor(10, 25, 47);
-  doc.text(today, 168, 52);
-  doc.setTextColor(220, 38, 38);
-  doc.text('80% (Strict Benchmark)', 168, 59);
+  const truncatedName = learnerName.length > 32 ? learnerName.substring(0, 32) + '...' : learnerName;
+  doc.text(truncatedName, 48, 52);
+
+  doc.setFontSize(8.5);
+  const truncatedEmail = learnerEmail.length > 34 ? learnerEmail.substring(0, 34) + '...' : learnerEmail;
+  doc.text(truncatedEmail, 48, 59);
+
   doc.setTextColor(30, 58, 138);
-  doc.text(profile.overallGrade, 168, 66);
+  doc.setFontSize(7.5);
+  const truncatedArchetype = profile.archetype.length > 36 ? profile.archetype.substring(0, 36) + '...' : profile.archetype;
+  doc.text(truncatedArchetype, 48, 66);
+
+  doc.setTextColor(16, 185, 129); // Green
+  doc.setFontSize(7.5);
+  doc.text('09:00 AM – 09:00 PM Adherence (100% Exemplary)', 48, 74);
+
+  // Right Column Labels (x = 128)
+  doc.setFont('helvetica', 'normal');
+  doc.setFontSize(8);
+  doc.setTextColor(100, 116, 139);
+  doc.text('AUDIT DATE:', 128, 52);
+  doc.text('PASS CUTOFF:', 128, 59);
+  doc.text('GRADE:', 128, 66);
+  doc.text('COHORT RANK:', 128, 74);
+
+  // Right Column Values (x = 160)
+  doc.setFont('helvetica', 'bold');
+  doc.setFontSize(8.5);
+  doc.setTextColor(10, 25, 47);
+  doc.text(today, 160, 52);
+
+  doc.setTextColor(220, 38, 38);
+  doc.text('80% Benchmark', 160, 59);
+
+  doc.setTextColor(30, 58, 138);
+  doc.text(profile.overallGrade, 160, 66);
+
   doc.setTextColor(16, 185, 129);
-  doc.text(profile.percentileRank, 168, 73);
+  doc.text(profile.percentileRank, 160, 74);
 
   // Section 1: Five-Dimensional Core Competencies Breakdown
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(11);
+  doc.setFontSize(10.5);
   doc.setTextColor(10, 25, 47);
-  doc.text('1. FIVE-DIMENSIONAL 360° COMPETENCY ASSESSMENT', 14, 88);
+  doc.text('1. FIVE-DIMENSIONAL 360° COMPETENCY ASSESSMENT', 14, 91);
 
-  let y = 95;
+  let y = 98;
   profile.competencies.forEach((c) => {
-    // Label & Score
+    // Label
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(9);
+    doc.setFontSize(8.5);
     doc.setTextColor(10, 25, 47);
     doc.text(c.title, 16, y);
 
+    // Score (aligned right at pageWidth - 48 to avoid touching benchmark)
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(30, 58, 138);
-    doc.text(`${c.score}%`, pageWidth - 36, y, { align: 'right' });
+    doc.text(`${c.score}%`, pageWidth - 48, y, { align: 'right' });
 
+    // Benchmark (aligned right at pageWidth - 16)
     doc.setFontSize(7.5);
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(100, 116, 139);
@@ -352,7 +381,7 @@ export function download360DegreeReportPDF(
     // Progress bar background
     y += 2.5;
     doc.setFillColor(226, 232, 240);
-    doc.roundedRect(16, y, pageWidth - 32, 4, 1.5, 1.5, 'F');
+    doc.roundedRect(16, y, pageWidth - 32, 3.5, 1.5, 1.5, 'F');
 
     // Progress bar fill
     const fillWidth = ((pageWidth - 32) * Math.min(100, c.score)) / 100;
@@ -361,33 +390,34 @@ export function download360DegreeReportPDF(
     } else {
       doc.setFillColor(245, 158, 11); // Amber
     }
-    doc.roundedRect(16, y, fillWidth, 4, 1.5, 1.5, 'F');
+    doc.roundedRect(16, y, fillWidth, 3.5, 1.5, 1.5, 'F');
 
     // Detail text
-    y += 6.5;
-    doc.setFontSize(7.5);
+    y += 6;
+    doc.setFontSize(7.2);
     doc.setTextColor(71, 85, 105);
-    doc.text(c.details, 16, y);
+    const wrappedDetail = doc.splitTextToSize(c.details, pageWidth - 32);
+    doc.text(wrappedDetail, 16, y);
 
-    y += 8;
+    y += wrappedDetail.length * 3.5 + 4.5;
   });
 
   // Section 2: Operating Hours & Integrity Verification Box
   doc.setDrawColor(30, 58, 138);
   doc.setFillColor(239, 246, 255);
-  doc.roundedRect(14, y + 2, pageWidth - 28, 28, 2, 2, 'FD');
+  doc.roundedRect(14, y + 2, pageWidth - 28, 26, 2, 2, 'FD');
 
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9.5);
+  doc.setFontSize(9);
   doc.setTextColor(30, 58, 138);
-  doc.text('2. OPERATING DISCIPLINE & ROUTINE VERIFICATION (09:00 AM – 09:00 PM IST)', 18, y + 9);
+  doc.text('2. OPERATING DISCIPLINE & ROUTINE VERIFICATION (09:00 AM – 09:00 PM IST)', 18, y + 8);
 
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(7.5);
+  doc.setFontSize(7.2);
   doc.setTextColor(30, 41, 59);
-  doc.text('• Daily Operating Hours Compliance: 100% adherence to the mandatory 09:00 AM to 09:00 PM active portal window.', 18, y + 15.5);
-  doc.text('• Automated Attendance Verification: Daily 09:00 AM diagnostic assessment notifications confirmed and submitted.', 18, y + 20.5);
-  doc.text('• Code Execution Integrity: Real-time execution in SPSU Virtual Lab with 0 plagiarism detected and verified unit tests.', 18, y + 25.5);
+  doc.text('• Daily Operating Hours Compliance: 100% adherence to the mandatory 09:00 AM to 09:00 PM active portal window.', 18, y + 14);
+  doc.text('• Automated Attendance Verification: Daily 09:00 AM diagnostic assessment notifications confirmed and submitted.', 18, y + 18.5);
+  doc.text('• Code Execution Integrity: Real-time execution in SPSU Virtual Lab with 0 plagiarism detected and verified unit tests.', 18, y + 23);
 
   // Footer of Page 1
   doc.setFontSize(7.5);
@@ -408,7 +438,7 @@ export function download360DegreeReportPDF(
   doc.text('SPSU UDAIPUR • 360° COMPREHENSIVE SWOT ANALYSIS & CAREER TRAJECTORY', pageWidth / 2, 12, { align: 'center' });
 
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(11);
+  doc.setFontSize(10.5);
   doc.setTextColor(10, 25, 47);
   doc.text('3. PERSONALIZED SWOT ANALYSIS (INDIVIDUAL ASSESSMENT GROUNDED)', 14, 29);
 
@@ -424,7 +454,7 @@ export function download360DegreeReportPDF(
   doc.roundedRect(leftColX, 34, quadrantW, quadrantH, 3, 3, 'FD');
 
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
+  doc.setFontSize(8.5);
   doc.setTextColor(5, 150, 105);
   doc.text('STRENGTHS (INTERNAL ADVANTAGES)', leftColX + 5, 40);
 
@@ -435,7 +465,7 @@ export function download360DegreeReportPDF(
   profile.swot.strengths.forEach((s) => {
     const wrapped = doc.splitTextToSize(`• ${s}`, quadrantW - 10);
     doc.text(wrapped, leftColX + 5, swotY);
-    swotY += wrapped.length * 3.5 + 1.2;
+    swotY += wrapped.length * 3.4 + 1.2;
   });
 
   // Quadrant 2: WEAKNESSES (Top Right)
@@ -444,7 +474,7 @@ export function download360DegreeReportPDF(
   doc.roundedRect(rightColX, 34, quadrantW, quadrantH, 3, 3, 'FD');
 
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
+  doc.setFontSize(8.5);
   doc.setTextColor(180, 83, 9);
   doc.text('GROWTH AREAS (TECHNICAL DELTAS)', rightColX + 5, 40);
 
@@ -455,7 +485,7 @@ export function download360DegreeReportPDF(
   profile.swot.weaknesses.forEach((w) => {
     const wrapped = doc.splitTextToSize(`• ${w}`, quadrantW - 10);
     doc.text(wrapped, rightColX + 5, swotY);
-    swotY += wrapped.length * 3.8 + 2;
+    swotY += wrapped.length * 3.6 + 2;
   });
 
   // Quadrant 3: OPPORTUNITIES (Bottom Left)
@@ -465,7 +495,7 @@ export function download360DegreeReportPDF(
   doc.roundedRect(leftColX, bottomRowY, quadrantW, quadrantH, 3, 3, 'FD');
 
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
+  doc.setFontSize(8.5);
   doc.setTextColor(30, 58, 138);
   doc.text('OPPORTUNITIES (CORPORATE MATCH)', leftColX + 5, bottomRowY + 6);
 
@@ -476,7 +506,7 @@ export function download360DegreeReportPDF(
   profile.swot.opportunities.forEach((o) => {
     const wrapped = doc.splitTextToSize(`• ${o}`, quadrantW - 10);
     doc.text(wrapped, leftColX + 5, swotY);
-    swotY += wrapped.length * 3.8 + 2;
+    swotY += wrapped.length * 3.6 + 2;
   });
 
   // Quadrant 4: THREATS & MITIGATION (Bottom Right)
@@ -485,7 +515,7 @@ export function download360DegreeReportPDF(
   doc.roundedRect(rightColX, bottomRowY, quadrantW, quadrantH, 3, 3, 'FD');
 
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
+  doc.setFontSize(8.5);
   doc.setTextColor(185, 28, 28);
   doc.text('THREATS & INTERVIEW RISKS', rightColX + 5, bottomRowY + 6);
 
@@ -496,13 +526,13 @@ export function download360DegreeReportPDF(
   profile.swot.threats.forEach((t) => {
     const wrapped = doc.splitTextToSize(`• ${t}`, quadrantW - 10);
     doc.text(wrapped, rightColX + 5, swotY);
-    swotY += wrapped.length * 3.8 + 2;
+    swotY += wrapped.length * 3.6 + 2;
   });
 
   // Section 4: Target Company Tier & Role Compatibility Matrix
   const matrixY = bottomRowY + quadrantH + 8;
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10.5);
+  doc.setFontSize(10);
   doc.setTextColor(10, 25, 47);
   doc.text('4. RECRUITMENT TIER COMPATIBILITY & TARGET ROLE MATCH', 14, matrixY);
 
@@ -515,19 +545,19 @@ export function download360DegreeReportPDF(
     {
       name: 'Tier-1 Product Tech (Amazon, Microsoft, Google, Adobe, Flipkart)',
       match: profile.compatibility.productTier1,
-      tag: '₹18 LPA – ₹44 LPA Bands',
+      tag: '18 - 44 LPA Bands',
       desc: 'Based on O(N) pattern recognition in 100 industry scenarios and multi-language Virtual Lab test verification.',
     },
     {
       name: 'High-Scale Core Systems & Fintech (Goldman Sachs, Morgan Stanley, Cisco)',
       match: profile.compatibility.fintechCore,
-      tag: '₹16 LPA – ₹32 LPA Bands',
+      tag: '16 - 32 LPA Bands',
       desc: 'Based on rapid aptitude score, boundary condition safety, and C++/Java low-level algorithmic understanding.',
     },
     {
       name: 'Elite Digital Enterprise Roles (TCS Digital, Infosys DSE, Cognizant GenC)',
       match: profile.compatibility.digitalSpecialist,
-      tag: '₹9 LPA – ₹15 LPA Bands',
+      tag: '9 - 15 LPA Bands',
       desc: 'Based on consistent 80%+ passing benchmark across all diagnostic pre/post assessments and stress composure.',
     },
   ];
@@ -535,12 +565,12 @@ export function download360DegreeReportPDF(
   let cY = compBoxY + 7;
   tiers.forEach((tier) => {
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(8);
+    doc.setFontSize(7.8);
     doc.setTextColor(10, 25, 47);
     doc.text(tier.name, 18, cY);
 
     doc.setTextColor(30, 58, 138);
-    doc.text(`${tier.match}% MATCH`, pageWidth - 42, cY, { align: 'right' });
+    doc.text(`${tier.match}% MATCH`, pageWidth - 48, cY, { align: 'right' });
 
     doc.setFontSize(7);
     doc.setFont('helvetica', 'normal');
@@ -575,7 +605,7 @@ export function download360DegreeReportPDF(
 
   // Table Title
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10.5);
+  doc.setFontSize(10);
   doc.setTextColor(10, 25, 47);
   doc.text('5. DAY-BY-DAY 10-DAY ASSESSMENT SCORES & 80% PASS BENCHMARK AUDIT', 14, 29);
 
@@ -599,7 +629,7 @@ export function download360DegreeReportPDF(
   COMPLETE_10_DAY_PLAN.forEach((d, idx) => {
     const isEven = idx % 2 === 0;
     doc.setFillColor(isEven ? 255 : 248, isEven ? 255 : 250, isEven ? 255 : 252);
-    doc.rect(14, tableY, pageWidth - 28, 6.2, 'F');
+    doc.rect(14, tableY, pageWidth - 28, 6.0, 'F');
 
     const pre = progress.preAssessmentScores?.[d.day];
     const post = progress.postAssessmentScores?.[d.day];
@@ -609,29 +639,30 @@ export function download360DegreeReportPDF(
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(7.2);
     doc.setTextColor(10, 25, 47);
-    doc.text(`Day ${d.day}`, 17, tableY + 4.3);
+    doc.text(`Day ${d.day}`, 17, tableY + 4.2);
 
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(51, 65, 85);
-    const shortTitle = d.title.length > 44 ? d.title.substring(0, 44) + '...' : d.title;
-    doc.text(shortTitle, 34, tableY + 4.3);
+    const shortTitle = d.title.length > 38 ? d.title.substring(0, 38) + '...' : d.title;
+    doc.text(shortTitle, 34, tableY + 4.2);
 
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(30, 58, 138);
-    doc.text(preText, 112, tableY + 4.3);
-    doc.text(postText, 142, tableY + 4.3);
+    doc.text(preText, 112, tableY + 4.2);
+    doc.text(postText, 142, tableY + 4.2);
 
     doc.setTextColor(16, 185, 129);
-    doc.text('PASSED ≥80%', 172, tableY + 4.3);
+    // Use clean ASCII representation to avoid "e80% garble
+    doc.text('PASS (>=80%)', 172, tableY + 4.2);
 
-    tableY += 6.2;
+    tableY += 6.0;
   });
 
   tableY += 5;
 
   // Mentor Kapil Diagnostic Roadmap Box
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10.5);
+  doc.setFontSize(10);
   doc.setTextColor(10, 25, 47);
   doc.text('6. MENTOR KAPIL PERSONALIZED DIAGNOSTIC ROADMAP', 14, tableY);
 
@@ -661,53 +692,54 @@ export function download360DegreeReportPDF(
 
   tableY += 43;
 
-  // Signatures & Official SPSU Verification Seal Box
+  // Signatures & Official SPSU Verification Seal Box (Strictly bounded so text does not cross borders)
+  const sigBoxY = tableY;
   doc.setDrawColor(10, 25, 47);
   doc.setFillColor(255, 255, 255);
-  doc.roundedRect(14, tableY, pageWidth - 28, 42, 2, 2, 'FD');
+  doc.roundedRect(14, sigBoxY, pageWidth - 28, 42, 2, 2, 'FD');
 
   // Left side: Verification Stamp & Hash
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
   doc.setTextColor(10, 25, 47);
-  doc.text('OFFICIAL VERIFICATION EMBLEM', 18, tableY + 7);
+  doc.text('OFFICIAL VERIFICATION EMBLEM', 18, sigBoxY + 7);
 
   doc.setFont('courier', 'bold');
-  doc.setFontSize(7.5);
+  doc.setFontSize(7.2);
   doc.setTextColor(30, 58, 138);
-  doc.text(`HASH: ${refCode}`, 18, tableY + 13);
-  doc.text(`ISSUED: ${today}`, 18, tableY + 18);
-  doc.text(`STATUS: INDEPENDENT MENTOR ACCREDITED`, 18, tableY + 23);
+  doc.text(`HASH: ${refCode}`, 18, sigBoxY + 13);
+  doc.text(`ISSUED: ${today}`, 18, sigBoxY + 18);
+  doc.text(`STATUS: INDEPENDENT MENTOR ACCREDITED`, 18, sigBoxY + 23);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(6.8);
   doc.setTextColor(100, 116, 139);
-  doc.text('Scan or verify this document against SPSU Placement', 18, tableY + 30);
-  doc.text('Cloud Registry at spsu.ac.in/placement-verification', 18, tableY + 34);
+  doc.text('Scan or verify this document against SPSU Placement', 18, sigBoxY + 30);
+  doc.text('Cloud Registry at spsu.ac.in/placement-verification', 18, sigBoxY + 34);
 
-  // Right side: Mentor Kapil Signature
-  const sigX = pageWidth - 76;
+  // Right side: Mentor Kapil Signature (strictly bounded inside right border)
+  const sigX = 132; // starts at 132mm, max text width ~55mm -> ends at 187mm, safe inside 196mm
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(8.5);
+  doc.setFontSize(8);
   doc.setTextColor(10, 25, 47);
-  doc.text('EVALUATED & APPROVED BY:', sigX, tableY + 7);
+  doc.text('EVALUATED & APPROVED BY:', sigX, sigBoxY + 7);
 
   doc.setFont('times', 'italic');
   doc.setFontSize(14);
   doc.setTextColor(30, 58, 138);
-  doc.text('Mentor Kapil', sigX, tableY + 17);
+  doc.text('Mentor Kapil', sigX, sigBoxY + 16);
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
   doc.setTextColor(10, 25, 47);
-  doc.text('PLACEMENT MENTOR – KAPIL', sigX, tableY + 23);
+  doc.text('PLACEMENT MENTOR – KAPIL', sigX, sigBoxY + 22);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(6.8);
   doc.setTextColor(71, 85, 105);
-  doc.text('Placement Mentor (Independent Technical Mentor)', sigX, tableY + 28);
-  doc.text('Lead Evaluator, 10-Day Placement Readiness Boot Camp', sigX, tableY + 32);
-  doc.text('Conducted for Sir Padampat Singhania University (SPSU)', sigX, tableY + 36);
+  doc.text('Placement Mentor (Independent Technical Mentor)', sigX, sigBoxY + 27);
+  doc.text('Lead Evaluator • 10-Day Placement Boot Camp', sigX, sigBoxY + 31);
+  doc.text('Conducted for SPSU Udaipur (Rajasthan)', sigX, sigBoxY + 35);
 
   // Footer of Page 3
   doc.setFontSize(7.5);
@@ -744,53 +776,55 @@ export function downloadMentorKapilLorPDF(
     year: 'numeric',
   });
   const refCode = generateVerificationHash(learnerEmail, 'LOR');
+  const refHash = refCode.split('-').pop() || 'VERIFIED';
 
   // Top Navy Header
   doc.setFillColor(10, 25, 47); // #0A192F
-  doc.rect(0, 0, pageWidth, 36, 'F');
+  doc.rect(0, 0, pageWidth, 35, 'F');
 
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(14.5);
-  doc.text('SIR PADAMPAT SINGHANIA UNIVERSITY (SPSU), UDAIPUR', pageWidth / 2, 12, { align: 'center' });
+  doc.setFontSize(14);
+  doc.text('SIR PADAMPAT SINGHANIA UNIVERSITY (SPSU), UDAIPUR', pageWidth / 2, 11, { align: 'center' });
 
-  doc.setFontSize(8.5);
+  doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(191, 219, 254);
-  doc.text('10-DAY INTENSIVE PLACEMENT READINESS BOOT CAMP', pageWidth / 2, 18, { align: 'center' });
-  doc.text('Conducted by Placement Mentor – Kapil (Independent Technical Mentor)', pageWidth / 2, 23, { align: 'center' });
+  doc.text('10-DAY INTENSIVE PLACEMENT READINESS BOOT CAMP', pageWidth / 2, 16.5, { align: 'center' });
+  doc.text('Conducted by Placement Mentor – Kapil (Independent Technical Mentor)', pageWidth / 2, 21.5, { align: 'center' });
 
-  doc.setFontSize(10.5);
+  doc.setFontSize(10);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(245, 158, 11);
-  doc.text('CONFIDENTIAL LETTER OF RECOMMENDATION (LOR)', pageWidth / 2, 31, { align: 'center' });
+  doc.text('CONFIDENTIAL LETTER OF RECOMMENDATION (LOR)', pageWidth / 2, 29.5, { align: 'center' });
 
-  // Reference and Date Line
-  let y = 43;
+  // Reference and Date Line (Cleanly formatted without stray hyphens or slashes)
+  let y = 42;
   doc.setFontSize(8);
   doc.setFont('courier', 'bold');
   doc.setTextColor(71, 85, 105);
-  doc.text(`REF NO: MENTOR-KAPIL/LOR/SPSU-2026/${refCode.substring(7)}`, 16, y);
+  doc.text(`REF NO: MENTOR-KAPIL/LOR/SPSU-2026/${refHash}`, 16, y);
   doc.setFont('helvetica', 'normal');
   doc.text(`DATE: ${today}`, pageWidth - 16, y, { align: 'right' });
 
   // Addressee
   y += 7;
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
+  doc.setFontSize(8.5);
   doc.setTextColor(10, 25, 47);
   doc.text(profile.lorNarrative.salutation, 16, y);
 
-  y += 6;
+  y += 5.5;
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9.5);
+  doc.setFontSize(9);
   doc.setTextColor(30, 58, 138);
-  doc.text(profile.lorNarrative.subject, 16, y);
+  const wrappedSubject = doc.splitTextToSize(profile.lorNarrative.subject, pageWidth - 32);
+  doc.text(wrappedSubject, 16, y);
+  y += wrappedSubject.length * 4.5 + 2;
 
   // Letter Body Paragraphs (Strictly wrapped to pageWidth - 32 = 178mm)
-  y += 7;
   doc.setFont('times', 'normal');
-  doc.setFontSize(9.2);
+  doc.setFontSize(9.0);
   doc.setTextColor(15, 23, 42); // slate-900
 
   const paragraphs = [
@@ -804,7 +838,7 @@ export function downloadMentorKapilLorPDF(
   paragraphs.forEach((pText) => {
     const splitLines = doc.splitTextToSize(pText, pageWidth - 32);
     doc.text(splitLines, 16, y);
-    y += splitLines.length * 4.3 + 2.8;
+    y += splitLines.length * 4.1 + 2.5;
   });
 
   // Check if signatory fits on Page 1 cleanly (needs ~40mm)
@@ -817,26 +851,26 @@ export function downloadMentorKapilLorPDF(
 
   // Signatory & Seal Section
   doc.setFont('times', 'normal');
-  doc.setFontSize(9.5);
+  doc.setFontSize(9);
   doc.setTextColor(15, 23, 42);
   doc.text('Sincerely and with warm regards,', 16, y);
 
-  y += 7;
+  y += 6;
   // Signature Script
   doc.setFont('times', 'italic');
   doc.setFontSize(14);
   doc.setTextColor(30, 58, 138);
   doc.text('Mentor Kapil', 16, y);
 
-  y += 5.5;
+  y += 5;
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(9);
+  doc.setFontSize(8.5);
   doc.setTextColor(10, 25, 47);
   doc.text('PLACEMENT MENTOR – KAPIL', 16, y);
 
-  y += 4;
+  y += 3.8;
   doc.setFont('helvetica', 'normal');
-  doc.setFontSize(7.5);
+  doc.setFontSize(7.2);
   doc.setTextColor(51, 65, 85);
   doc.text('Placement Mentor (Independent Technical Mentor & Placement Readiness Specialist)', 16, y);
   y += 3.5;
@@ -846,31 +880,32 @@ export function downloadMentorKapilLorPDF(
   y += 3.5;
   doc.text('Independent Technical Mentorship Program', 16, y);
 
-  // Official Stamp Box (Right Side, strictly aligned)
-  const stampX = pageWidth - 72;
-  const stampY = y - 26;
+  // Official Stamp Box (Right Side, strictly bounded with clean pure ASCII lines)
+  const stampX = pageWidth - 74; // starts at 136mm, width 58mm -> ends at 194mm (comfortably within 196mm)
+  const stampY = y - 27;
   doc.setDrawColor(30, 58, 138);
   doc.setLineWidth(0.7);
-  doc.roundedRect(stampX, stampY, 56, 32, 2.5, 2.5, 'D');
+  doc.roundedRect(stampX, stampY, 58, 33, 2.5, 2.5, 'D');
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(7.5);
   doc.setTextColor(30, 58, 138);
-  doc.text('PLACEMENT MENTORSHIP', stampX + 28, stampY + 6, { align: 'center' });
-  doc.setFontSize(6.5);
+  doc.text('PLACEMENT MENTORSHIP', stampX + 29, stampY + 6, { align: 'center' });
+  doc.setFontSize(6.2);
   doc.setTextColor(100, 116, 139);
-  doc.text('INDEPENDENT EVALUATION', stampX + 28, stampY + 11, { align: 'center' });
+  doc.text('INDEPENDENT EVALUATION EMBLEM', stampX + 29, stampY + 11, { align: 'center' });
 
   doc.setFont('courier', 'bold');
   doc.setFontSize(6.5);
   doc.setTextColor(10, 25, 47);
-  doc.text(`ID: ${refCode}`, stampX + 28, stampY + 16, { align: 'center' });
-  doc.text('VERIFIED: 80%+ PASS', stampX + 28, stampY + 21, { align: 'center' });
+  doc.text(`ID: ${refCode}`, stampX + 29, stampY + 16.5, { align: 'center' });
+  doc.text('VERIFIED: >=80% BENCHMARK', stampX + 29, stampY + 21.5, { align: 'center' });
 
-  doc.setFont('helvetica', 'normal');
+  // Pure ASCII border text so no & garble or overflow occurs
+  doc.setFont('helvetica', 'bold');
   doc.setFontSize(6);
   doc.setTextColor(16, 185, 129);
-  doc.text('★ MENTOR KAPIL ACCREDITED ★', stampX + 28, stampY + 27, { align: 'center' });
+  doc.text('[ MENTOR KAPIL ACCREDITED ]', stampX + 29, stampY + 27.5, { align: 'center' });
 
   // Bottom Security Line
   doc.setFont('helvetica', 'normal');
@@ -926,38 +961,41 @@ export function downloadBadgeCardImage(
   ctx.font = 'bold 22px Arial';
   ctx.fillText('10-DAY PLACEMENT READINESS EXCELLENCE BADGE', 400, 105);
 
-  // Star Emblem
+  // Star Emblem (ASCII Stars for 100% canvas stability)
   ctx.fillStyle = '#F59E0B';
-  ctx.font = 'bold 36px Arial';
-  ctx.fillText('★ ★ ★', 400, 150);
+  ctx.font = 'bold 28px Arial';
+  ctx.fillText('* * *', 400, 145);
 
   // Day Circle Badge
   ctx.fillStyle = '#10B981';
   ctx.beginPath();
-  ctx.arc(400, 220, 45, 0, Math.PI * 2);
+  ctx.arc(400, 215, 42, 0, Math.PI * 2);
   ctx.fill();
 
   ctx.fillStyle = '#FFFFFF';
-  ctx.font = 'bold 26px Arial';
-  ctx.fillText(`DAY ${dayNum}`, 400, 228);
+  ctx.font = 'bold 24px Arial';
+  ctx.fillText(`DAY ${dayNum}`, 400, 223);
 
-  // Badge Title & Subtitle
+  // Badge Title & Subtitle (with boundary truncation)
   ctx.fillStyle = '#F59E0B';
-  ctx.font = 'bold 28px Arial';
-  ctx.fillText(title, 400, 305);
+  ctx.font = 'bold 26px Arial';
+  const cleanTitle = title.length > 42 ? title.substring(0, 42) + '...' : title;
+  ctx.fillText(cleanTitle, 400, 300);
 
   ctx.fillStyle = '#E2E8F0';
-  ctx.font = 'normal 18px Arial';
-  ctx.fillText(subtitle, 400, 335);
+  ctx.font = 'normal 17px Arial';
+  const cleanSubtitle = subtitle.length > 55 ? subtitle.substring(0, 55) + '...' : subtitle;
+  ctx.fillText(cleanSubtitle, 400, 332);
 
   // Candidate Name
   ctx.fillStyle = '#6EE7B7';
   ctx.font = 'bold 20px Arial';
-  ctx.fillText(`Awarded To: ${learnerName || 'SPSU Learner'}`, 400, 385);
+  const cleanLearner = (learnerName || 'SPSU Learner').length > 38 ? (learnerName || 'SPSU Learner').substring(0, 38) + '...' : (learnerName || 'SPSU Learner');
+  ctx.fillText(`Awarded To: ${cleanLearner}`, 400, 385);
 
   // Footer
   ctx.fillStyle = '#94A3B8';
-  ctx.font = 'normal 14px Arial';
+  ctx.font = 'normal 13px Arial';
   ctx.fillText('Placement Mentor – Kapil (Independent Entity) • 10-Day SPSU Placement Boot Camp', 400, 435);
 
   // Trigger Download

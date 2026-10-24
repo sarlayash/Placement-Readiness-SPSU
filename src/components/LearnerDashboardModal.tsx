@@ -324,7 +324,7 @@ export const LearnerDashboardModal: React.FC<LearnerDashboardModalProps> = ({
                   360° Detailed Report
                 </div>
                 <div className="text-[10px] text-slate-300">
-                  Full 5-dimension competency analysis & 10-day score audit.
+                  Personalized SWOT analysis, 5-dimension competency & 10-day audit.
                 </div>
               </button>
 
@@ -351,7 +351,7 @@ export const LearnerDashboardModal: React.FC<LearnerDashboardModalProps> = ({
                   Mentor Kapil LOR
                 </div>
                 <div className="text-[10px] text-slate-300">
-                  Official Recommendation Letter on SPSU Letterhead with seal.
+                  Individualized SDE-1 recommendation with authentic personal value-add.
                 </div>
               </button>
 

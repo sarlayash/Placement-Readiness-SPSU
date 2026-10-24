@@ -110,3 +110,20 @@ export interface UserProgress {
   certificateId: string | null;
   certificateIssuedAt: string | null;
 }
+
+export interface LearnerRecord {
+  uid: string;
+  name: string;
+  email: string;
+  photoURL?: string;
+  firstLogin: string;
+  lastLoginAttempt: string;
+  preAssessmentScores: Record<number, number>;
+  postAssessmentScores: Record<number, number>;
+  preAssessmentPassed: Record<number, boolean>;
+  postAssessmentPassed: Record<number, boolean>;
+  completedDays: Record<number, boolean>;
+  unlockedBadges: Record<number, string>;
+  certificateId?: string | null;
+  certificateIssuedAt?: string | null;
+}

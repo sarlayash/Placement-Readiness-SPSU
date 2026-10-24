@@ -1,0 +1,281 @@
+import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
+import { db } from './firebase';
+import { GoogleUser, UserProgress, LearnerRecord } from '../types';
+
+const LOCAL_REGISTRY_KEY = 'spsu_kapil_all_learners_registry_v1';
+
+/**
+ * Reads local learners registry from localStorage as a fallback or hybrid store.
+ */
+export function getLocalLearnersRegistry(): Record<string, LearnerRecord> {
+  try {
+    const raw = localStorage.getItem(LOCAL_REGISTRY_KEY);
+    if (!raw) return {};
+    return JSON.parse(raw) as Record<string, LearnerRecord>;
+  } catch {
+    return {};
+  }
+}
+
+/**
+ * Saves learners registry into localStorage.
+ */
+export function saveLocalLearnersRegistry(registry: Record<string, LearnerRecord>): void {
+  try {
+    localStorage.setItem(LOCAL_REGISTRY_KEY, JSON.stringify(registry));
+  } catch (err) {
+    console.warn('Could not persist local learner registry:', err);
+  }
+}
+
+/**
+ * Record a user's sign in / login attempt with real timestamp.
+ * Syncs to both Firebase Firestore and the persistent local registry.
+ */
+export async function recordUserSignIn(
+  user: GoogleUser,
+  currentProgress?: UserProgress
+): Promise<LearnerRecord> {
+  const now = new Date().toISOString();
+  const localRegistry = getLocalLearnersRegistry();
+  const existing = localRegistry[user.email.toLowerCase()] || localRegistry[user.uid];
+
+  const updatedRecord: LearnerRecord = {
+    uid: user.uid,
+    name: user.name || 'SPSU Learner',
+    email: user.email.toLowerCase(),
+    photoURL: user.photoURL,
+    firstLogin: existing?.firstLogin || user.signedInAt || now,
+    lastLoginAttempt: now,
+    preAssessmentScores: currentProgress?.preAssessmentScores || existing?.preAssessmentScores || {},
+    postAssessmentScores: currentProgress?.postAssessmentScores || existing?.postAssessmentScores || {},
+    preAssessmentPassed: currentProgress?.preAssessmentPassed || existing?.preAssessmentPassed || {},
+    postAssessmentPassed: currentProgress?.postAssessmentPassed || existing?.postAssessmentPassed || {},
+    completedDays: currentProgress?.completedDays || existing?.completedDays || {},
+    unlockedBadges: currentProgress?.unlockedBadges || existing?.unlockedBadges || {},
+    certificateId: currentProgress?.certificateId || existing?.certificateId || null,
+    certificateIssuedAt: currentProgress?.certificateIssuedAt || existing?.certificateIssuedAt || null,
+  };
+
+  // Update local registry
+  localRegistry[user.email.toLowerCase()] = updatedRecord;
+  saveLocalLearnersRegistry(localRegistry);
+
+  // Sync to Firebase Firestore asynchronously
+  try {
+    const learnerDocRef = doc(db, 'learners', user.uid || user.email.toLowerCase());
+    await setDoc(learnerDocRef, updatedRecord, { merge: true });
+  } catch (err) {
+    console.warn('Firestore learner sync notice (will use local registry):', err);
+  }
+
+  return updatedRecord;
+}
+
+/**
+ * Update a learner's assessment progress and sync.
+ */
+export async function syncLearnerProgress(
+  user: GoogleUser,
+  progress: UserProgress
+): Promise<void> {
+  const localRegistry = getLocalLearnersRegistry();
+  const existing = localRegistry[user.email.toLowerCase()] || localRegistry[user.uid];
+  const now = new Date().toISOString();
+
+  const updatedRecord: LearnerRecord = {
+    uid: user.uid,
+    name: user.name || existing?.name || 'SPSU Learner',
+    email: user.email.toLowerCase(),
+    photoURL: user.photoURL || existing?.photoURL,
+    firstLogin: existing?.firstLogin || user.signedInAt || now,
+    lastLoginAttempt: now,
+    preAssessmentScores: { ...(existing?.preAssessmentScores || {}), ...progress.preAssessmentScores },
+    postAssessmentScores: { ...(existing?.postAssessmentScores || {}), ...progress.postAssessmentScores },
+    preAssessmentPassed: { ...(existing?.preAssessmentPassed || {}), ...progress.preAssessmentPassed },
+    postAssessmentPassed: { ...(existing?.postAssessmentPassed || {}), ...progress.postAssessmentPassed },
+    completedDays: { ...(existing?.completedDays || {}), ...(progress.completedDays || {}) },
+    unlockedBadges: { ...(existing?.unlockedBadges || {}), ...progress.unlockedBadges },
+    certificateId: progress.certificateId || existing?.certificateId || null,
+    certificateIssuedAt: progress.certificateIssuedAt || existing?.certificateIssuedAt || null,
+  };
+
+  localRegistry[user.email.toLowerCase()] = updatedRecord;
+  saveLocalLearnersRegistry(localRegistry);
+
+  try {
+    const learnerDocRef = doc(db, 'learners', user.uid || user.email.toLowerCase());
+    await setDoc(learnerDocRef, updatedRecord, { merge: true });
+  } catch (err) {
+    console.warn('Firestore progress sync notice:', err);
+  }
+}
+
+/**
+ * Fetch all registered learners from Firebase Firestore, merged with local registry.
+ */
+export async function fetchAllLearners(): Promise<LearnerRecord[]> {
+  const mergedMap: Record<string, LearnerRecord> = { ...getLocalLearnersRegistry() };
+
+  try {
+    const snapshot = await getDocs(collection(db, 'learners'));
+    snapshot.forEach((docSnap) => {
+      if (docSnap.exists()) {
+        const data = docSnap.data() as LearnerRecord;
+        if (data && (data.email || data.uid)) {
+          const key = (data.email || data.uid).toLowerCase();
+          mergedMap[key] = {
+            ...mergedMap[key],
+            ...data,
+          };
+        }
+      }
+    });
+  } catch (err) {
+    console.warn('Could not read from Firestore collection "learners", using cached registry:', err);
+  }
+
+  const list = Object.values(mergedMap);
+
+  // Sort descending by last login attempt (newest first)
+  list.sort((a, b) => {
+    const tA = new Date(a.lastLoginAttempt || a.firstLogin || 0).getTime();
+    const tB = new Date(b.lastLoginAttempt || b.firstLogin || 0).getTime();
+    return tB - tA;
+  });
+
+  return list;
+}
+
+/**
+ * Downloads assessment scores (Pre and Post) in CSV format.
+ * If day is specified (1..10), downloads day-specific scores.
+ * Otherwise, downloads a comprehensive CSV of all 10 days.
+ */
+export function downloadAssessmentScoresCSV(learners: LearnerRecord[], dayFilter?: number): void {
+  let csvContent = '';
+  const nowStr = new Date().toISOString().replace(/[:.]/g, '-');
+
+  if (dayFilter && dayFilter >= 1 && dayFilter <= 10) {
+    // Single Day CSV
+    const headers = [
+      'Learner Name',
+      'Email Address',
+      'Firebase UID',
+      'First Registration Date',
+      'Last Login Attempt',
+      `Day ${dayFilter} Pre-Assessment Score (%)`,
+      `Day ${dayFilter} Pre-Assessment Passed`,
+      `Day ${dayFilter} Post-Assessment Score (%)`,
+      `Day ${dayFilter} Post-Assessment Passed`,
+      `Day ${dayFilter} Completed`,
+      'Total Badges Earned',
+      'Official Certificate ID',
+    ];
+
+    const rows = learners.map((l) => {
+      const preScore = l.preAssessmentScores?.[dayFilter] !== undefined ? `${l.preAssessmentScores[dayFilter]}%` : 'Not Attempted';
+      const prePassed = l.preAssessmentPassed?.[dayFilter] ? 'PASSED' : 'PENDING';
+      const postScore = l.postAssessmentScores?.[dayFilter] !== undefined ? `${l.postAssessmentScores[dayFilter]}%` : 'Not Attempted';
+      const postPassed = l.postAssessmentPassed?.[dayFilter] ? 'PASSED' : 'PENDING';
+      const dayCompleted = l.completedDays?.[dayFilter] || (l.preAssessmentPassed?.[dayFilter] && l.postAssessmentPassed?.[dayFilter]) ? 'YES' : 'NO';
+      const badgeCount = Object.keys(l.unlockedBadges || {}).length;
+
+      return [
+        `"${(l.name || 'Learner').replace(/"/g, '""')}"`,
+        `"${(l.email || '').replace(/"/g, '""')}"`,
+        `"${(l.uid || '').replace(/"/g, '""')}"`,
+        `"${l.firstLogin || ''}"`,
+        `"${l.lastLoginAttempt || ''}"`,
+        `"${preScore}"`,
+        `"${prePassed}"`,
+        `"${postScore}"`,
+        `"${postPassed}"`,
+        `"${dayCompleted}"`,
+        `"${badgeCount}/10"`,
+        `"${l.certificateId || 'Pending'}"`,
+      ].join(',');
+    });
+
+    csvContent = [headers.join(','), ...rows].join('\r\n');
+    triggerFileDownload(csvContent, `SPSU_Kapil_Day_${dayFilter}_Assessment_Scores_${nowStr}.csv`);
+  } else {
+    // Complete 10-Day CSV
+    const headers = [
+      'Learner Name',
+      'Email Address',
+      'Firebase UID',
+      'First Registration Date',
+      'Last Login Attempt',
+      'Day 1 Pre (%)',
+      'Day 1 Post (%)',
+      'Day 2 Pre (%)',
+      'Day 2 Post (%)',
+      'Day 3 Pre (%)',
+      'Day 3 Post (%)',
+      'Day 4 Pre (%)',
+      'Day 4 Post (%)',
+      'Day 5 Pre (%)',
+      'Day 5 Post (%)',
+      'Day 6 Pre (%)',
+      'Day 6 Post (%)',
+      'Day 7 Pre (%)',
+      'Day 7 Post (%)',
+      'Day 8 Pre (%)',
+      'Day 8 Post (%)',
+      'Day 9 Pre (%)',
+      'Day 9 Post (%)',
+      'Day 10 Pre (%)',
+      'Day 10 Post (%)',
+      'Total Days Completed',
+      'Badges Unlocked',
+      'Certificate ID',
+      'Certificate Issued At',
+    ];
+
+    const rows = learners.map((l) => {
+      const scoresCols: string[] = [];
+      let completedDaysCount = 0;
+
+      for (let d = 1; d <= 10; d++) {
+        const pre = l.preAssessmentScores?.[d] !== undefined ? `${l.preAssessmentScores[d]}%` : '-';
+        const post = l.postAssessmentScores?.[d] !== undefined ? `${l.postAssessmentScores[d]}%` : '-';
+        scoresCols.push(`"${pre}"`, `"${post}"`);
+
+        if (l.completedDays?.[d] || (l.preAssessmentPassed?.[d] && l.postAssessmentPassed?.[d])) {
+          completedDaysCount++;
+        }
+      }
+
+      const badgeCount = Object.keys(l.unlockedBadges || {}).length;
+
+      return [
+        `"${(l.name || 'Learner').replace(/"/g, '""')}"`,
+        `"${(l.email || '').replace(/"/g, '""')}"`,
+        `"${(l.uid || '').replace(/"/g, '""')}"`,
+        `"${l.firstLogin || ''}"`,
+        `"${l.lastLoginAttempt || ''}"`,
+        ...scoresCols,
+        `"${completedDaysCount}/10"`,
+        `"${badgeCount}/10"`,
+        `"${l.certificateId || 'Pending'}"`,
+        `"${l.certificateIssuedAt || ''}"`,
+      ].join(',');
+    });
+
+    csvContent = [headers.join(','), ...rows].join('\r\n');
+    triggerFileDownload(csvContent, `SPSU_Kapil_All_Days_Assessment_Scores_${nowStr}.csv`);
+  }
+}
+
+function triggerFileDownload(content: string, filename: string): void {
+  const blob = new Blob([content], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.setAttribute('href', url);
+  link.setAttribute('download', filename);
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+}

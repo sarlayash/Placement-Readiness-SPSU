@@ -1,13 +1,14 @@
 import React from 'react';
-import { Award, FileCheck2, ShieldCheck, Code2, GraduationCap, CheckCircle } from 'lucide-react';
+import { Award, FileCheck2, ShieldCheck, Code2, GraduationCap, CheckCircle, Lock } from 'lucide-react';
 import { LiveDateTime } from './LiveDateTime';
 
 interface FooterProps {
   onOpenBadges: () => void;
   onOpenCertificate: () => void;
+  onOpenAdmin?: () => void;
 }
 
-export const Footer: React.FC<FooterProps> = ({ onOpenBadges, onOpenCertificate }) => {
+export const Footer: React.FC<FooterProps> = ({ onOpenBadges, onOpenCertificate, onOpenAdmin }) => {
   return (
     <footer className="bg-[#0A192F] text-white border-t-2 border-[#1E3A8A] mt-auto">
       {/* Top Banner with Real Date & Time and Verification Badge */}
@@ -101,6 +102,17 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBadges, onOpenCertificate 
                 <FileCheck2 className="w-3 h-3 text-[#1E3A8A]" />
                 <span>Kapil Certificate</span>
               </button>
+              {onOpenAdmin && (
+                <button
+                  type="button"
+                  onClick={onOpenAdmin}
+                  className="px-2.5 py-1 rounded-lg bg-[#112240] hover:bg-[#1E3A8A] text-amber-300 hover:text-white border border-amber-400/40 text-[11px] font-bold transition-colors cursor-pointer flex items-center gap-1"
+                  title="Administrator Portal"
+                >
+                  <Lock className="w-3 h-3 text-amber-300" />
+                  <span>Admin</span>
+                </button>
+              )}
             </div>
           </div>
         </div>

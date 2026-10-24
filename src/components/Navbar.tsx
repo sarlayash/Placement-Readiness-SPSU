@@ -5,6 +5,7 @@ import {
   Calendar,
   Code2,
   FileCheck2,
+  Lock,
   LogIn,
   LogOut,
   Menu,
@@ -16,7 +17,7 @@ import { LiveDateTime } from './LiveDateTime';
 interface NavbarProps {
   user: GoogleUser | null;
   progress: UserProgress;
-  activeView: 'planner' | 'day-workspace';
+  activeView: 'planner' | 'day-workspace' | 'admin';
   selectedDay: number;
   isSidebarCollapsed: boolean;
   onToggleSidebar: () => void;
@@ -26,6 +27,7 @@ interface NavbarProps {
   onSignOut: () => void;
   onOpenBadges: () => void;
   onOpenCertificate: () => void;
+  onOpenAdmin: () => void;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -41,6 +43,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSignOut,
   onOpenBadges,
   onOpenCertificate,
+  onOpenAdmin,
 }) => {
   const unlockedBadgesCount = Object.keys(progress.unlockedBadges).length;
 
@@ -120,6 +123,22 @@ export const Navbar: React.FC<NavbarProps> = ({
           >
             <FileCheck2 className="w-4 h-4 text-[#1E3A8A]" />
             <span className="hidden md:inline">Certificate</span>
+          </button>
+
+          {/* Admin Lock Button */}
+          <button
+            type="button"
+            onClick={onOpenAdmin}
+            className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-bold transition-all cursor-pointer shadow-xs ${
+              activeView === 'admin'
+                ? 'bg-amber-400 text-[#0A192F] font-black'
+                : 'bg-[#112240] hover:bg-[#1E3A8A] border border-amber-400/50 text-amber-300 hover:text-white'
+            }`}
+            title="Administrator Dashboard & Score Export"
+            aria-label="Admin Dashboard"
+          >
+            <Lock className="w-3.5 h-3.5 text-amber-300 shrink-0" />
+            <span className="hidden sm:inline">Admin</span>
           </button>
 
           {/* Google User Profile or Sign-In */}

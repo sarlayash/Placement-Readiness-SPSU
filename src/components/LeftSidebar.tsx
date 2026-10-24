@@ -19,13 +19,14 @@ import { isDayUnlocked, isDayCompleted } from '../utils/dayLocking';
 interface LeftSidebarProps {
   days: DayPlan[];
   selectedDay: number;
-  activeView: 'planner' | 'day-workspace';
+  activeView: 'planner' | 'day-workspace' | 'admin';
   isCollapsed: boolean;
   onToggleCollapse: () => void;
   onSelectPlanner: () => void;
   onSelectDay: (day: number) => void;
   onOpenBadges: () => void;
   onOpenCertificate: () => void;
+  onOpenAdmin: () => void;
   progress: UserProgress;
   user: GoogleUser | null;
 }
@@ -40,6 +41,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   onSelectDay,
   onOpenBadges,
   onOpenCertificate,
+  onOpenAdmin,
   progress,
   user,
 }) => {
@@ -269,6 +271,24 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 </div>
               </div>
             )}
+          </button>
+
+          <button
+            type="button"
+            onClick={onOpenAdmin}
+            className={`flex items-center gap-2 p-2 rounded-xl text-left text-xs font-bold transition-all cursor-pointer ${
+              activeView === 'admin'
+                ? isCollapsed
+                  ? 'justify-center bg-amber-400 text-[#0A192F]'
+                  : 'bg-amber-400 text-[#0A192F] font-black'
+                : isCollapsed
+                ? 'justify-center bg-[#112240] text-amber-300 hover:bg-[#1E3A8A]'
+                : 'bg-[#112240] hover:bg-[#1E3A8A] text-amber-300 border border-amber-400/40'
+            }`}
+            title="Administrator Dashboard & Score Export"
+          >
+            <Lock className="w-4 h-4 text-amber-300 shrink-0" />
+            {!isCollapsed && <span>Admin Portal</span>}
           </button>
         </div>
       </div>

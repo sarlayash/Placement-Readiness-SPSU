@@ -8,6 +8,7 @@ import {
   signOut as fbSignOut,
   User as FirebaseUser,
 } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 import { GoogleUser } from '../types';
 
 export const firebaseConfig = {
@@ -22,6 +23,7 @@ export const firebaseConfig = {
 
 export const app = getApps().length === 0 ? initializeApp(firebaseConfig) : getApp();
 export const auth = getAuth(app);
+export const db = getFirestore(app);
 export const googleProvider = new GoogleAuthProvider();
 googleProvider.setCustomParameters({
   prompt: 'select_account',

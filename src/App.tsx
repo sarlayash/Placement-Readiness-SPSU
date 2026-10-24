@@ -22,6 +22,9 @@ import { DayWorkspace } from './components/DayWorkspace';
 import { GoogleAuthModal } from './components/GoogleAuthModal';
 import { BadgeGalleryModal } from './components/BadgeGalleryModal';
 import { CertificateModal } from './components/CertificateModal';
+import { AdminLoginModal } from './components/AdminLoginModal';
+import { AdminDashboard } from './components/AdminDashboard';
+import { recordUserSignIn, syncLearnerProgress } from './utils/learnerRegistry';
 
 export function App() {
   const [user, setUser] = useState<GoogleUser | null>(() => loadStoredGoogleUser());
@@ -29,15 +32,23 @@ export function App() {
     loadStoredProgress(loadStoredGoogleUser()?.email)
   );
 
-  // Landing page defaults to Complete Day Planner ('planner')
-  const [activeView, setActiveView] = useState<'planner' | 'day-workspace'>('planner');
+  // Landing page defaults to Complete Day Planner ('planner'), can be 'day-workspace' or 'admin'
+  const [activeView, setActiveView] = useState<'planner' | 'day-workspace' | 'admin'>('planner');
   const [selectedDay, setSelectedDay] = useState<number>(1);
   const [initialDayTab, setInitialDayTab] = useState<'notes' | 'ide' | 'pre' | 'post'>('notes');
 
-  // Modals
+  // Modals & Admin Session
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
   const [showBadgesModal, setShowBadgesModal] = useState<boolean>(false);
   const [showCertificateModal, setShowCertificateModal] = useState<boolean>(false);
+  const [showAdminModal, setShowAdminModal] = useState<boolean>(false);
+  const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => {
+    try {
+      return sessionStorage.getItem('spsu_kapil_admin_auth_v1') === 'true';
+    } catch {
+      return false;
+    }
+  });
 
   // Left Sidebar Expand/Collapse state (defaults to expanded on desktop, toggleable anytime)
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
@@ -66,7 +77,10 @@ export function App() {
           };
           setUser(mapped);
           saveStoredGoogleUser(mapped);
-          setProgress(loadStoredProgress(mapped.email));
+          const p = loadStoredProgress(mapped.email);
+          setProgress(p);
+          // Record real login attempt in centralized registry & Firestore
+          recordUserSignIn(mapped, p);
         }
       });
       return () => unsub();
@@ -78,6 +92,9 @@ export function App() {
   // Persist user progress whenever it changes
   useEffect(() => {
     saveStoredProgress(progress, user?.email);
+    if (user) {
+      syncLearnerProgress(user, progress);
+    }
   }, [progress, user]);
 
   const handleAuthSuccess = (authenticatedUser: GoogleUser) => {
@@ -90,12 +107,45 @@ export function App() {
     }
     setProgress(loaded);
     setShowAuthModal(false);
+    // Record login attempt in centralized registry & Firestore
+    recordUserSignIn(authenticatedUser, loaded);
   };
 
   const handleSignOut = async () => {
     await signOutGoogle();
     setUser(null);
     saveStoredGoogleUser(null);
+  };
+
+  const handleOpenAdmin = () => {
+    if (isAdminAuthenticated) {
+      setActiveView('admin');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    } else {
+      setShowAdminModal(true);
+    }
+  };
+
+  const handleAdminSuccess = () => {
+    setIsAdminAuthenticated(true);
+    try {
+      sessionStorage.setItem('spsu_kapil_admin_auth_v1', 'true');
+    } catch {
+      // ignore
+    }
+    setShowAdminModal(false);
+    setActiveView('admin');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  const handleAdminSignOut = () => {
+    setIsAdminAuthenticated(false);
+    try {
+      sessionStorage.removeItem('spsu_kapil_admin_auth_v1');
+    } catch {
+      // ignore
+    }
+    setActiveView('planner');
   };
 
   const handleSelectDay = (day: number, tab: 'notes' | 'ide' | 'pre' | 'post' = 'notes') => {
@@ -202,6 +252,7 @@ export function App() {
         onSignOut={handleSignOut}
         onOpenBadges={() => setShowBadgesModal(true)}
         onOpenCertificate={() => setShowCertificateModal(true)}
+        onOpenAdmin={handleOpenAdmin}
       />
 
       {/* Main Layout: Collapsible Left Sidebar + Content Area */}
@@ -216,6 +267,7 @@ export function App() {
           onSelectDay={(d) => handleSelectDay(d, 'notes')}
           onOpenBadges={() => setShowBadgesModal(true)}
           onOpenCertificate={() => setShowCertificateModal(true)}
+          onOpenAdmin={handleOpenAdmin}
           progress={progress}
           user={user}
         />
@@ -227,7 +279,12 @@ export function App() {
           }`}
         >
           <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
-            {activeView === 'planner' ? (
+            {activeView === 'admin' ? (
+              <AdminDashboard
+                onBackToPortal={() => setActiveView('planner')}
+                onAdminSignOut={handleAdminSignOut}
+              />
+            ) : activeView === 'planner' ? (
               <LandingDayPlanner
                 days={COMPLETE_10_DAY_PLAN}
                 modules={SYLLABUS_MODULES}
@@ -261,6 +318,7 @@ export function App() {
           <Footer
             onOpenBadges={() => setShowBadgesModal(true)}
             onOpenCertificate={() => setShowCertificateModal(true)}
+            onOpenAdmin={handleOpenAdmin}
           />
         </div>
       </div>
@@ -269,6 +327,13 @@ export function App() {
         <GoogleAuthModal
           onSuccess={handleAuthSuccess}
           onClose={() => setShowAuthModal(false)}
+        />
+      )}
+
+      {showAdminModal && (
+        <AdminLoginModal
+          onSuccess={handleAdminSuccess}
+          onClose={() => setShowAdminModal(false)}
         />
       )}
 

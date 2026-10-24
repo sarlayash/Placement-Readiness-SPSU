@@ -2,6 +2,8 @@ import { DayPlan } from '../types';
 import { DAY_1_PROGRAMMING_NOTES } from './day1ProgrammingNotes';
 import { DAY_1_PRE_ASSESSMENT_50, DAY_1_POST_ASSESSMENT_50 } from './day1Assessments50';
 import { DAY_1_PRACTICAL_CHALLENGES_10 } from './day1Challenges10';
+import { DAY_2_PROGRAMMING_NOTES } from './day2ProgrammingNotes';
+import { DAY_2_PRE_ASSESSMENT_50, DAY_2_POST_ASSESSMENT_50 } from './day2Assessments50';
 
 export const DAYS_1_TO_5: DayPlan[] = [
   {
@@ -92,176 +94,7 @@ export const DAYS_1_TO_5: DayPlan[] = [
         duration: '30 Mins',
       },
     ],
-    programmingNotes: [
-      {
-        id: 'd2-note-1',
-        title: 'Sliding Window & Two-Pointer Invariants vs Hashing',
-        conceptSummary:
-          'Sliding Window converts O(N²) subarray/substring nested scans into O(N) linear passes by maintaining a dynamic window [left, right]. As `right` expands to include elements, `left` contracts whenever the window constraint is violated.',
-        timeSpaceNote: 'Sliding Window: O(N) Time (each element enters and leaves the window at most once), O(K) Space for frequency table.',
-        kapilMentorTip:
-          'When an interviewer asks for "longest/shortest contiguous subarray or substring satisfying condition X", immediately evaluate whether the window property is monotonic—if so, Sliding Window is your O(N) weapon.',
-        codeByLanguage: {
-          c: `#include <stdio.h>
-#include <string.h>
-
-// Longest Substring Without Repeating Characters: O(N) Time, O(1) Alphabet Space
-int lengthOfLongestSubstring(const char* s) {
-    int lastSeen[256];
-    for (int i = 0; i < 256; i++) lastSeen[i] = -1;
-    int maxLen = 0, left = 0;
-    for (int right = 0; s[right] != '\\0'; right++) {
-        unsigned char c = (unsigned char)s[right];
-        if (lastSeen[c] >= left) {
-            left = lastSeen[c] + 1;
-        }
-        lastSeen[c] = right;
-        int curLen = right - left + 1;
-        if (curLen > maxLen) maxLen = curLen;
-    }
-    return maxLen;
-}
-
-int main() {
-    printf("%d\\n", lengthOfLongestSubstring("abcabcbb")); // 3
-    return 0;
-}`,
-          cpp: `#include <iostream>
-#include <string>
-#include <vector>
-#include <algorithm>
-using namespace std;
-
-int lengthOfLongestSubstring(const string& s) {
-    vector<int> lastSeen(256, -1);
-    int maxLen = 0, left = 0;
-    for (int right = 0; right < (int)s.size(); right++) {
-        unsigned char c = s[right];
-        if (lastSeen[c] >= left) {
-            left = lastSeen[c] + 1;
-        }
-        lastSeen[c] = right;
-        maxLen = max(maxLen, right - left + 1);
-    }
-    return maxLen;
-}
-
-int main() {
-    cout << lengthOfLongestSubstring("abcabcbb") << endl;
-    return 0;
-}`,
-          java: `import java.util.Arrays;
-
-public class SlidingWindowDSA {
-    public static int lengthOfLongestSubstring(String s) {
-        int[] lastSeen = new int[256];
-        Arrays.fill(lastSeen, -1);
-        int maxLen = 0, left = 0;
-        for (int right = 0; right < s.length(); right++) {
-            char c = s.charAt(right);
-            if (lastSeen[c] >= left) {
-                left = lastSeen[c] + 1;
-            }
-            lastSeen[c] = right;
-            maxLen = Math.max(maxLen, right - left + 1);
-        }
-        return maxLen;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(lengthOfLongestSubstring("abcabcbb"));
-    }
-}`,
-          python: `def length_of_longest_substring(s: str) -> int:
-    last_seen: dict[str, int] = {}
-    left = 0
-    max_len = 0
-    for right, ch in enumerate(s):
-        if ch in last_seen and last_seen[ch] >= left:
-            left = last_seen[ch] + 1
-        last_seen[ch] = right
-        max_len = max(max_len, right - left + 1)
-    return max_len
-
-if __name__ == "__main__":
-    print(length_of_longest_substring("abcabcbb"))`,
-        },
-      },
-      {
-        id: 'd2-note-2',
-        title: 'Trees, Graph BFS/DFS & Introductory Dynamic Programming',
-        conceptSummary:
-          'BFS explores level-by-level using a FIFO Queue (ideal for shortest path in unweighted graphs), while DFS explores depth-first using a Stack/Recursion. Dynamic Programming (DP) optimizes recursion when overlapping subproblems and optimal substructure exist.',
-        timeSpaceNote: 'BFS/DFS: O(V + E) Time, O(V) Space | 1D DP Tabulation: O(N) Time, O(1) Space with state compression.',
-        kapilMentorTip:
-          'Every DP solution starts as a brute-force recursion choice tree. Identify the changing parameters in your recursive state, cache them in a table, and then flip it bottom-up.',
-        codeByLanguage: {
-          c: `#include <stdio.h>
-
-// Introductory DP: Maximum Non-Adjacent Subsequence Sum (House Robber Pattern)
-// O(N) Time, O(1) Space
-int maxNonAdjacentSum(int nums[], int n) {
-    int prev2 = 0, prev1 = 0;
-    for (int i = 0; i < n; i++) {
-        int take = prev2 + nums[i];
-        int skip = prev1;
-        int curr = (take > skip) ? take : skip;
-        prev2 = prev1;
-        prev1 = curr;
-    }
-    return prev1;
-}
-
-int main() {
-    int arr[] = {2, 7, 9, 3, 1};
-    printf("%d\\n", maxNonAdjacentSum(arr, 5)); // 12
-    return 0;
-}`,
-          cpp: `#include <iostream>
-#include <vector>
-#include <algorithm>
-using namespace std;
-
-int maxNonAdjacentSum(const vector<int>& nums) {
-    int prev2 = 0, prev1 = 0;
-    for (int x : nums) {
-        int curr = max(prev1, prev2 + x);
-        prev2 = prev1;
-        prev1 = curr;
-    }
-    return prev1;
-}
-
-int main() {
-    cout << maxNonAdjacentSum({2, 7, 9, 3, 1}) << endl;
-    return 0;
-}`,
-          java: `public class DynamicProgrammingNote {
-    public static int maxNonAdjacentSum(int[] nums) {
-        int prev2 = 0, prev1 = 0;
-        for (int x : nums) {
-            int curr = Math.max(prev1, prev2 + x);
-            prev2 = prev1;
-            prev1 = curr;
-        }
-        return prev1;
-    }
-
-    public static void main(String[] args) {
-        System.out.println(maxNonAdjacentSum(new int[]{2, 7, 9, 3, 1}));
-    }
-}`,
-          python: `def max_non_adjacent_sum(nums: list[int]) -> int:
-    prev2, prev1 = 0, 0
-    for x in nums:
-        prev2, prev1 = prev1, max(prev1, prev2 + x)
-    return prev1
-
-if __name__ == "__main__":
-    print(max_non_adjacent_sum([2, 7, 9, 3, 1]))`,
-        },
-      },
-    ],
+    programmingNotes: DAY_2_PROGRAMMING_NOTES,
     practicalChallenges: [
       {
         id: 'd2-prob-1',
@@ -585,63 +418,8 @@ if __name__ == "__main__":
         ],
       },
     ],
-    preAssessment: [
-      {
-        id: 'd2-pre-1',
-        question: 'Which traversal of a Binary Search Tree (BST) visits nodes in non-decreasing sorted order?',
-        options: ['Pre-order', 'In-order', 'Post-order', 'Level-order (BFS)'],
-        correctIndex: 1,
-        explanation: 'In-order traversal (Left -> Root -> Right) visits all BST keys in sorted ascending order.',
-        category: 'Theory (30%)',
-      },
-      {
-        id: 'd2-pre-2',
-        question: 'In Floyd’s Cycle Detection (Tortoise and Hare) on a Singly Linked List, what are the step sizes of the two pointers?',
-        options: ['1 step and 2 steps', '1 step and 3 steps', '2 steps and 4 steps', 'Both move 1 step'],
-        correctIndex: 0,
-        explanation: 'Slow pointer advances 1 node per step while Fast pointer advances 2 nodes per step, guaranteeing O(N) cycle detection in O(1) space.',
-        category: 'Practical Execution & Trace (70%)',
-      },
-      {
-        id: 'd2-pre-3',
-        question: 'What is the amortized time complexity of Next Greater Element using a Monotonic Stack over N elements?',
-        options: ['O(N²)', 'O(N log N)', 'O(N)', 'O(1)'],
-        correctIndex: 2,
-        explanation: 'Each element is pushed onto the stack once and popped at most once, totaling at most 2N operations = O(N).',
-        category: 'Practical Execution & Trace (70%)',
-      },
-    ],
-    postAssessment: [
-      {
-        id: 'd2-post-1',
-        question: 'Which data structure is used internally by Breadth-First Search (BFS) to find the shortest path in an unweighted graph?',
-        options: ['Stack (LIFO)', 'Queue (FIFO)', 'Min-Heap', 'Disjoint Set Union'],
-        correctIndex: 1,
-        explanation: 'A FIFO Queue guarantees vertices are explored in order of their distance (level) from the source.',
-        category: 'Theory (30%)',
-      },
-      {
-        id: 'd2-post-2',
-        question: 'Trace `longestUniqueSubstring("pwwkew")`. What is the returned length?',
-        options: ['2', '3', '4', '5'],
-        correctIndex: 1,
-        explanation: 'The longest substring without repeating characters is "wke" or "kew", both of length 3.',
-        category: 'Practical Execution & Trace (70%)',
-      },
-      {
-        id: 'd2-post-3',
-        question: 'What differentiates Dynamic Programming from Greedy algorithms?',
-        options: [
-          'Greedy is always slower than DP',
-          'DP evaluates overlapping subproblems to guarantee a global optimum when local greedy choices fail',
-          'DP only works on sorted arrays',
-          'Greedy requires O(N²) memory',
-        ],
-        correctIndex: 1,
-        explanation: 'DP explores and caches overlapping subproblem states when a locally optimal greedy step does not guarantee global optimality.',
-        category: 'Theory (30%)',
-      },
-    ],
+    preAssessment: DAY_2_PRE_ASSESSMENT_50,
+    postAssessment: DAY_2_POST_ASSESSMENT_50,
     badge: {
       id: 'badge-day-2',
       day: 2,

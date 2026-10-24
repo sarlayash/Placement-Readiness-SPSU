@@ -26,6 +26,7 @@ import { AdminLoginModal } from './components/AdminLoginModal';
 import { AdminDashboard } from './components/AdminDashboard';
 import { LearnerDashboardModal } from './components/LearnerDashboardModal';
 import { NotificationCenterModal } from './components/NotificationCenterModal';
+import { OperatingHoursModal } from './components/OperatingHoursModal';
 import { recordUserSignIn, syncLearnerProgress } from './utils/learnerRegistry';
 import { checkAndTriggerAutomaticReminders, loadInAppReminders } from './utils/pushNotifications';
 
@@ -65,6 +66,9 @@ export function App() {
 
   // Left Sidebar Expand/Collapse state (defaults to expanded on desktop, toggleable anytime)
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+
+  // Daily Operating Hours (09:00 AM – 09:00 PM) re-render trigger
+  const [, setHoursOverrideTick] = useState<number>(0);
 
   // Periodic automatic reminders check
   useEffect(() => {
@@ -438,6 +442,14 @@ export function App() {
             setShowNotificationCenter(false);
             handleSelectDay(d, tab);
           }}
+        />
+      )}
+
+      {/* 09:00 AM – 09:00 PM Daily Operating Hours Gate */}
+      {!isAdminAuthenticated && (
+        <OperatingHoursModal
+          onAdminClick={() => setShowAdminModal(true)}
+          onOverrideToggle={() => setHoursOverrideTick((t) => t + 1)}
         />
       )}
     </div>

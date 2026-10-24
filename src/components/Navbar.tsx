@@ -101,9 +101,14 @@ export const Navbar: React.FC<NavbarProps> = ({
           </button>
         </div>
 
-        {/* Center: Real Live Date & Time Widget */}
-        <div className="flex items-center gap-2">
+        {/* Center: Real Live Date & Time Widget + Operating Hours Indicator */}
+        <div className="flex items-center gap-2 flex-wrap justify-center">
           <LiveDateTime variant="header" />
+          <div className="hidden lg:flex items-center gap-1.5 px-3 py-1 rounded-xl bg-[#112240] border border-[#1E3A8A] text-[10px] font-mono font-bold shadow-xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span className="text-[#93C5FD]">DAILY HOURS:</span>
+            <span className="text-white">09:00 AM – 09:00 PM IST</span>
+          </div>
         </div>
 
         {/* Right: Notifications, Learner Dashboard, Badges, Certificate & Strict Google Auth */}

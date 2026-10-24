@@ -11,11 +11,17 @@ interface FooterProps {
 export const Footer: React.FC<FooterProps> = ({ onOpenBadges, onOpenCertificate, onOpenAdmin }) => {
   return (
     <footer className="bg-[#0A192F] text-white border-t-2 border-[#1E3A8A] mt-auto">
-      {/* Top Banner with Real Date & Time and Verification Badge */}
+      {/* Top Banner with Real Date & Time, Operating Hours and Verification Badge */}
       <div className="border-b border-[#1E3A8A]/60 bg-[#081426] py-3 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-3 text-xs">
           {/* Live Date and Time */}
           <LiveDateTime variant="footer" />
+
+          {/* Operating Hours Status */}
+          <div className="flex items-center gap-2 text-xs font-mono font-bold text-amber-300 bg-[#112240] px-3 py-1 rounded-xl border border-amber-300/30">
+            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+            <span>Operating Hours: 09:00 AM – 09:00 PM IST Daily</span>
+          </div>
 
           {/* Genuine Signature Verification */}
           <div className="flex items-center gap-2 text-xs font-semibold text-emerald-300">

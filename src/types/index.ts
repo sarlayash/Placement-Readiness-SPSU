@@ -48,6 +48,8 @@ export interface PracticalChallenge {
 export interface AssessmentQuestion {
   id: string;
   question: string;
+  codeSnippet?: string;
+  codeLanguage?: string;
   options: string[];
   correctIndex: number;
   explanation: string;
@@ -102,6 +104,7 @@ export interface UserProgress {
   postAssessmentPassed: Record<number, boolean>;
   completedChallengeIds: string[];
   readNoteIds: string[];
+  completedDays?: Record<number, boolean>;
   unlockedBadges: Record<number, string>; // day -> ISO timestamp unlocked
   savedCode: Record<string, Record<SupportedLanguage, string>>; // challengeId -> lang -> code
   certificateId: string | null;

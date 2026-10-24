@@ -11,8 +11,10 @@ import {
   Clock,
   Sparkles,
   BookOpen,
+  Lock,
 } from 'lucide-react';
 import { LiveDateTime } from './LiveDateTime';
+import { isDayUnlocked, isDayCompleted } from '../utils/dayLocking';
 
 interface LeftSidebarProps {
   days: DayPlan[];
@@ -137,6 +139,8 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
         {/* All 10 Days List */}
         <div className="space-y-1">
           {days.map((day) => {
+            const isUnlocked = isDayUnlocked(day.day, progress);
+            const isComplete = isDayCompleted(day.day, progress);
             const isSelected = activeView === 'day-workspace' && selectedDay === day.day;
             const isBadgeUnlocked = !!progress.unlockedBadges[day.day];
             const hasPrePassed = !!progress.preAssessmentPassed[day.day];
@@ -146,25 +150,41 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
               <button
                 key={day.day}
                 type="button"
-                onClick={() => onSelectDay(day.day)}
-                className={`w-full flex items-center gap-2 p-1.5 rounded-xl text-left text-xs transition-all cursor-pointer ${
-                  isSelected
-                    ? 'bg-[#1E3A8A] text-white font-extrabold ring-1 ring-white/40'
-                    : 'text-[#BFDBFE] hover:bg-[#112240] hover:text-white'
+                onClick={() => {
+                  if (isUnlocked) {
+                    onSelectDay(day.day);
+                  } else {
+                    alert(`Day ${day.day} is locked! Complete all sections of Day ${day.day - 1} (Pre-Assessment, Notes, IDE Lab, and Post-Assessment) to unlock.`);
+                  }
+                }}
+                className={`w-full flex items-center gap-2 p-1.5 rounded-xl text-left text-xs transition-all ${
+                  !isUnlocked
+                    ? 'opacity-50 text-slate-400 hover:bg-[#112240]/40 cursor-not-allowed'
+                    : isSelected
+                    ? 'bg-[#1E3A8A] text-white font-extrabold ring-1 ring-white/40 cursor-pointer'
+                    : 'text-[#BFDBFE] hover:bg-[#112240] hover:text-white cursor-pointer'
                 }`}
-                title={`Day ${day.day}: ${day.title}`}
+                title={
+                  !isUnlocked
+                    ? `Day ${day.day} is Locked (Complete Day ${day.day - 1} to unlock)`
+                    : `Day ${day.day}: ${day.title}`
+                }
               >
-                {/* Day Badge / Number Icon */}
+                {/* Day Badge / Number / Lock Icon */}
                 <div
                   className={`w-8 h-8 rounded-lg font-black text-xs flex items-center justify-center shrink-0 transition-transform ${
-                    isBadgeUnlocked
+                    !isUnlocked
+                      ? 'bg-[#081426] text-slate-400 border border-slate-700'
+                      : isBadgeUnlocked
                       ? 'bg-amber-400 text-[#0A192F] shadow-xs'
                       : isSelected
                       ? 'bg-white text-[#0A192F]'
                       : 'bg-[#112240] text-[#93C5FD] border border-[#1E3A8A]'
                   }`}
                 >
-                  {isBadgeUnlocked ? (
+                  {!isUnlocked ? (
+                    <Lock className="w-3.5 h-3.5 text-slate-400" />
+                  ) : isBadgeUnlocked ? (
                     <Award className="w-4 h-4 text-[#0A192F]" />
                   ) : (
                     `D${day.day}`
@@ -175,9 +195,13 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center justify-between gap-1">
                       <span className="font-bold text-[11px] truncate text-white">
-                        Day {day.day}
+                        Day {day.day} {!isUnlocked && <span className="text-[9px] text-amber-300 font-normal">[Locked]</span>}
                       </span>
-                      {isBadgeUnlocked ? (
+                      {!isUnlocked ? (
+                        <span className="text-[9px] font-bold text-slate-400 bg-slate-800/80 px-1 py-0.2 rounded border border-slate-700">
+                          Locked 🔒
+                        </span>
+                      ) : isBadgeUnlocked ? (
                         <span className="text-[9px] font-bold text-amber-300 bg-amber-950/60 px-1 py-0.2 rounded border border-amber-500/30">
                           Badge ✓
                         </span>
@@ -188,7 +212,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                       ) : null}
                     </div>
                     <div className="text-[10px] text-[#BFDBFE] truncate">
-                      {day.title}
+                      {!isUnlocked ? `Complete Day ${day.day - 1} to Unlock` : day.title}
                     </div>
                   </div>
                 )}

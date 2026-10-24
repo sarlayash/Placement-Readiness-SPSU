@@ -19,14 +19,17 @@ import {
   FileCode2,
   Image,
   Lightbulb,
+  Lock,
   Play,
   RotateCcw,
   ShieldCheck,
   Terminal,
+  Unlock,
   XCircle,
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { downloadBadgePNG, downloadBadgePDF } from '../utils/exportCredentials';
+import { isDayUnlocked, isDayCompleted, getDaySectionStatus } from '../utils/dayLocking';
 
 interface DayWorkspaceProps {
   dayPlan: DayPlan;
@@ -40,6 +43,7 @@ interface DayWorkspaceProps {
   onSavePreScore: (day: number, scorePercent: number) => void;
   onSavePostScore: (day: number, scorePercent: number) => void;
   onMarkChallengeSolved: (day: number, challengeId: string) => void;
+  onMarkDayCompleted?: (day: number) => void;
   onSaveUserCode: (challengeId: string, lang: SupportedLanguage, code: string) => void;
 }
 
@@ -62,6 +66,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
   onSavePreScore,
   onSavePostScore,
   onMarkChallengeSolved,
+  onMarkDayCompleted,
   onSaveUserCode,
 }) => {
   const [activeTab, setActiveTab] = useState<'notes' | 'ide' | 'pre' | 'post'>(initialTab);
@@ -245,6 +250,110 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
 
   const badgeUnlockedAt = progress.unlockedBadges[dayPlan.day];
   const isBadgeUnlocked = Boolean(badgeUnlockedAt);
+  const isUnlocked = isDayUnlocked(dayPlan.day, progress);
+  const isCurrentCompleted = isDayCompleted(dayPlan.day, progress);
+  const prevDay = dayPlan.day - 1;
+
+  if (!isUnlocked) {
+    return (
+      <div className="space-y-6 pb-16">
+        {/* Day Selector Ribbon */}
+        <div className="flex items-center justify-between gap-3 flex-wrap bg-[#0A192F] text-white p-4 rounded-2xl border-2 border-[#1E3A8A]">
+          <button
+            type="button"
+            onClick={onBackToPlanner}
+            className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-[#112240] hover:bg-[#1E3A8A] border border-[#93C5FD]/40 text-xs font-bold text-white transition-colors cursor-pointer"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            <span>Back to 10-Day Planner</span>
+          </button>
+
+          <div className="flex items-center gap-1.5 overflow-x-auto py-1">
+            {allDays.map((d) => {
+              const dUnlocked = isDayUnlocked(d.day, progress);
+              return (
+                <button
+                  key={d.day}
+                  type="button"
+                  onClick={() => onSelectDay(d.day)}
+                  className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                    d.day === dayPlan.day
+                      ? 'bg-white text-[#0A192F] shadow-xs'
+                      : dUnlocked
+                      ? 'bg-[#112240] text-[#BFDBFE] hover:bg-[#1E3A8A] hover:text-white'
+                      : 'bg-[#081426] text-slate-500 opacity-60'
+                  }`}
+                >
+                  {!dUnlocked && <Lock className="w-3 h-3 text-amber-400" />}
+                  <span>Day {d.day}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+
+        {/* Locked Day Warning Screen */}
+        <div className="rounded-3xl border-2 border-amber-300 bg-amber-50/70 p-8 sm:p-12 text-center max-w-2xl mx-auto space-y-6 shadow-lg">
+          <div className="w-16 h-16 rounded-2xl bg-amber-100 border border-amber-300 text-amber-800 flex items-center justify-center mx-auto shadow-inner">
+            <Lock className="w-8 h-8 text-amber-700" />
+          </div>
+
+          <div className="space-y-2">
+            <span className="text-xs font-mono font-bold uppercase text-amber-800 tracking-wider">
+              Sequence Lock Enforced • Day {dayPlan.day} of 10
+            </span>
+            <h2 className="text-2xl sm:text-3xl font-black text-[#0A192F]">
+              Day {dayPlan.day} is Currently Locked
+            </h2>
+            <p className="text-sm text-slate-700 max-w-md mx-auto leading-relaxed">
+              In accordance with Kapil's 10-Day Pedagogical Framework, each day unlocks sequentially once the previous day is marked completed and all sections have been checked.
+            </p>
+          </div>
+
+          <div className="p-4 rounded-2xl bg-white border border-amber-200 text-left space-y-2 text-xs">
+            <div className="font-bold text-[#0A192F] uppercase font-mono">
+              Requirements to Unlock Day {dayPlan.day}:
+            </div>
+            <ul className="space-y-1.5 text-slate-700">
+              <li className="flex items-center gap-2">
+                <span className="w-4 h-4 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center text-[10px]">1</span>
+                <span>Complete Day {prevDay} Pre-Assessment</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-4 h-4 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center text-[10px]">2</span>
+                <span>Review Day {prevDay} Conceptual Notes (C, C++, Java, Python)</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-4 h-4 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center text-[10px]">3</span>
+                <span>Solve Day {prevDay} Practical IDE Lab Challenges</span>
+              </li>
+              <li className="flex items-center gap-2">
+                <span className="w-4 h-4 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center text-[10px]">4</span>
+                <span>Pass Day {prevDay} Post-Assessment & Claim Badge</span>
+              </li>
+            </ul>
+          </div>
+
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+            <button
+              type="button"
+              onClick={() => onSelectDay(prevDay)}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-bold text-sm transition-all cursor-pointer shadow-md"
+            >
+              <span>Go to Day {prevDay} to Complete Sections</span>
+            </button>
+            <button
+              type="button"
+              onClick={onBackToPlanner}
+              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold text-sm transition-all cursor-pointer"
+            >
+              <span>Back to Planner</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6 pb-16">
@@ -260,20 +369,95 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
         </button>
 
         <div className="flex items-center gap-1.5 overflow-x-auto py-1">
-          {allDays.map((d) => (
-            <button
-              key={d.day}
-              type="button"
-              onClick={() => onSelectDay(d.day)}
-              className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
-                d.day === dayPlan.day
-                  ? 'bg-white text-[#0A192F] shadow-xs'
-                  : 'bg-[#112240] text-[#BFDBFE] hover:bg-[#1E3A8A] hover:text-white'
-              }`}
-            >
-              Day {d.day}
-            </button>
-          ))}
+          {allDays.map((d) => {
+            const dUnlocked = isDayUnlocked(d.day, progress);
+            return (
+              <button
+                key={d.day}
+                type="button"
+                onClick={() => {
+                  if (dUnlocked) {
+                    onSelectDay(d.day);
+                  } else {
+                    alert(`Day ${d.day} is locked. Complete Day ${d.day - 1} and verify all sections to unlock!`);
+                  }
+                }}
+                className={`inline-flex items-center gap-1 px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                  d.day === dayPlan.day
+                    ? 'bg-white text-[#0A192F] shadow-xs'
+                    : dUnlocked
+                    ? 'bg-[#112240] text-[#BFDBFE] hover:bg-[#1E3A8A] hover:text-white'
+                    : 'bg-[#081426] text-slate-500 opacity-60'
+                }`}
+              >
+                {!dUnlocked && <Lock className="w-3 h-3 text-amber-400" />}
+                <span>Day {d.day}</span>
+              </button>
+            );
+          })}
+        </div>
+      </div>
+
+      {/* Day Progress & Section Verification Bar */}
+      <div className="rounded-2xl border-2 border-[#1E3A8A] bg-[#0A192F] text-white p-4 shadow-sm">
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div className="space-y-1.5">
+            <div className="flex items-center gap-2 text-xs font-mono font-bold text-[#93C5FD]">
+              <ShieldCheck className="w-4 h-4 text-emerald-400" />
+              <span>DAY {dayPlan.day} SECTION VERIFICATION CHECKLIST</span>
+            </div>
+            <div className="flex items-center gap-2.5 text-xs flex-wrap">
+              <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg ${
+                progress.preAssessmentPassed[dayPlan.day] ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40' : 'bg-[#112240] text-slate-300'
+              }`}>
+                {progress.preAssessmentPassed[dayPlan.day] ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <ClipboardCheck className="w-3.5 h-3.5 text-slate-400" />}
+                <span>1. Pre-Assessment (50 MCQs)</span>
+              </span>
+
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-950 text-emerald-300 border border-emerald-500/40">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>2. 30% Theory Notes</span>
+              </span>
+
+              <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-emerald-950 text-emerald-300 border border-emerald-500/40">
+                <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" />
+                <span>3. 70% Practical IDE Lab</span>
+              </span>
+
+              <span className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-lg ${
+                progress.postAssessmentPassed[dayPlan.day] ? 'bg-emerald-950 text-emerald-300 border border-emerald-500/40' : 'bg-[#112240] text-slate-300'
+              }`}>
+                {progress.postAssessmentPassed[dayPlan.day] ? <CheckCircle2 className="w-3.5 h-3.5 text-emerald-400" /> : <Award className="w-3.5 h-3.5 text-slate-400" />}
+                <span>4. Post-Assessment (50 MCQs)</span>
+              </span>
+            </div>
+          </div>
+
+          <div className="shrink-0 flex items-center gap-2">
+            {isCurrentCompleted ? (
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-emerald-500/20 border border-emerald-400 text-emerald-300 text-xs font-bold">
+                <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                <span>Day {dayPlan.day} Completed • Next Day Unlocked</span>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => {
+                  onMarkDayCompleted?.(dayPlan.day);
+                  confetti({
+                    particleCount: 80,
+                    spread: 70,
+                    origin: { y: 0.6 },
+                    colors: ['#0A192F', '#1E3A8A', '#93C5FD', '#10B981'],
+                  });
+                }}
+                className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white hover:bg-[#EFF6FF] text-[#0A192F] text-xs font-black transition-all cursor-pointer shadow-sm hover:scale-[1.02]"
+              >
+                <Check className="w-4 h-4 text-[#1E3A8A]" />
+                <span>Check All Sections & Complete Day {dayPlan.day}</span>
+              </button>
+            )}
+          </div>
         </div>
       </div>
 
@@ -437,6 +621,18 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
                 <p className="text-sm sm:text-base font-bold text-[#0A192F]">
                   {q.question}
                 </p>
+
+                {q.codeSnippet && (
+                  <div className="my-3 rounded-xl bg-[#0A192F] text-emerald-300 font-mono text-xs sm:text-sm p-3.5 overflow-x-auto border border-[#1E3A8A] shadow-inner">
+                    {q.codeLanguage && (
+                      <div className="text-[10px] uppercase font-bold tracking-wider text-[#93C5FD] mb-2 border-b border-[#1E3A8A] pb-1 flex items-center justify-between">
+                        <span>{q.codeLanguage.toUpperCase()} Code Snippet</span>
+                        <span className="text-[9px] text-[#BFDBFE]">Execution & Trace</span>
+                      </div>
+                    )}
+                    <pre className="whitespace-pre font-mono leading-relaxed">{q.codeSnippet}</pre>
+                  </div>
+                )}
 
                 <div className="space-y-2 pt-1">
                   {q.options.map((opt, oIdx) => {
@@ -864,6 +1060,18 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
                 <p className="text-sm sm:text-base font-bold text-[#0A192F]">
                   {q.question}
                 </p>
+
+                {q.codeSnippet && (
+                  <div className="my-3 rounded-xl bg-[#0A192F] text-emerald-300 font-mono text-xs sm:text-sm p-3.5 overflow-x-auto border border-[#1E3A8A] shadow-inner">
+                    {q.codeLanguage && (
+                      <div className="text-[10px] uppercase font-bold tracking-wider text-[#93C5FD] mb-2 border-b border-[#1E3A8A] pb-1 flex items-center justify-between">
+                        <span>{q.codeLanguage.toUpperCase()} Code Snippet</span>
+                        <span className="text-[9px] text-[#BFDBFE]">Execution & Trace</span>
+                      </div>
+                    )}
+                    <pre className="whitespace-pre font-mono leading-relaxed">{q.codeSnippet}</pre>
+                  </div>
+                )}
 
                 <div className="space-y-2 pt-1">
                   {q.options.map((opt, oIdx) => {

@@ -1,5 +1,6 @@
 import { DayPlan } from '../types';
 import { DAY_1_PROGRAMMING_NOTES } from './day1ProgrammingNotes';
+import { DAY_1_PRE_ASSESSMENT_50, DAY_1_POST_ASSESSMENT_50 } from './day1Assessments50';
 
 export const DAYS_1_TO_5: DayPlan[] = [
   {
@@ -359,63 +360,8 @@ if __name__ == "__main__":
         ],
       },
     ],
-    preAssessment: [
-      {
-        id: 'd1-pre-1',
-        question: 'What is the time complexity of a loop where the index variable i starts at 1 and doubles (i = i * 2) until i >= N?',
-        options: ['O(N)', 'O(log N)', 'O(N log N)', 'O(1)'],
-        correctIndex: 1,
-        explanation: 'Since i doubles each iteration (1, 2, 4, 8, ..., 2^k), it reaches N in k = log2(N) steps.',
-        category: 'Theory (30%)',
-      },
-      {
-        id: 'd1-pre-2',
-        question: 'Trace the C/C++ expression: int x = 5; int y = (x == 5) ? (x << 1) : (x >> 1); What is the value of y?',
-        options: ['2', '5', '10', '25'],
-        correctIndex: 2,
-        explanation: 'Since x == 5 is true, x << 1 left-shifts 5 by 1 bit, which multiplies by 2 to give 10.',
-        category: 'Practical Execution & Trace (70%)',
-      },
-      {
-        id: 'd1-pre-3',
-        question: 'Which error occurs if a recursive function lacks a reachable base case?',
-        options: ['Syntax Error', 'Stack Overflow / Segmentation Fault', 'NullPointerException', 'Compilation Failure'],
-        correctIndex: 1,
-        explanation: 'Unbounded recursive calls exhaust the call stack memory, triggering a Stack Overflow.',
-        category: 'Practical Execution & Trace (70%)',
-      },
-    ],
-    postAssessment: [
-      {
-        id: 'd1-post-1',
-        question: 'Why does concatenating strings inside a loop of size N using `str = str + ch` in Java take O(N²) time?',
-        options: [
-          'Because char takes 4 bytes in Java',
-          'Because String is immutable and each concatenation allocates and copies a new character array',
-          'Because the JVM garbage collector pauses every iteration',
-          'It actually takes O(N) time',
-        ],
-        correctIndex: 1,
-        explanation: 'Java Strings are immutable; copying 1 + 2 + ... + N characters sums to N(N+1)/2 = O(N²).',
-        category: 'Theory (30%)',
-      },
-      {
-        id: 'd1-post-2',
-        question: 'In the Equilibrium Index algorithm, how much auxiliary memory is required when maintaining totalSum and leftSum variables?',
-        options: ['O(N) Space', 'O(log N) Space', 'O(1) Constant Space', 'O(N²) Space'],
-        correctIndex: 2,
-        explanation: 'Only scalar accumulator variables (totalSum and leftSum) are stored regardless of N.',
-        category: 'Practical Execution & Trace (70%)',
-      },
-      {
-        id: 'd1-post-3',
-        question: 'What is printed by `fastPower(3, 4, 100)`?',
-        options: ['12', '27', '81', '64'],
-        correctIndex: 2,
-        explanation: '3^4 = 81, and 81 % 100 = 81.',
-        category: 'Practical Execution & Trace (70%)',
-      },
-    ],
+    preAssessment: DAY_1_PRE_ASSESSMENT_50,
+    postAssessment: DAY_1_POST_ASSESSMENT_50,
     badge: {
       id: 'badge-day-1',
       day: 1,

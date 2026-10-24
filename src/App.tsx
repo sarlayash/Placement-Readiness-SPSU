@@ -149,6 +149,23 @@ export function App() {
     });
   };
 
+  const handleMarkDayCompleted = (day: number) => {
+    setProgress((prev) => {
+      const nextBadges = { ...prev.unlockedBadges };
+      if (!nextBadges[day]) {
+        nextBadges[day] = new Date().toISOString();
+      }
+      return {
+        ...prev,
+        completedDays: {
+          ...(prev.completedDays || {}),
+          [day]: true,
+        },
+        unlockedBadges: nextBadges,
+      };
+    });
+  };
+
   const handleSaveUserCode = (
     challengeId: string,
     lang: SupportedLanguage,
@@ -234,6 +251,7 @@ export function App() {
                 onSavePreScore={handleSavePreScore}
                 onSavePostScore={handleSavePostScore}
                 onMarkChallengeSolved={handleMarkChallengeSolved}
+                onMarkDayCompleted={handleMarkDayCompleted}
                 onSaveUserCode={handleSaveUserCode}
               />
             )}

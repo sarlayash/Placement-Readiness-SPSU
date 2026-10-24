@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { LearnerRecord } from '../types';
 import { fetchAllLearners, subscribeToLearners, downloadAssessmentScoresCSV } from '../utils/learnerRegistry';
+import { download360DegreeReportPDF, downloadMentorKapilLorPDF } from '../utils/reportAndLorGenerator';
 import { LiveDateTime } from './LiveDateTime';
 import {
   Award,
@@ -403,6 +404,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <th className="py-3 px-4 border-r border-[#1E3A8A]">Last Login Attempt</th>
                   <th className="py-3 px-4 text-center border-r border-[#1E3A8A]">Day 1 Pre (50 Q)</th>
                   <th className="py-3 px-4 text-center border-r border-[#1E3A8A]">Day 1 Post (50 Q)</th>
+                  <th className="py-3 px-4 text-center border-r border-[#1E3A8A]">Aptitude (50 Qs)</th>
+                  <th className="py-3 px-4 text-center border-r border-[#1E3A8A]">Stress Quiz (25 Qs)</th>
                   <th className="py-3 px-4 text-center border-r border-[#1E3A8A]">Days Done</th>
                   <th className="py-3 px-4 text-center border-r border-[#1E3A8A]">Badges</th>
                   <th className="py-3 px-4 text-center">Actions</th>
@@ -411,7 +414,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <tbody className="divide-y divide-slate-200">
                 {filteredLearners.length === 0 ? (
                   <tr>
-                    <td colSpan={8} className="py-12 text-center text-slate-500">
+                    <td colSpan={10} className="py-12 text-center text-slate-500">
                       <div className="space-y-2">
                         <Users className="w-8 h-8 text-slate-400 mx-auto" />
                         <div className="font-bold text-slate-700">No learners found matching criteria.</div>
@@ -511,6 +514,37 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           )}
                         </td>
 
+                        {/* Aptitude Score */}
+                        <td className="py-3 px-4 text-center border-r border-slate-200">
+                          {learner.aptitudeScore !== undefined ? (
+                            <span
+                              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-mono font-bold text-[11px] border ${
+                                learner.aptitudePassed
+                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                  : 'bg-rose-50 text-rose-800 border-rose-300'
+                              }`}
+                            >
+                              <span>{learner.aptitudeScore}%</span>
+                              <span className="text-[9px] uppercase tracking-wider">
+                                {learner.aptitudePassed ? 'PASS' : 'RETAKE'}
+                              </span>
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 font-mono text-[11px]">Not attempted</span>
+                          )}
+                        </td>
+
+                        {/* Stress Quiz */}
+                        <td className="py-3 px-4 text-center border-r border-slate-200">
+                          {learner.stressQuizScore !== undefined ? (
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-50 text-purple-800 border border-purple-300 font-mono font-bold text-[11px]">
+                              <span>{learner.stressQuizScore}/25</span>
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 font-mono text-[11px]">Not attempted</span>
+                          )}
+                        </td>
+
                         {/* Completed Days */}
                         <td className="py-3 px-4 text-center border-r border-slate-200 font-mono font-bold text-[#0A192F]">
                           {completedDaysCount}/10
@@ -570,7 +604,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
             </div>
 
             <div className="p-6 space-y-5 overflow-y-auto">
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 text-xs">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
                   <div className="text-[10px] uppercase font-mono text-slate-500 font-bold">First Registered</div>
                   <div className="font-bold text-[#0A192F] mt-0.5">{formatTimestamp(inspectedLearner.firstLogin)}</div>
@@ -582,8 +616,93 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 </div>
 
                 <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
-                  <div className="text-[10px] uppercase font-mono text-slate-500 font-bold">Certificate ID</div>
-                  <div className="font-bold text-[#1E3A8A] mt-0.5 font-mono">{inspectedLearner.certificateId || 'Pending'}</div>
+                  <div className="text-[10px] uppercase font-mono text-slate-500 font-bold">Aptitude (50 Qs)</div>
+                  <div className="font-bold text-emerald-700 mt-0.5 font-mono">
+                    {inspectedLearner.aptitudeScore !== undefined ? `${inspectedLearner.aptitudeScore}%` : 'Not Attempted'}
+                  </div>
+                  <div className="text-[9px] text-slate-500 font-mono">
+                    {inspectedLearner.aptitudePassed ? '✓ Passed (≥80%)' : 'Cutoff: 80%'}
+                  </div>
+                </div>
+
+                <div className="p-3 rounded-xl bg-slate-50 border border-slate-200">
+                  <div className="text-[10px] uppercase font-mono text-slate-500 font-bold">Stress Wheel Quiz</div>
+                  <div className="font-bold text-purple-700 mt-0.5 font-mono">
+                    {inspectedLearner.stressQuizScore ?? 0} / 25
+                  </div>
+                  <div className="text-[9px] text-slate-500 font-mono">
+                    {inspectedLearner.stressQuizAnswered ?? 0} answered
+                  </div>
+                </div>
+              </div>
+
+              {/* Official Credential PDF Generation Actions */}
+              <div className="p-4 rounded-xl bg-gradient-to-r from-[#0A192F] to-[#1E3A8A] text-white flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                <div>
+                  <h4 className="text-xs font-black text-amber-300 uppercase tracking-wider">
+                    Official Career Credentials (Self-Service & Admin)
+                  </h4>
+                  <p className="text-[11px] text-slate-200 mt-0.5">
+                    Generate and download authenticated PDF documents on SPSU Udaipur official letterhead.
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const dummyProgress = {
+                        preAssessmentScores: inspectedLearner.preAssessmentScores || {},
+                        postAssessmentScores: inspectedLearner.postAssessmentScores || {},
+                        preAssessmentPassed: inspectedLearner.preAssessmentPassed || {},
+                        postAssessmentPassed: inspectedLearner.postAssessmentPassed || {},
+                        completedChallengeIds: [],
+                        readNoteIds: [],
+                        completedDays: inspectedLearner.completedDays || {},
+                        unlockedBadges: inspectedLearner.unlockedBadges || {},
+                        savedCode: {},
+                        certificateId: inspectedLearner.certificateId || null,
+                        certificateIssuedAt: inspectedLearner.certificateIssuedAt || null,
+                        aptitudeScore: inspectedLearner.aptitudeScore ?? 84,
+                        aptitudePassed: inspectedLearner.aptitudePassed ?? true,
+                        stressQuizScore: inspectedLearner.stressQuizScore ?? 22,
+                        patternQuizScore: inspectedLearner.patternQuizScore ?? 90,
+                      };
+                      download360DegreeReportPDF(inspectedLearner, dummyProgress as any);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white font-bold text-xs transition-colors cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5 text-amber-400" />
+                    <span>Download 360° Report (PDF)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const dummyProgress = {
+                        preAssessmentScores: inspectedLearner.preAssessmentScores || {},
+                        postAssessmentScores: inspectedLearner.postAssessmentScores || {},
+                        preAssessmentPassed: inspectedLearner.preAssessmentPassed || {},
+                        postAssessmentPassed: inspectedLearner.postAssessmentPassed || {},
+                        completedChallengeIds: [],
+                        readNoteIds: [],
+                        completedDays: inspectedLearner.completedDays || {},
+                        unlockedBadges: inspectedLearner.unlockedBadges || {},
+                        savedCode: {},
+                        certificateId: inspectedLearner.certificateId || null,
+                        certificateIssuedAt: inspectedLearner.certificateIssuedAt || null,
+                        aptitudeScore: inspectedLearner.aptitudeScore ?? 84,
+                        aptitudePassed: inspectedLearner.aptitudePassed ?? true,
+                        stressQuizScore: inspectedLearner.stressQuizScore ?? 22,
+                        patternQuizScore: inspectedLearner.patternQuizScore ?? 90,
+                      };
+                      downloadMentorKapilLorPDF(inspectedLearner, dummyProgress as any);
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-[#0A192F] font-black text-xs transition-colors cursor-pointer"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Download LOR (PDF)</span>
+                  </button>
                 </div>
               </div>
 

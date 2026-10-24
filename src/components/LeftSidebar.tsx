@@ -33,6 +33,9 @@ interface LeftSidebarProps {
   onOpenLearnerDashboard?: () => void;
   onOpenNotifications?: () => void;
   onOpenPatternQuiz?: () => void;
+  onOpenStressWheel?: () => void;
+  onOpenAptitude?: () => void;
+  onOpenSelfService?: () => void;
   progress: UserProgress;
   user: GoogleUser | null;
 }
@@ -51,6 +54,9 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   onOpenLearnerDashboard,
   onOpenNotifications,
   onOpenPatternQuiz,
+  onOpenStressWheel,
+  onOpenAptitude,
+  onOpenSelfService,
   progress,
   user,
 }) => {
@@ -200,6 +206,81 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 </div>
                 <div className="text-[10px] text-amber-300 truncate font-mono">
                   DSA Pattern Finder
+                </div>
+              </div>
+            )}
+          </button>
+        )}
+
+        {/* Spinning Wheel Stress Buster Quiz Link */}
+        {onOpenStressWheel && (
+          <button
+            type="button"
+            onClick={onOpenStressWheel}
+            className="w-full flex items-center gap-2.5 p-2 rounded-xl text-left text-xs font-bold text-[#BFDBFE] hover:bg-[#112240] hover:text-white transition-all cursor-pointer group"
+            title="Spinning Wheel: B-Tech Stress Buster (25 MCQs + Kapil Wisdom)"
+          >
+            <div className="w-8 h-8 rounded-lg bg-amber-400 text-[#0A192F] flex items-center justify-center shrink-0 text-sm font-black shadow-xs">
+              🎡
+            </div>
+            {!isCollapsed && (
+              <div className="truncate">
+                <div className="truncate text-white flex items-center gap-1.5">
+                  <span>Stress Wheel</span>
+                  <span className="px-1.5 py-0.2 rounded-full bg-amber-400/20 text-amber-300 text-[9px] font-mono font-bold">25 Q</span>
+                </div>
+                <div className="text-[10px] text-amber-300 truncate font-mono">
+                  B-Tech Stress Buster
+                </div>
+              </div>
+            )}
+          </button>
+        )}
+
+        {/* Aptitude Assessment Link */}
+        {onOpenAptitude && (
+          <button
+            type="button"
+            onClick={onOpenAptitude}
+            className="w-full flex items-center gap-2.5 p-2 rounded-xl text-left text-xs font-bold text-[#BFDBFE] hover:bg-[#112240] hover:text-white transition-all cursor-pointer group"
+            title="Placement Aptitude Master (50 MCQs, Cutoff 80%)"
+          >
+            <div className="w-8 h-8 rounded-lg bg-[#2563EB] text-white flex items-center justify-center shrink-0 text-sm font-black shadow-xs">
+              🧠
+            </div>
+            {!isCollapsed && (
+              <div className="truncate">
+                <div className="truncate text-white flex items-center gap-1.5">
+                  <span>Aptitude (50 Q)</span>
+                  <span className="px-1.5 py-0.2 rounded-full bg-emerald-400/20 text-emerald-300 text-[9px] font-mono font-bold">80% Pass</span>
+                </div>
+                <div className="text-[10px] text-emerald-300 truncate font-mono">
+                  Quant • Logic • Verbal
+                </div>
+              </div>
+            )}
+          </button>
+        )}
+
+        {/* Self-Service Credentials & 360 Report / LOR Link */}
+        {onOpenSelfService && (
+          <button
+            type="button"
+            onClick={onOpenSelfService}
+            className="w-full flex items-center gap-2.5 p-2 rounded-xl text-left text-xs font-bold text-[#BFDBFE] hover:bg-[#112240] hover:text-white transition-all cursor-pointer group"
+            title="Self-Service Hub: Download 360° Report, Mentor LOR, Badges & Cert"
+          >
+            <div className="w-8 h-8 rounded-lg bg-emerald-600 text-white flex items-center justify-center shrink-0 text-sm font-black shadow-xs">
+              📜
+            </div>
+            {!isCollapsed && (
+              <div className="truncate">
+                <div className="truncate text-white flex items-center gap-1.5">
+                  <span>Self-Service Hub</span>
+                  <span className="px-1.5 py-0.2 rounded-full bg-emerald-400/20 text-emerald-300 text-[9px] font-mono font-bold">PDF</span>
+                </div>
+                <div className="text-[10px] text-emerald-300 truncate font-mono">
+                  360° Report & LOR
                 </div>
               </div>
             )}

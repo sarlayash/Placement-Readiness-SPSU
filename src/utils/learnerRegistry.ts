@@ -62,6 +62,18 @@ export async function recordUserSignIn(
     unlockedBadges: currentProgress?.unlockedBadges || existing?.unlockedBadges || {},
     certificateId: currentProgress?.certificateId || existing?.certificateId || null,
     certificateIssuedAt: currentProgress?.certificateIssuedAt || existing?.certificateIssuedAt || null,
+    patternQuizScore: currentProgress?.patternQuizScore ?? existing?.patternQuizScore ?? 0,
+    patternQuizCompleted: currentProgress?.patternQuizCompleted ?? existing?.patternQuizCompleted ?? false,
+    stressQuizScore: currentProgress?.stressQuizScore ?? existing?.stressQuizScore ?? 0,
+    stressQuizAnswered: currentProgress?.stressQuizAnswered ?? existing?.stressQuizAnswered ?? 0,
+    stressQuizCompleted: currentProgress?.stressQuizCompleted ?? existing?.stressQuizCompleted ?? false,
+    stressQuizAttemptedAt: currentProgress?.stressQuizAttemptedAt || existing?.stressQuizAttemptedAt,
+    aptitudeScore: currentProgress?.aptitudeScore ?? existing?.aptitudeScore ?? 0,
+    aptitudeCorrectCount: currentProgress?.aptitudeCorrectCount ?? existing?.aptitudeCorrectCount ?? 0,
+    aptitudePassed: currentProgress?.aptitudePassed ?? existing?.aptitudePassed ?? false,
+    aptitudeAttemptedAt: currentProgress?.aptitudeAttemptedAt || existing?.aptitudeAttemptedAt,
+    lorIssuedAt: currentProgress?.lorIssuedAt || existing?.lorIssuedAt || null,
+    reportGeneratedAt: currentProgress?.reportGeneratedAt || existing?.reportGeneratedAt || null,
   };
 
   // Update local registry
@@ -106,6 +118,18 @@ export async function syncLearnerProgress(
     unlockedBadges: { ...(existing?.unlockedBadges || {}), ...progress.unlockedBadges },
     certificateId: progress.certificateId || existing?.certificateId || null,
     certificateIssuedAt: progress.certificateIssuedAt || existing?.certificateIssuedAt || null,
+    patternQuizScore: progress.patternQuizScore ?? existing?.patternQuizScore ?? 0,
+    patternQuizCompleted: progress.patternQuizCompleted ?? existing?.patternQuizCompleted ?? false,
+    stressQuizScore: progress.stressQuizScore ?? existing?.stressQuizScore ?? 0,
+    stressQuizAnswered: progress.stressQuizAnswered ?? existing?.stressQuizAnswered ?? 0,
+    stressQuizCompleted: progress.stressQuizCompleted ?? existing?.stressQuizCompleted ?? false,
+    stressQuizAttemptedAt: progress.stressQuizAttemptedAt || existing?.stressQuizAttemptedAt,
+    aptitudeScore: progress.aptitudeScore ?? existing?.aptitudeScore ?? 0,
+    aptitudeCorrectCount: progress.aptitudeCorrectCount ?? existing?.aptitudeCorrectCount ?? 0,
+    aptitudePassed: progress.aptitudePassed ?? existing?.aptitudePassed ?? false,
+    aptitudeAttemptedAt: progress.aptitudeAttemptedAt || existing?.aptitudeAttemptedAt,
+    lorIssuedAt: progress.lorIssuedAt || existing?.lorIssuedAt || null,
+    reportGeneratedAt: progress.reportGeneratedAt || existing?.reportGeneratedAt || null,
   };
 
   localRegistry[user.email.toLowerCase()] = updatedRecord;
@@ -305,10 +329,16 @@ export function downloadAssessmentScoresCSV(learners: LearnerRecord[], dayFilter
       'Day 9 Post (Cutoff 80%)',
       'Day 10 Pre (Cutoff 80%)',
       'Day 10 Post (Cutoff 80%)',
+      'Aptitude Assessment (50 Qs, Cutoff 80%)',
+      'Aptitude Passed',
+      'B-Tech Stress Wheel Score (25 Qs)',
+      'DSA Pattern Quiz (100 Scenarios)',
       'Total Days Completed (Both >= 80%)',
       'Badges Unlocked',
       'Certificate ID',
       'Certificate Issued At',
+      '360 Report Status',
+      'LOR Issued Status',
     ];
 
     const rows = learners.map((l) => {
@@ -334,6 +364,10 @@ export function downloadAssessmentScoresCSV(learners: LearnerRecord[], dayFilter
       }
 
       const badgeCount = Object.keys(l.unlockedBadges || {}).length;
+      const aptScoreStr = l.aptitudeScore !== undefined ? `${l.aptitudeScore}% (${l.aptitudeCorrectCount || 0}/50)` : 'Not Attempted';
+      const aptPassStr = l.aptitudePassed ? 'PASSED (>=80%)' : (l.aptitudeScore !== undefined ? 'FAILED (<80%)' : 'Pending');
+      const stressScoreStr = l.stressQuizScore !== undefined ? `${l.stressQuizScore}/25 (${Math.round((l.stressQuizScore/25)*100)}%)` : 'Not Attempted';
+      const patternScoreStr = l.patternQuizScore !== undefined ? `${l.patternQuizScore}/100` : 'Not Attempted';
 
       return [
         `"${(l.name || 'Learner').replace(/"/g, '""')}"`,
@@ -342,10 +376,16 @@ export function downloadAssessmentScoresCSV(learners: LearnerRecord[], dayFilter
         `"${l.firstLogin || ''}"`,
         `"${l.lastLoginAttempt || ''}"`,
         ...scoresCols,
+        `"${aptScoreStr}"`,
+        `"${aptPassStr}"`,
+        `"${stressScoreStr}"`,
+        `"${patternScoreStr}"`,
         `"${completedDaysCount}/10"`,
         `"${badgeCount}/10"`,
         `"${l.certificateId || 'Pending'}"`,
         `"${l.certificateIssuedAt || ''}"`,
+        `"${l.reportGeneratedAt ? 'Generated' : 'Ready'}"`,
+        `"${l.lorIssuedAt ? 'Issued' : 'Eligible'}"`,
       ].join(',');
     });
 

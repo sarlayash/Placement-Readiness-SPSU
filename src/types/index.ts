@@ -125,6 +125,19 @@ export interface UserProgress {
   savedCode: Record<string, Record<SupportedLanguage, string>>; // challengeId -> lang -> code
   certificateId: string | null;
   certificateIssuedAt: string | null;
+  // Extended Placement Assessments & Quizzes
+  patternQuizScore?: number; // 0..100
+  patternQuizCompleted?: boolean;
+  stressQuizScore?: number; // 0..25
+  stressQuizAnswered?: number;
+  stressQuizCompleted?: boolean;
+  stressQuizAttemptedAt?: string;
+  aptitudeScore?: number; // 0..100 percentage
+  aptitudeCorrectCount?: number; // 0..50
+  aptitudePassed?: boolean; // >= 80%
+  aptitudeAttemptedAt?: string;
+  lorIssuedAt?: string | null;
+  reportGeneratedAt?: string | null;
 }
 
 export interface LearnerRecord {
@@ -142,4 +155,17 @@ export interface LearnerRecord {
   unlockedBadges: Record<number, string>;
   certificateId?: string | null;
   certificateIssuedAt?: string | null;
+  // Extended Placement Assessments & Quizzes
+  patternQuizScore?: number;
+  patternQuizCompleted?: boolean;
+  stressQuizScore?: number;
+  stressQuizAnswered?: number;
+  stressQuizCompleted?: boolean;
+  stressQuizAttemptedAt?: string;
+  aptitudeScore?: number;
+  aptitudeCorrectCount?: number;
+  aptitudePassed?: boolean;
+  aptitudeAttemptedAt?: string;
+  lorIssuedAt?: string | null;
+  reportGeneratedAt?: string | null;
 }

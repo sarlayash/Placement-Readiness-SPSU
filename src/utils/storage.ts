@@ -14,6 +14,16 @@ export const EMPTY_PROGRESS: UserProgress = {
   savedCode: {},
   certificateId: null,
   certificateIssuedAt: null,
+  patternQuizScore: 0,
+  patternQuizCompleted: false,
+  stressQuizScore: 0,
+  stressQuizAnswered: 0,
+  stressQuizCompleted: false,
+  aptitudeScore: 0,
+  aptitudeCorrectCount: 0,
+  aptitudePassed: false,
+  lorIssuedAt: null,
+  reportGeneratedAt: null,
 };
 
 export function loadStoredGoogleUser(): GoogleUser | null {
@@ -57,6 +67,18 @@ export function loadStoredProgress(userEmail?: string): UserProgress {
       savedCode: parsed.savedCode || {},
       certificateId: parsed.certificateId || null,
       certificateIssuedAt: parsed.certificateIssuedAt || null,
+      patternQuizScore: parsed.patternQuizScore ?? 0,
+      patternQuizCompleted: Boolean(parsed.patternQuizCompleted),
+      stressQuizScore: parsed.stressQuizScore ?? 0,
+      stressQuizAnswered: parsed.stressQuizAnswered ?? 0,
+      stressQuizCompleted: Boolean(parsed.stressQuizCompleted),
+      stressQuizAttemptedAt: parsed.stressQuizAttemptedAt,
+      aptitudeScore: parsed.aptitudeScore ?? 0,
+      aptitudeCorrectCount: parsed.aptitudeCorrectCount ?? 0,
+      aptitudePassed: Boolean(parsed.aptitudePassed),
+      aptitudeAttemptedAt: parsed.aptitudeAttemptedAt,
+      lorIssuedAt: parsed.lorIssuedAt || null,
+      reportGeneratedAt: parsed.reportGeneratedAt || null,
     };
   } catch {
     return { ...EMPTY_PROGRESS };

@@ -28,6 +28,9 @@ import { LearnerDashboardModal } from './components/LearnerDashboardModal';
 import { NotificationCenterModal } from './components/NotificationCenterModal';
 import { OperatingHoursModal } from './components/OperatingHoursModal';
 import { IndustryPatternQuizModal } from './components/IndustryPatternQuizModal';
+import { SpinningWheelQuizModal } from './components/SpinningWheelQuizModal';
+import { AptitudeAssessmentModal } from './components/AptitudeAssessmentModal';
+import { SelfServiceCredentialsModal } from './components/SelfServiceCredentialsModal';
 import { recordUserSignIn, syncLearnerProgress } from './utils/learnerRegistry';
 import { checkAndTriggerAutomaticReminders, loadInAppReminders } from './utils/pushNotifications';
 
@@ -50,6 +53,9 @@ export function App() {
   const [showLearnerDashboard, setShowLearnerDashboard] = useState<boolean>(false);
   const [showNotificationCenter, setShowNotificationCenter] = useState<boolean>(false);
   const [showPatternQuiz, setShowPatternQuiz] = useState<boolean>(false);
+  const [showStressWheel, setShowStressWheel] = useState<boolean>(false);
+  const [showAptitude, setShowAptitude] = useState<boolean>(false);
+  const [showSelfService, setShowSelfService] = useState<boolean>(false);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState<number>(() => {
     try {
       return loadInAppReminders().filter((r) => !r.read).length;
@@ -326,6 +332,9 @@ export function App() {
             setUnreadNotificationsCount(0);
           }}
           onOpenPatternQuiz={() => setShowPatternQuiz(true)}
+          onOpenStressWheel={() => setShowStressWheel(true)}
+          onOpenAptitude={() => setShowAptitude(true)}
+          onOpenSelfService={() => setShowSelfService(true)}
           progress={progress}
           user={user}
         />
@@ -353,6 +362,9 @@ export function App() {
                 onOpenBadges={() => setShowBadgesModal(true)}
                 onOpenCertificate={() => setShowCertificateModal(true)}
                 onOpenPatternQuiz={() => setShowPatternQuiz(true)}
+                onOpenStressWheel={() => setShowStressWheel(true)}
+                onOpenAptitude={() => setShowAptitude(true)}
+                onOpenSelfService={() => setShowSelfService(true)}
               />
             ) : (
               <DayWorkspace
@@ -435,6 +447,18 @@ export function App() {
             setShowLearnerDashboard(false);
             setShowCertificateModal(true);
           }}
+          onOpenStressWheel={() => {
+            setShowLearnerDashboard(false);
+            setShowStressWheel(true);
+          }}
+          onOpenAptitude={() => {
+            setShowLearnerDashboard(false);
+            setShowAptitude(true);
+          }}
+          onOpenSelfService={() => {
+            setShowLearnerDashboard(false);
+            setShowSelfService(true);
+          }}
         />
       )}
 
@@ -454,6 +478,42 @@ export function App() {
         <IndustryPatternQuizModal
           isOpen={showPatternQuiz}
           onClose={() => setShowPatternQuiz(false)}
+        />
+      )}
+
+      {/* Spinning Wheel: B-Tech Stress Buster Quiz (25 Scenarios + Kapil Mentorship) */}
+      {showStressWheel && (
+        <SpinningWheelQuizModal
+          isOpen={showStressWheel}
+          onClose={() => setShowStressWheel(false)}
+          user={user}
+          progress={progress}
+          onUpdateProgress={setProgress}
+        />
+      )}
+
+      {/* 50-MCQ Placement Aptitude Master Assessment (Quant, Logic, Verbal, Kapil Shortcuts) */}
+      {showAptitude && (
+        <AptitudeAssessmentModal
+          isOpen={showAptitude}
+          onClose={() => setShowAptitude(false)}
+          user={user}
+          progress={progress}
+          onUpdateProgress={setProgress}
+        />
+      )}
+
+      {/* Self-Service Credentials Hub (Download 360° Report, Mentor Kapil LOR, Badges & Cert) */}
+      {showSelfService && (
+        <SelfServiceCredentialsModal
+          isOpen={showSelfService}
+          onClose={() => setShowSelfService(false)}
+          user={user}
+          progress={progress}
+          onOpenAuth={() => {
+            setShowSelfService(false);
+            setShowAuthModal(true);
+          }}
         />
       )}
 

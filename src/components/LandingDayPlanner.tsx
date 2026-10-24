@@ -36,6 +36,9 @@ interface LandingDayPlannerProps {
   onOpenBadges: () => void;
   onOpenCertificate: () => void;
   onOpenPatternQuiz?: () => void;
+  onOpenStressWheel?: () => void;
+  onOpenAptitude?: () => void;
+  onOpenSelfService?: () => void;
 }
 
 export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
@@ -48,6 +51,9 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
   onOpenBadges,
   onOpenCertificate,
   onOpenPatternQuiz,
+  onOpenStressWheel,
+  onOpenAptitude,
+  onOpenSelfService,
 }) => {
   // Real, non-fake structural counts & authenticated user progress only
   const unlockedBadgesCount = Object.keys(progress.unlockedBadges).length;
@@ -414,6 +420,140 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
                 </button>
               )}
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. NEW SPECIAL PLACEMENT TOOLS: Spinning Wheel Stress Buster + 50 Aptitude MCQs + Self-Service Hub */}
+      <section className="space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 border-b border-slate-200 pb-2">
+          <div>
+            <span className="text-xs font-mono uppercase tracking-widest text-amber-600 font-extrabold flex items-center gap-1.5">
+              <Sparkles className="w-3.5 h-3.5 text-amber-500" />
+              <span>Placement Resilience, Cognitive Aptitude & Credential Hub</span>
+            </span>
+            <h3 className="text-xl sm:text-2xl font-black text-[#0A192F] mt-0.5">
+              Interactive Tools, Aptitude Drills & Career Verification
+            </h3>
+          </div>
+          <span className="text-xs text-slate-500 font-mono">
+            Direct Real-Time Firestore Sync
+          </span>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          {/* Card A: Spinning Wheel B-Tech Stress Buster */}
+          <div className="p-5 rounded-3xl bg-gradient-to-br from-amber-500/10 via-white to-amber-50 border-2 border-amber-400 shadow-sm flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="w-12 h-12 rounded-2xl bg-amber-400 text-[#0A192F] flex items-center justify-center text-2xl shadow-sm">
+                  🎡
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full bg-amber-100 text-amber-800 font-mono text-[10px] font-bold">
+                  25 Hilarious Scenarios
+                </span>
+              </div>
+
+              <div>
+                <h4 className="text-base font-black text-[#0A192F]">
+                  Spinning Wheel: B-Tech Stress Buster
+                </h4>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                  3 AM segfaults, ghost teammates, 74.8% attendance panic & placement anxiety decoded with <strong>Mentor Kapil's hidden meanings & high-EQ engineering wisdom</strong>.
+                </p>
+              </div>
+
+              <div className="text-[11px] font-mono text-amber-900 bg-amber-100/60 p-2.5 rounded-xl">
+                • Current Score: <strong>{progress.stressQuizScore ?? 0}/25</strong> ({progress.stressQuizAnswered ?? 0} answered)
+              </div>
+            </div>
+
+            {onOpenStressWheel && (
+              <button
+                type="button"
+                onClick={onOpenStressWheel}
+                className="w-full py-3 rounded-2xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 group"
+              >
+                <span>Spin the Wheel Now</span>
+                <ChevronRight className="w-4 h-4 text-amber-400 group-hover:translate-x-1 transition-transform" />
+              </button>
+            )}
+          </div>
+
+          {/* Card B: Placement Aptitude Assessment (50 MCQs) */}
+          <div className="p-5 rounded-3xl bg-gradient-to-br from-blue-500/10 via-white to-blue-50 border-2 border-[#1E3A8A] shadow-sm flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="w-12 h-12 rounded-2xl bg-[#1E3A8A] text-white flex items-center justify-center text-2xl shadow-sm">
+                  🧠
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-mono text-[10px] font-bold">
+                  Cutoff: 80% (40/50)
+                </span>
+              </div>
+
+              <div>
+                <h4 className="text-base font-black text-[#0A192F]">
+                  Placement Aptitude Master (50 MCQs)
+                </h4>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                  Quantitative Aptitude, Logical Reasoning, and Verbal Ability mapped to TCS NQT, Infosys DSE, Amazon, Cognizant, and Wipro with <strong>Mentor Kapil's speed shortcuts</strong>.
+                </p>
+              </div>
+
+              <div className="text-[11px] font-mono text-blue-900 bg-blue-100/60 p-2.5 rounded-xl">
+                • Score: <strong>{progress.aptitudeScore !== undefined ? `${progress.aptitudeScore}% (${progress.aptitudeCorrectCount || 0}/50)` : 'Not Attempted'}</strong> • {progress.aptitudePassed ? '✓ PASSED ≥80%' : 'Required ≥80%'}
+              </div>
+            </div>
+
+            {onOpenAptitude && (
+              <button
+                type="button"
+                onClick={onOpenAptitude}
+                className="w-full py-3 rounded-2xl bg-[#1E3A8A] hover:bg-[#2563EB] text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 group"
+              >
+                <span>Launch 50-MCQ Aptitude Test</span>
+                <ChevronRight className="w-4 h-4 text-emerald-300 group-hover:translate-x-1 transition-transform" />
+              </button>
+            )}
+          </div>
+
+          {/* Card C: Self-Service Hub (360° Report, LOR, Badges, Cert) */}
+          <div className="p-5 rounded-3xl bg-gradient-to-br from-emerald-500/10 via-white to-emerald-50 border-2 border-emerald-500 shadow-sm flex flex-col justify-between space-y-4 hover:shadow-md transition-all">
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="w-12 h-12 rounded-2xl bg-emerald-600 text-white flex items-center justify-center text-2xl shadow-sm">
+                  📜
+                </span>
+                <span className="px-2.5 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-mono text-[10px] font-bold">
+                  PDF & PNG Hub
+                </span>
+              </div>
+
+              <div>
+                <h4 className="text-base font-black text-[#0A192F]">
+                  Self-Service Credentials & Reports Hub
+                </h4>
+                <p className="text-xs text-slate-600 mt-1 leading-relaxed">
+                  Instant one-click downloads: <strong>360-Degree Placement Analysis Report (PDF)</strong>, <strong>Official Letter of Recommendation (LOR) from Mentor Kapil (PDF)</strong>, Certificate & Badges.
+                </p>
+              </div>
+
+              <div className="text-[11px] font-mono text-emerald-900 bg-emerald-100/60 p-2.5 rounded-xl">
+                • Credentials: <strong>360° Report</strong> • <strong>Mentor LOR</strong> • <strong>Badges</strong> • <strong>Cert</strong>
+              </div>
+            </div>
+
+            {onOpenSelfService && (
+              <button
+                type="button"
+                onClick={onOpenSelfService}
+                className="w-full py-3 rounded-2xl bg-emerald-700 hover:bg-emerald-800 text-white text-xs font-bold transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 group"
+              >
+                <span>Open Self-Service Downloads</span>
+                <ChevronRight className="w-4 h-4 text-amber-300 group-hover:translate-x-1 transition-transform" />
+              </button>
+            )}
           </div>
         </div>
       </section>

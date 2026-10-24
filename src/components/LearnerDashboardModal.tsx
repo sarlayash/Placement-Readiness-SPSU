@@ -14,7 +14,10 @@ import {
   Calendar,
   CheckCircle2,
   Clock,
+  Download,
   ExternalLink,
+  FileSpreadsheet,
+  FileText,
   GraduationCap,
   Layers,
   Lock,
@@ -24,7 +27,12 @@ import {
   User,
   X,
   XCircle,
+  Zap,
 } from 'lucide-react';
+import {
+  download360DegreeReportPDF,
+  downloadMentorKapilLorPDF,
+} from '../utils/reportAndLorGenerator';
 
 interface LearnerDashboardModalProps {
   isOpen: boolean;
@@ -34,6 +42,9 @@ interface LearnerDashboardModalProps {
   onSelectDay: (day: number, tab?: 'notes' | 'ide' | 'pre' | 'post') => void;
   onOpenAuth: () => void;
   onOpenCertificate: () => void;
+  onOpenStressWheel?: () => void;
+  onOpenAptitude?: () => void;
+  onOpenSelfService?: () => void;
 }
 
 export const LearnerDashboardModal: React.FC<LearnerDashboardModalProps> = ({
@@ -44,6 +55,9 @@ export const LearnerDashboardModal: React.FC<LearnerDashboardModalProps> = ({
   onSelectDay,
   onOpenAuth,
   onOpenCertificate,
+  onOpenStressWheel,
+  onOpenAptitude,
+  onOpenSelfService,
 }) => {
   const [pushStatus, setPushStatus] = useState<string>('default');
   const [pushLoading, setPushLoading] = useState<boolean>(false);
@@ -181,41 +195,207 @@ export const LearnerDashboardModal: React.FC<LearnerDashboardModalProps> = ({
           </div>
 
           {/* Quick Metrics Grid */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-            <div className="p-4 rounded-xl border border-slate-200 bg-[#F8FAFC]">
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3">
+            <div className="p-3.5 rounded-xl border border-slate-200 bg-[#F8FAFC]">
               <span className="text-[10px] font-extrabold uppercase text-slate-500 block">
                 Days Completed
               </span>
-              <span className="text-xl font-black text-[#0A192F] font-mono mt-1 block">
+              <span className="text-lg font-black text-[#0A192F] font-mono mt-0.5 block">
                 {completedDaysCount} / 10
               </span>
             </div>
 
-            <div className="p-4 rounded-xl border border-slate-200 bg-[#F8FAFC]">
+            <div className="p-3.5 rounded-xl border border-slate-200 bg-[#F8FAFC]">
               <span className="text-[10px] font-extrabold uppercase text-slate-500 block">
-                Daily Badges Unlocked
+                Badges Unlocked
               </span>
-              <span className="text-xl font-black text-amber-600 font-mono mt-1 block">
+              <span className="text-lg font-black text-amber-600 font-mono mt-0.5 block">
                 {unlockedBadgesCount} / 10
               </span>
             </div>
 
-            <div className="p-4 rounded-xl border border-slate-200 bg-[#F8FAFC]">
+            <div className="p-3.5 rounded-xl border border-slate-200 bg-[#F8FAFC]">
               <span className="text-[10px] font-extrabold uppercase text-slate-500 block">
                 Solved Challenges
               </span>
-              <span className="text-xl font-black text-[#1E3A8A] font-mono mt-1 block">
+              <span className="text-lg font-black text-[#1E3A8A] font-mono mt-0.5 block">
                 {progress.completedChallengeIds?.length || 0}
               </span>
             </div>
 
-            <div className="p-4 rounded-xl border border-slate-200 bg-[#F8FAFC]">
+            <div className="p-3.5 rounded-xl border border-slate-200 bg-[#F8FAFC]">
+              <span className="text-[10px] font-extrabold uppercase text-slate-500 block">
+                Aptitude (50 Qs)
+              </span>
+              <span className="text-lg font-black text-emerald-700 font-mono mt-0.5 block">
+                {progress.aptitudeScore !== undefined ? `${progress.aptitudeScore}%` : 'Pending'}
+              </span>
+              <span className="text-[9px] font-mono text-slate-500">
+                {progress.aptitudePassed ? '✓ Passed (≥80%)' : 'Cutoff: 80%'}
+              </span>
+            </div>
+
+            <div className="p-3.5 rounded-xl border border-slate-200 bg-[#F8FAFC]">
+              <span className="text-[10px] font-extrabold uppercase text-slate-500 block">
+                Stress Wheel Quiz
+              </span>
+              <span className="text-lg font-black text-purple-700 font-mono mt-0.5 block">
+                {progress.stressQuizScore ?? 0} / 25
+              </span>
+              <span className="text-[9px] font-mono text-slate-500">
+                {progress.stressQuizAnswered ?? 0} Scenarios
+              </span>
+            </div>
+
+            <div className="p-3.5 rounded-xl border border-slate-200 bg-[#F8FAFC]">
               <span className="text-[10px] font-extrabold uppercase text-slate-500 block">
                 Official Certificate
               </span>
-              <span className="text-xs font-bold text-[#0A192F] truncate mt-2 block font-mono">
+              <span className="text-xs font-bold text-[#0A192F] truncate mt-1 block font-mono">
                 {progress.certificateId ? '✓ Generated' : 'Pending (80%+)'}
               </span>
+            </div>
+          </div>
+
+          {/* Self-Service Instant Downloads Section */}
+          <div className="p-5 rounded-2xl bg-gradient-to-r from-[#0A192F] to-[#1E3A8A] text-white shadow-md space-y-4">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div className="flex items-center gap-2.5">
+                <div className="p-2 rounded-xl bg-amber-400 text-[#0A192F]">
+                  <Download className="w-5 h-5 text-[#0A192F]" />
+                </div>
+                <div>
+                  <h4 className="text-sm font-black text-white">
+                    Learner Self-Service Downloads Center
+                  </h4>
+                  <p className="text-[11px] text-[#BFDBFE]">
+                    Instant access to your verified 360° Evaluation Report, Mentor Kapil LOR, Badges & Certificate.
+                  </p>
+                </div>
+              </div>
+
+              {onOpenSelfService && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    onClose();
+                    onOpenSelfService();
+                  }}
+                  className="px-3.5 py-1.5 rounded-xl bg-white/10 hover:bg-white/20 border border-white/30 text-white text-xs font-bold transition-all cursor-pointer whitespace-nowrap self-start sm:self-center"
+                >
+                  Open Full Hub →
+                </button>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2.5">
+              {/* 360 Report PDF */}
+              <button
+                type="button"
+                onClick={() => {
+                  const learnerUser: GoogleUser = user || {
+                    uid: 'demo_user',
+                    name: 'SPSU Learner',
+                    email: 'learner@spsu.ac.in',
+                    photoURL: '',
+                    signedInAt: new Date().toISOString(),
+                  };
+                  download360DegreeReportPDF(learnerUser, progress);
+                }}
+                className="p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-left transition-all cursor-pointer space-y-1.5 group"
+              >
+                <div className="flex items-center justify-between">
+                  <FileSpreadsheet className="w-4 h-4 text-amber-300" />
+                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-blue-500/30 text-blue-200">PDF</span>
+                </div>
+                <div className="text-xs font-bold text-white group-hover:text-amber-300 transition-colors">
+                  360° Detailed Report
+                </div>
+                <div className="text-[10px] text-slate-300">
+                  Full 5-dimension competency analysis & 10-day score audit.
+                </div>
+              </button>
+
+              {/* LOR from Mentor Kapil PDF */}
+              <button
+                type="button"
+                onClick={() => {
+                  const learnerUser: GoogleUser = user || {
+                    uid: 'demo_user',
+                    name: 'SPSU Learner',
+                    email: 'learner@spsu.ac.in',
+                    photoURL: '',
+                    signedInAt: new Date().toISOString(),
+                  };
+                  downloadMentorKapilLorPDF(learnerUser, progress);
+                }}
+                className="p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-left transition-all cursor-pointer space-y-1.5 group"
+              >
+                <div className="flex items-center justify-between">
+                  <GraduationCap className="w-4 h-4 text-emerald-300" />
+                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-emerald-500/30 text-emerald-200">PDF</span>
+                </div>
+                <div className="text-xs font-bold text-white group-hover:text-emerald-300 transition-colors">
+                  Mentor Kapil LOR
+                </div>
+                <div className="text-[10px] text-slate-300">
+                  Official Recommendation Letter on SPSU Letterhead with seal.
+                </div>
+              </button>
+
+              {/* Certificate */}
+              <button
+                type="button"
+                onClick={() => {
+                  onClose();
+                  onOpenCertificate();
+                }}
+                className="p-3 rounded-xl bg-white/10 hover:bg-white/20 border border-white/20 text-left transition-all cursor-pointer space-y-1.5 group"
+              >
+                <div className="flex items-center justify-between">
+                  <ShieldCheck className="w-4 h-4 text-cyan-300" />
+                  <span className="text-[9px] font-mono px-1.5 py-0.5 rounded bg-cyan-500/30 text-cyan-200">PDF / PNG</span>
+                </div>
+                <div className="text-xs font-bold text-white group-hover:text-cyan-300 transition-colors">
+                  Official Certificate
+                </div>
+                <div className="text-[10px] text-slate-300">
+                  Sole signatory: Kapil. Verified completion credential.
+                </div>
+              </button>
+
+              {/* Launch Aptitude / Stress Quiz */}
+              <div className="p-3 rounded-xl bg-white/10 border border-white/20 flex flex-col justify-between gap-1.5">
+                <span className="text-[10px] font-mono text-amber-300 uppercase font-bold">
+                  Quick Quiz Launch
+                </span>
+                <div className="flex items-center gap-2">
+                  {onOpenAptitude && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onClose();
+                        onOpenAptitude();
+                      }}
+                      className="flex-1 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-[10px] font-bold text-white transition-all cursor-pointer text-center"
+                    >
+                      🧠 Aptitude (50 Q)
+                    </button>
+                  )}
+                  {onOpenStressWheel && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onClose();
+                        onOpenStressWheel();
+                      }}
+                      className="flex-1 py-1.5 rounded-lg bg-amber-400 hover:bg-amber-300 text-[10px] font-bold text-[#0A192F] transition-all cursor-pointer text-center"
+                    >
+                      🎡 Wheel (25 Q)
+                    </button>
+                  )}
+                </div>
+              </div>
             </div>
           </div>
 

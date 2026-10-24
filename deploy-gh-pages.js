@@ -17,6 +17,7 @@ if (fs.existsSync(indexHtml)) {
 
 try {
   execSync('git init', { cwd: distDir, stdio: 'inherit' });
+  execSync('git config credential.helper manager', { cwd: distDir, stdio: 'inherit' });
   execSync('git remote add origin https://github.com/sarlayash/Placement-Readiness-SPSU.git', { cwd: distDir, stdio: 'inherit' });
   execSync('git checkout -B gh-pages', { cwd: distDir, stdio: 'inherit' });
   execSync('git add -A', { cwd: distDir, stdio: 'inherit' });

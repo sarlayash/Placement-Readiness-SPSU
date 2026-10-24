@@ -27,6 +27,7 @@ import { AdminDashboard } from './components/AdminDashboard';
 import { LearnerDashboardModal } from './components/LearnerDashboardModal';
 import { NotificationCenterModal } from './components/NotificationCenterModal';
 import { OperatingHoursModal } from './components/OperatingHoursModal';
+import { IndustryPatternQuizModal } from './components/IndustryPatternQuizModal';
 import { recordUserSignIn, syncLearnerProgress } from './utils/learnerRegistry';
 import { checkAndTriggerAutomaticReminders, loadInAppReminders } from './utils/pushNotifications';
 
@@ -48,6 +49,7 @@ export function App() {
   const [showAdminModal, setShowAdminModal] = useState<boolean>(false);
   const [showLearnerDashboard, setShowLearnerDashboard] = useState<boolean>(false);
   const [showNotificationCenter, setShowNotificationCenter] = useState<boolean>(false);
+  const [showPatternQuiz, setShowPatternQuiz] = useState<boolean>(false);
   const [unreadNotificationsCount, setUnreadNotificationsCount] = useState<number>(() => {
     try {
       return loadInAppReminders().filter((r) => !r.read).length;
@@ -323,6 +325,7 @@ export function App() {
             setShowNotificationCenter(true);
             setUnreadNotificationsCount(0);
           }}
+          onOpenPatternQuiz={() => setShowPatternQuiz(true)}
           progress={progress}
           user={user}
         />
@@ -349,6 +352,7 @@ export function App() {
                 onOpenAuth={() => setShowAuthModal(true)}
                 onOpenBadges={() => setShowBadgesModal(true)}
                 onOpenCertificate={() => setShowCertificateModal(true)}
+                onOpenPatternQuiz={() => setShowPatternQuiz(true)}
               />
             ) : (
               <DayWorkspace
@@ -442,6 +446,14 @@ export function App() {
             setShowNotificationCenter(false);
             handleSelectDay(d, tab);
           }}
+        />
+      )}
+
+      {/* 100 Real-Time Industry Scenarios: DSA Pattern Identification Quiz Modal */}
+      {showPatternQuiz && (
+        <IndustryPatternQuizModal
+          isOpen={showPatternQuiz}
+          onClose={() => setShowPatternQuiz(false)}
         />
       )}
 

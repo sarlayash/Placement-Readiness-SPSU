@@ -18,6 +18,9 @@ import {
   Lock,
   Quote,
   Sparkles,
+  Trophy,
+  Flame,
+  Zap,
 } from 'lucide-react';
 import mentorKapilImg from '../assets/mentor-kapil.jpg';
 import { downloadBadgePNG, downloadBadgePDF } from '../utils/exportCredentials';
@@ -32,6 +35,7 @@ interface LandingDayPlannerProps {
   onOpenAuth: () => void;
   onOpenBadges: () => void;
   onOpenCertificate: () => void;
+  onOpenPatternQuiz?: () => void;
 }
 
 export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
@@ -43,6 +47,7 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
   onOpenAuth,
   onOpenBadges,
   onOpenCertificate,
+  onOpenPatternQuiz,
 }) => {
   // Real, non-fake structural counts & authenticated user progress only
   const unlockedBadgesCount = Object.keys(progress.unlockedBadges).length;
@@ -255,6 +260,160 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
                 <span>Google Sign-Up to Bind Credentials</span>
               </button>
             )}
+          </div>
+        </div>
+      </section>
+
+      {/* 2. NEW FEATURE: 100 Unique Real-Time Industry Scenarios: DSA Pattern Identification Quiz */}
+      <section className="rounded-3xl bg-gradient-to-br from-amber-500/10 via-white to-blue-50 border-2 border-amber-400 p-6 sm:p-8 shadow-lg space-y-6 relative overflow-hidden">
+        <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 relative z-10">
+          <div className="space-y-2 max-w-3xl">
+            <div className="flex items-center gap-2 flex-wrap">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500 text-white font-mono font-black text-xs shadow-xs">
+                <Trophy className="w-3.5 h-3.5 text-white" />
+                <span>NEW INDUSTRY FEATURE • 100 SCENARIOS</span>
+              </span>
+              <span className="px-2.5 py-0.5 rounded-full bg-slate-900 text-amber-300 font-mono text-xs font-bold">
+                Netflix • Uber • Amazon • Google • Stripe • Meta • Spotify
+              </span>
+            </div>
+
+            <h2 className="text-2xl sm:text-4xl font-black text-[#0A192F] tracking-tight">
+              100 Real-Time Industry Problem Scenarios: DSA Pattern Identification Quiz
+            </h2>
+
+            <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
+              Top tech recruiters test your ability to look at real-world production engineering challenges and instantly map them to the optimal algorithmic pattern (Sliding Window, Monotonic Stack, Two Pointers, Binary Search on Answer, DSU, Topological Sort, Heaps, and Dynamic Programming). Test your placement readiness across 100 unique real-time scenarios curated by <strong>Mentor Kapil</strong>!
+            </p>
+          </div>
+
+          <div className="shrink-0 flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+            {onOpenPatternQuiz && (
+              <button
+                type="button"
+                onClick={onOpenPatternQuiz}
+                className="inline-flex items-center justify-center gap-2.5 px-6 py-4 rounded-2xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-black text-sm transition-all cursor-pointer shadow-xl hover:scale-[1.02] border-2 border-amber-400 group"
+              >
+                <Trophy className="w-5 h-5 text-amber-400 group-hover:rotate-12 transition-transform" />
+                <span>Launch 100-Scenario Quiz Master</span>
+                <ChevronRight className="w-4 h-4 text-amber-300" />
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* 4 Sample Live Cards previewing the 100 scenarios */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5 pt-2">
+          {/* Card 1 */}
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2 hover:border-[#1E3A8A] transition-all">
+            <div className="flex items-center justify-between text-xs">
+              <span className="px-2 py-0.5 rounded-md bg-red-50 text-red-700 font-bold font-mono text-[11px]">
+                Netflix
+              </span>
+              <span className="text-[10px] text-slate-400 font-mono font-bold">Scenario #1</span>
+            </div>
+            <div className="font-extrabold text-xs text-[#0A192F] line-clamp-1">
+              Adaptive Bitrate Buffer Smoothing
+            </div>
+            <p className="text-[11px] text-slate-600 line-clamp-2">
+              Smooth video playback by measuring bandwidth packet throughput over a sliding time interval of K seconds.
+            </p>
+            <div className="pt-1 flex items-center justify-between text-[11px]">
+              <span className="font-mono text-emerald-700 font-bold">Sliding Window</span>
+              {onOpenPatternQuiz && (
+                <button
+                  type="button"
+                  onClick={onOpenPatternQuiz}
+                  className="text-xs font-bold text-[#1E3A8A] hover:underline cursor-pointer"
+                >
+                  Solve →
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Card 2 */}
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2 hover:border-[#1E3A8A] transition-all">
+            <div className="flex items-center justify-between text-xs">
+              <span className="px-2 py-0.5 rounded-md bg-slate-900 text-white font-bold font-mono text-[11px]">
+                Uber
+              </span>
+              <span className="text-[10px] text-slate-400 font-mono font-bold">Scenario #2</span>
+            </div>
+            <div className="font-extrabold text-xs text-[#0A192F] line-clamp-1">
+              Nearest Available Driver Dispatch
+            </div>
+            <p className="text-[11px] text-slate-600 line-clamp-2">
+              Query top 5 closest available drivers out of 50,000 active cabs in under 5 milliseconds.
+            </p>
+            <div className="pt-1 flex items-center justify-between text-[11px]">
+              <span className="font-mono text-emerald-700 font-bold">Max-Heap (Top-K)</span>
+              {onOpenPatternQuiz && (
+                <button
+                  type="button"
+                  onClick={onOpenPatternQuiz}
+                  className="text-xs font-bold text-[#1E3A8A] hover:underline cursor-pointer"
+                >
+                  Solve →
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Card 3 */}
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2 hover:border-[#1E3A8A] transition-all">
+            <div className="flex items-center justify-between text-xs">
+              <span className="px-2 py-0.5 rounded-md bg-amber-100 text-amber-900 font-bold font-mono text-[11px]">
+                Amazon
+              </span>
+              <span className="text-[10px] text-slate-400 font-mono font-bold">Scenario #3</span>
+            </div>
+            <div className="font-extrabold text-xs text-[#0A192F] line-clamp-1">
+              Warehouse Robot Cargo Bin Packing
+            </div>
+            <p className="text-[11px] text-slate-600 line-clamp-2">
+              Pack 100,000 packages into K containers minimizing the maximum container weight without rearranging items.
+            </p>
+            <div className="pt-1 flex items-center justify-between text-[11px]">
+              <span className="font-mono text-emerald-700 font-bold">BS on Answer</span>
+              {onOpenPatternQuiz && (
+                <button
+                  type="button"
+                  onClick={onOpenPatternQuiz}
+                  className="text-xs font-bold text-[#1E3A8A] hover:underline cursor-pointer"
+                >
+                  Solve →
+                </button>
+              )}
+            </div>
+          </div>
+
+          {/* Card 4 */}
+          <div className="p-4 rounded-2xl bg-white border border-slate-200 shadow-xs space-y-2 hover:border-[#1E3A8A] transition-all">
+            <div className="flex items-center justify-between text-xs">
+              <span className="px-2 py-0.5 rounded-md bg-blue-50 text-blue-800 font-bold font-mono text-[11px]">
+                Stripe
+              </span>
+              <span className="text-[10px] text-slate-400 font-mono font-bold">Scenario #7</span>
+            </div>
+            <div className="font-extrabold text-xs text-[#0A192F] line-clamp-1">
+              Zero-Sum Credit Loop Detection
+            </div>
+            <p className="text-[11px] text-slate-600 line-clamp-2">
+              Detect contiguous sequences of negative and positive transactions cancelling to zero balance in single pass.
+            </p>
+            <div className="pt-1 flex items-center justify-between text-[11px]">
+              <span className="font-mono text-emerald-700 font-bold">Prefix Sum + Map</span>
+              {onOpenPatternQuiz && (
+                <button
+                  type="button"
+                  onClick={onOpenPatternQuiz}
+                  className="text-xs font-bold text-[#1E3A8A] hover:underline cursor-pointer"
+                >
+                  Solve →
+                </button>
+              )}
+            </div>
           </div>
         </div>
       </section>

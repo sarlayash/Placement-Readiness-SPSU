@@ -14,6 +14,7 @@ import {
   BookOpen,
   Layers,
   Lock,
+  Trophy,
 } from 'lucide-react';
 import { LiveDateTime } from './LiveDateTime';
 import { isDayUnlocked, isDayCompleted } from '../utils/dayLocking';
@@ -31,6 +32,7 @@ interface LeftSidebarProps {
   onOpenAdmin: () => void;
   onOpenLearnerDashboard?: () => void;
   onOpenNotifications?: () => void;
+  onOpenPatternQuiz?: () => void;
   progress: UserProgress;
   user: GoogleUser | null;
 }
@@ -48,6 +50,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   onOpenAdmin,
   onOpenLearnerDashboard,
   onOpenNotifications,
+  onOpenPatternQuiz,
   progress,
   user,
 }) => {
@@ -172,6 +175,31 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 <div className="truncate text-white">Daily Reminders</div>
                 <div className="text-[10px] text-amber-300 truncate">
                   09:00 AM & 02:30 PM
+                </div>
+              </div>
+            )}
+          </button>
+        )}
+
+        {/* 100 Real-Time Industry Scenarios Quiz Link */}
+        {onOpenPatternQuiz && (
+          <button
+            type="button"
+            onClick={onOpenPatternQuiz}
+            className="w-full flex items-center gap-2.5 p-2 rounded-xl text-left text-xs font-bold text-[#BFDBFE] hover:bg-[#112240] hover:text-white transition-all cursor-pointer group"
+            title="100 Real-Time Industry Scenarios: DSA Pattern Identification Quiz"
+          >
+            <div className="w-8 h-8 rounded-lg bg-amber-500/20 text-amber-300 border border-amber-400/40 flex items-center justify-center shrink-0 group-hover:scale-105 transition-transform">
+              <Trophy className="w-4 h-4 text-amber-400" />
+            </div>
+            {!isCollapsed && (
+              <div className="truncate">
+                <div className="truncate text-white font-extrabold flex items-center gap-1.5">
+                  <span>Industry Quiz</span>
+                  <span className="px-1.5 py-0.2 rounded-full bg-amber-400/20 text-amber-300 text-[9px] font-mono font-bold">100 Q</span>
+                </div>
+                <div className="text-[10px] text-amber-300 truncate font-mono">
+                  DSA Pattern Finder
                 </div>
               </div>
             )}

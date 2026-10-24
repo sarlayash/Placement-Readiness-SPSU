@@ -1,17 +1,30 @@
 import { UserProgress } from '../types';
 
+export const PASSING_SCORE_PERCENT = 80;
+
 /**
  * Checks whether a given day has all its sections completed.
  * A day is considered completed if:
  * 1. It has been explicitly marked completed in progress.completedDays[day], OR
  * 2. Its official badge has been unlocked in progress.unlockedBadges[day], OR
- * 3. Both Pre-Assessment and Post-Assessment have been passed for that day.
+ * 3. Both Pre-Assessment and Post-Assessment have been passed with >= 80% score.
  */
 export function isDayCompleted(day: number, progress?: UserProgress | null): boolean {
   if (!progress) return false;
   if (progress.completedDays && progress.completedDays[day]) return true;
   if (progress.unlockedBadges && progress.unlockedBadges[day]) return true;
-  return Boolean(progress.preAssessmentPassed?.[day] && progress.postAssessmentPassed?.[day]);
+
+  const preScore = progress.preAssessmentScores?.[day];
+  const postScore = progress.postAssessmentScores?.[day];
+
+  const prePassed =
+    Boolean(progress.preAssessmentPassed?.[day]) &&
+    (preScore === undefined || preScore >= PASSING_SCORE_PERCENT);
+  const postPassed =
+    Boolean(progress.postAssessmentPassed?.[day]) &&
+    (postScore === undefined || postScore >= PASSING_SCORE_PERCENT);
+
+  return Boolean(prePassed && postPassed);
 }
 
 /**

@@ -162,6 +162,42 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
         </div>
       </section>
 
+      {/* 80% Passing Cutoff Strict Benchmark Notice */}
+      <section className="p-4 sm:p-5 rounded-2xl bg-white border-2 border-emerald-600 shadow-sm flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+        <div className="flex items-center gap-3.5">
+          <div className="w-11 h-11 rounded-xl bg-emerald-600 text-white flex flex-col items-center justify-center font-black text-xs shrink-0 shadow-sm">
+            <span>80%</span>
+            <span className="text-[9px] font-mono">PASS</span>
+          </div>
+          <div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono font-bold uppercase text-emerald-800">
+                Placement Standard Enforced
+              </span>
+              <span className="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-mono font-bold">
+                ≥ 40/50 MCQs
+              </span>
+            </div>
+            <div className="text-base font-extrabold text-[#0A192F]">
+              Strict 80% Passing Benchmark Across All Assessments
+            </div>
+            <p className="text-xs text-slate-600 mt-0.5">
+              Real-time Firestore scoring: Learners must score at least 80% (40 out of 50 correct MCQs) on both Diagnostic Pre-Assessment and Verification Post-Assessment to qualify for Badges and Day progression.
+            </p>
+          </div>
+        </div>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-emerald-50 text-emerald-800 border border-emerald-300 font-mono text-xs font-bold">
+            <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+            <span>≥ 80% = PASSED</span>
+          </span>
+          <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-rose-50 text-rose-800 border border-rose-300 font-mono text-xs font-bold">
+            <ShieldAlert className="w-3.5 h-3.5 text-rose-600" />
+            <span>&lt; 80% = RETAKE</span>
+          </span>
+        </div>
+      </section>
+
       {/* KPI Cards */}
       <section className="grid grid-cols-2 lg:grid-cols-5 gap-3.5">
         <div className="p-4 rounded-2xl bg-white border-2 border-[#0A192F] shadow-sm space-y-1">
@@ -438,8 +474,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         {/* Day 1 Pre Score */}
                         <td className="py-3 px-4 text-center border-r border-slate-200">
                           {pre1 !== undefined ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 font-mono font-bold text-[11px]">
-                              {pre1}% {prePassed ? '✓' : ''}
+                            <span
+                              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-mono font-bold text-[11px] border ${
+                                pre1 >= 80
+                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                  : 'bg-rose-50 text-rose-800 border-rose-300'
+                              }`}
+                            >
+                              <span>{pre1}%</span>
+                              <span className="text-[9px] uppercase tracking-wider">
+                                {pre1 >= 80 ? 'PASS' : 'RETAKE'}
+                              </span>
                             </span>
                           ) : (
                             <span className="text-slate-400 font-mono text-[11px]">Not attempted</span>
@@ -449,8 +494,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         {/* Day 1 Post Score */}
                         <td className="py-3 px-4 text-center border-r border-slate-200">
                           {post1 !== undefined ? (
-                            <span className="inline-flex items-center px-2 py-0.5 rounded-full bg-blue-50 text-blue-800 border border-blue-300 font-mono font-bold text-[11px]">
-                              {post1}% {postPassed ? '✓' : ''}
+                            <span
+                              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-mono font-bold text-[11px] border ${
+                                post1 >= 80
+                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                  : 'bg-rose-50 text-rose-800 border-rose-300'
+                              }`}
+                            >
+                              <span>{post1}%</span>
+                              <span className="text-[9px] uppercase tracking-wider">
+                                {post1 >= 80 ? 'PASS' : 'RETAKE'}
+                              </span>
                             </span>
                           ) : (
                             <span className="text-slate-400 font-mono text-[11px]">Not attempted</span>
@@ -556,16 +610,47 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
                         return (
                           <tr key={d} className="hover:bg-slate-50">
-                            <td className="py-2 px-3 font-bold text-[#0A192F]">Day {d}</td>
-                            <td className="py-2 px-3">
-                              {pre !== undefined ? <span className="text-emerald-700 font-bold">{pre}%</span> : <span className="text-slate-400">-</span>}
+                            <td className="py-2.5 px-3 font-bold text-[#0A192F]">Day {d}</td>
+                            <td className="py-2.5 px-3">
+                              {pre !== undefined ? (
+                                <span
+                                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold border ${
+                                    pre >= 80
+                                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                      : 'bg-rose-50 text-rose-800 border-rose-300'
+                                  }`}
+                                >
+                                  <span>{pre}%</span>
+                                  <span>({pre >= 80 ? 'PASSED ≥80%' : 'NEEDS RETAKE'})</span>
+                                </span>
+                              ) : (
+                                <span className="text-slate-400">-</span>
+                              )}
                             </td>
-                            <td className="py-2 px-3">
-                              {post !== undefined ? <span className="text-blue-700 font-bold">{post}%</span> : <span className="text-slate-400">-</span>}
+                            <td className="py-2.5 px-3">
+                              {post !== undefined ? (
+                                <span
+                                  className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-md text-[10px] font-bold border ${
+                                    post >= 80
+                                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                      : 'bg-rose-50 text-rose-800 border-rose-300'
+                                  }`}
+                                >
+                                  <span>{post}%</span>
+                                  <span>({post >= 80 ? 'PASSED ≥80%' : 'NEEDS RETAKE'})</span>
+                                </span>
+                              ) : (
+                                <span className="text-slate-400">-</span>
+                              )}
                             </td>
-                            <td className="py-2 px-3">
+                            <td className="py-2.5 px-3">
                               {completed ? (
-                                <span className="text-emerald-700 font-bold">✓ COMPLETED</span>
+                                <span className="inline-flex items-center gap-1 text-emerald-700 font-bold">
+                                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                                  <span>DAY COMPLETED (≥80%)</span>
+                                </span>
+                              ) : pre !== undefined || post !== undefined ? (
+                                <span className="text-amber-700 font-bold">IN PROGRESS (&lt;80%)</span>
                               ) : (
                                 <span className="text-slate-400">PENDING</span>
                               )}

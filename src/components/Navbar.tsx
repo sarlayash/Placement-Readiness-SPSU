@@ -2,9 +2,11 @@ import React from 'react';
 import { GoogleUser, UserProgress } from '../types';
 import {
   Award,
+  Bell,
   Calendar,
   Code2,
   FileCheck2,
+  Layers,
   Lock,
   LogIn,
   LogOut,
@@ -28,6 +30,9 @@ interface NavbarProps {
   onOpenBadges: () => void;
   onOpenCertificate: () => void;
   onOpenAdmin: () => void;
+  onOpenLearnerDashboard: () => void;
+  onOpenNotifications: () => void;
+  unreadNotificationsCount?: number;
 }
 
 export const Navbar: React.FC<NavbarProps> = ({
@@ -44,6 +49,9 @@ export const Navbar: React.FC<NavbarProps> = ({
   onOpenBadges,
   onOpenCertificate,
   onOpenAdmin,
+  onOpenLearnerDashboard,
+  onOpenNotifications,
+  unreadNotificationsCount = 0,
 }) => {
   const unlockedBadgesCount = Object.keys(progress.unlockedBadges).length;
 
@@ -98,8 +106,35 @@ export const Navbar: React.FC<NavbarProps> = ({
           <LiveDateTime variant="header" />
         </div>
 
-        {/* Right: Badges, Certificate & Strict Google Auth */}
+        {/* Right: Notifications, Learner Dashboard, Badges, Certificate & Strict Google Auth */}
         <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Automatic Reminders Notification Bell */}
+          <button
+            type="button"
+            onClick={onOpenNotifications}
+            className="relative p-2 rounded-xl bg-[#112240] hover:bg-[#1E3A8A] border border-[#93C5FD]/40 text-[#BFDBFE] hover:text-white transition-all cursor-pointer shadow-xs"
+            title="Automatic Reminders & Push Notification Alerts"
+            aria-label="View notifications and reminders"
+          >
+            <Bell className="w-4 h-4 text-amber-300" />
+            {unreadNotificationsCount > 0 && (
+              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-red-500 text-white font-mono text-[9px] font-black flex items-center justify-center animate-pulse">
+                {unreadNotificationsCount}
+              </span>
+            )}
+          </button>
+
+          {/* Learner Dashboard: Live Scores & 80% Benchmark */}
+          <button
+            type="button"
+            onClick={onOpenLearnerDashboard}
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-[#112240] hover:bg-[#1E3A8A] border border-[#93C5FD]/40 text-white text-xs font-bold transition-all cursor-pointer shadow-xs"
+            title="View Real-Time Scores & Learner Dashboard (80% Passing Benchmark)"
+          >
+            <Layers className="w-4 h-4 text-[#93C5FD]" />
+            <span className="hidden md:inline">My Scores</span>
+          </button>
+
           {/* Daily Badges Button (Shows ONLY real user's unlocked count) */}
           <button
             type="button"

@@ -230,7 +230,7 @@ export function downloadAssessmentScoresCSV(learners: LearnerRecord[], dayFilter
   const nowStr = new Date().toISOString().replace(/[:.]/g, '-');
 
   if (dayFilter && dayFilter >= 1 && dayFilter <= 10) {
-    // Single Day CSV
+    // Single Day CSV with explicit 80% passing benchmark annotations
     const headers = [
       'Learner Name',
       'Email Address',
@@ -238,20 +238,25 @@ export function downloadAssessmentScoresCSV(learners: LearnerRecord[], dayFilter
       'First Registration Date',
       'Last Login Attempt',
       `Day ${dayFilter} Pre-Assessment Score (%)`,
-      `Day ${dayFilter} Pre-Assessment Passed`,
+      `Day ${dayFilter} Pre Status (80% Cutoff)`,
       `Day ${dayFilter} Post-Assessment Score (%)`,
-      `Day ${dayFilter} Post-Assessment Passed`,
-      `Day ${dayFilter} Completed`,
+      `Day ${dayFilter} Post Status (80% Cutoff)`,
+      `Day ${dayFilter} Completed (Both >= 80%)`,
       'Total Badges Earned',
       'Official Certificate ID',
     ];
 
     const rows = learners.map((l) => {
-      const preScore = l.preAssessmentScores?.[dayFilter] !== undefined ? `${l.preAssessmentScores[dayFilter]}%` : 'Not Attempted';
-      const prePassed = l.preAssessmentPassed?.[dayFilter] ? 'PASSED' : 'PENDING';
-      const postScore = l.postAssessmentScores?.[dayFilter] !== undefined ? `${l.postAssessmentScores[dayFilter]}%` : 'Not Attempted';
-      const postPassed = l.postAssessmentPassed?.[dayFilter] ? 'PASSED' : 'PENDING';
-      const dayCompleted = l.completedDays?.[dayFilter] || (l.preAssessmentPassed?.[dayFilter] && l.postAssessmentPassed?.[dayFilter]) ? 'YES' : 'NO';
+      const rawPre = l.preAssessmentScores?.[dayFilter];
+      const rawPost = l.postAssessmentScores?.[dayFilter];
+
+      const preScore = rawPre !== undefined ? `${rawPre}%` : 'Not Attempted';
+      const prePassed = rawPre !== undefined ? (rawPre >= 80 ? 'PASSED (>=80%)' : 'NEEDS RETAKE (<80%)') : 'NOT ATTEMPTED';
+
+      const postScore = rawPost !== undefined ? `${rawPost}%` : 'Not Attempted';
+      const postPassed = rawPost !== undefined ? (rawPost >= 80 ? 'PASSED (>=80%)' : 'NEEDS RETAKE (<80%)') : 'NOT ATTEMPTED';
+
+      const dayCompleted = (rawPre !== undefined && rawPre >= 80 && rawPost !== undefined && rawPost >= 80) ? 'YES' : 'NO';
       const badgeCount = Object.keys(l.unlockedBadges || {}).length;
 
       return [
@@ -273,34 +278,34 @@ export function downloadAssessmentScoresCSV(learners: LearnerRecord[], dayFilter
     csvContent = [headers.join(','), ...rows].join('\r\n');
     triggerFileDownload(csvContent, `SPSU_Kapil_Day_${dayFilter}_Assessment_Scores_${nowStr}.csv`);
   } else {
-    // Complete 10-Day CSV
+    // Complete 10-Day Master CSV with explicit 80% passing indicator
     const headers = [
       'Learner Name',
       'Email Address',
       'Firebase UID',
       'First Registration Date',
       'Last Login Attempt',
-      'Day 1 Pre (%)',
-      'Day 1 Post (%)',
-      'Day 2 Pre (%)',
-      'Day 2 Post (%)',
-      'Day 3 Pre (%)',
-      'Day 3 Post (%)',
-      'Day 4 Pre (%)',
-      'Day 4 Post (%)',
-      'Day 5 Pre (%)',
-      'Day 5 Post (%)',
-      'Day 6 Pre (%)',
-      'Day 6 Post (%)',
-      'Day 7 Pre (%)',
-      'Day 7 Post (%)',
-      'Day 8 Pre (%)',
-      'Day 8 Post (%)',
-      'Day 9 Pre (%)',
-      'Day 9 Post (%)',
-      'Day 10 Pre (%)',
-      'Day 10 Post (%)',
-      'Total Days Completed',
+      'Day 1 Pre (Cutoff 80%)',
+      'Day 1 Post (Cutoff 80%)',
+      'Day 2 Pre (Cutoff 80%)',
+      'Day 2 Post (Cutoff 80%)',
+      'Day 3 Pre (Cutoff 80%)',
+      'Day 3 Post (Cutoff 80%)',
+      'Day 4 Pre (Cutoff 80%)',
+      'Day 4 Post (Cutoff 80%)',
+      'Day 5 Pre (Cutoff 80%)',
+      'Day 5 Post (Cutoff 80%)',
+      'Day 6 Pre (Cutoff 80%)',
+      'Day 6 Post (Cutoff 80%)',
+      'Day 7 Pre (Cutoff 80%)',
+      'Day 7 Post (Cutoff 80%)',
+      'Day 8 Pre (Cutoff 80%)',
+      'Day 8 Post (Cutoff 80%)',
+      'Day 9 Pre (Cutoff 80%)',
+      'Day 9 Post (Cutoff 80%)',
+      'Day 10 Pre (Cutoff 80%)',
+      'Day 10 Post (Cutoff 80%)',
+      'Total Days Completed (Both >= 80%)',
       'Badges Unlocked',
       'Certificate ID',
       'Certificate Issued At',
@@ -311,11 +316,19 @@ export function downloadAssessmentScoresCSV(learners: LearnerRecord[], dayFilter
       let completedDaysCount = 0;
 
       for (let d = 1; d <= 10; d++) {
-        const pre = l.preAssessmentScores?.[d] !== undefined ? `${l.preAssessmentScores[d]}%` : '-';
-        const post = l.postAssessmentScores?.[d] !== undefined ? `${l.postAssessmentScores[d]}%` : '-';
-        scoresCols.push(`"${pre}"`, `"${post}"`);
+        const rawPre = l.preAssessmentScores?.[d];
+        const rawPost = l.postAssessmentScores?.[d];
 
-        if (l.completedDays?.[d] || (l.preAssessmentPassed?.[d] && l.postAssessmentPassed?.[d])) {
+        const preStr = rawPre !== undefined
+          ? (rawPre >= 80 ? `${rawPre}% [PASS]` : `${rawPre}% [RETAKE]`)
+          : '-';
+        const postStr = rawPost !== undefined
+          ? (rawPost >= 80 ? `${rawPost}% [PASS]` : `${rawPost}% [RETAKE]`)
+          : '-';
+
+        scoresCols.push(`"${preStr}"`, `"${postStr}"`);
+
+        if (rawPre !== undefined && rawPre >= 80 && rawPost !== undefined && rawPost >= 80) {
           completedDaysCount++;
         }
       }

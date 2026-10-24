@@ -264,6 +264,14 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
     const pct = Math.round((correct / dayPlan.preAssessment.length) * 100);
     setPreSubmitted(true);
     onSavePreScore(dayPlan.day, pct);
+    if (pct >= 80) {
+      confetti({
+        particleCount: 70,
+        spread: 60,
+        origin: { y: 0.6 },
+        colors: ['#0A192F', '#1E3A8A', '#93C5FD'],
+      });
+    }
   };
 
   const handlePostSubmit = (e: React.FormEvent) => {
@@ -279,9 +287,9 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
     const pct = Math.round((correct / dayPlan.postAssessment.length) * 100);
     setPostSubmitted(true);
     onSavePostScore(dayPlan.day, pct);
-    if (pct >= 60) {
+    if (pct >= 80) {
       confetti({
-        particleCount: 90,
+        particleCount: 100,
         spread: 80,
         origin: { y: 0.6 },
         colors: ['#0A192F', '#1E3A8A', '#93C5FD', '#FFFFFF'],
@@ -632,17 +640,36 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
             <div>
               <span className="text-xs font-mono uppercase text-[#1E3A8A] font-bold">
-                Day {dayPlan.day} Diagnostic Benchmark
+                Day {dayPlan.day} Diagnostic Benchmark • Strict 80% Passing Benchmark
               </span>
               <h2 className="text-xl font-black text-[#0A192F]">
                 Daily Pre-Assessment ({dayPlan.title})
               </h2>
             </div>
-            {progress.preAssessmentScores[dayPlan.day] !== undefined && (
-              <div className="px-4 py-2 rounded-xl bg-[#EFF6FF] border border-[#1E3A8A] text-[#0A192F] text-xs font-extrabold">
-                Recorded Score: {progress.preAssessmentScores[dayPlan.day]}%
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs font-black">
+                Passing Cutoff: 80%
               </div>
-            )}
+              {progress.preAssessmentScores[dayPlan.day] !== undefined && (
+                <div
+                  className={`px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 border ${
+                    progress.preAssessmentScores[dayPlan.day] >= 80
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                      : 'bg-red-50 text-red-800 border-red-300'
+                  }`}
+                >
+                  {progress.preAssessmentScores[dayPlan.day] >= 80 ? (
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  ) : (
+                    <XCircle className="w-4 h-4 text-red-600" />
+                  )}
+                  <span>
+                    Score: {progress.preAssessmentScores[dayPlan.day]}%{' '}
+                    {progress.preAssessmentScores[dayPlan.day] >= 80 ? '(PASSED)' : '(NEEDS RETAKE)'}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
 
           <form onSubmit={handlePreSubmit} className="space-y-5">
@@ -722,22 +749,49 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
               </div>
             ))}
 
-            <div className="flex items-center justify-between pt-2">
+            <div className="flex flex-wrap items-center justify-between gap-3 pt-2">
               {!preSubmitted ? (
                 <button
                   type="submit"
-                  className="px-6 py-3 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-extrabold text-sm transition-colors cursor-pointer"
+                  className="px-6 py-3 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-extrabold text-sm transition-colors cursor-pointer shadow-xs"
                 >
-                  Submit Day {dayPlan.day} Pre-Assessment
+                  Submit Day {dayPlan.day} Pre-Assessment (80% Passing Cutoff)
                 </button>
               ) : (
-                <button
-                  type="button"
-                  onClick={() => setActiveTab('notes')}
-                  className="px-6 py-3 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-extrabold text-sm transition-colors cursor-pointer"
-                >
-                  Proceed to 30% Theory Notes (C, C++, Java, Python) →
-                </button>
+                <div className="flex flex-wrap items-center justify-between gap-3 w-full">
+                  <div className="text-xs font-bold">
+                    {progress.preAssessmentScores[dayPlan.day] !== undefined && progress.preAssessmentScores[dayPlan.day] >= 80 ? (
+                      <span className="text-emerald-700 flex items-center gap-1.5">
+                        <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                        <span>Pre-Assessment Passed ({progress.preAssessmentScores[dayPlan.day]}% ≥ 80%). Concept readiness verified!</span>
+                      </span>
+                    ) : (
+                      <span className="text-red-700 flex items-center gap-1.5">
+                        <XCircle className="w-4 h-4 text-red-600" />
+                        <span>Score: {progress.preAssessmentScores[dayPlan.day] || 0}%. Needs Retake to reach 80% passing benchmark.</span>
+                      </span>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPreSubmitted(false);
+                        setPreAnswers({});
+                      }}
+                      className="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-[#0A192F] text-xs font-bold transition-all cursor-pointer"
+                    >
+                      Retake Pre-Assessment
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setActiveTab('notes')}
+                      className="px-6 py-3 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-extrabold text-sm transition-colors cursor-pointer shadow-xs"
+                    >
+                      Proceed to 30% Theory Notes →
+                    </button>
+                  </div>
+                </div>
               )}
             </div>
           </form>
@@ -1460,17 +1514,36 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 pb-4">
             <div>
               <span className="text-xs font-mono uppercase text-[#1E3A8A] font-bold">
-                Day {dayPlan.day} Mastery Verification & Badge Unlock
+                Day {dayPlan.day} Mastery Verification & Badge Unlock • Strict 80% Passing Benchmark
               </span>
               <h2 className="text-xl font-black text-[#0A192F]">
                 Daily Post-Assessment ({dayPlan.title})
               </h2>
             </div>
-            {progress.postAssessmentScores[dayPlan.day] !== undefined && (
-              <div className="px-4 py-2 rounded-xl bg-[#0A192F] text-white text-xs font-extrabold">
-                Verified Score: {progress.postAssessmentScores[dayPlan.day]}%
+            <div className="flex items-center gap-2 flex-wrap">
+              <div className="px-3 py-1.5 rounded-xl bg-amber-50 border border-amber-300 text-amber-900 text-xs font-black">
+                Passing Cutoff: 80%
               </div>
-            )}
+              {progress.postAssessmentScores[dayPlan.day] !== undefined && (
+                <div
+                  className={`px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 border ${
+                    progress.postAssessmentScores[dayPlan.day] >= 80
+                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                      : 'bg-red-50 text-red-800 border-red-300'
+                  }`}
+                >
+                  {progress.postAssessmentScores[dayPlan.day] >= 80 ? (
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                  ) : (
+                    <XCircle className="w-4 h-4 text-red-600" />
+                  )}
+                  <span>
+                    Verified Score: {progress.postAssessmentScores[dayPlan.day]}%{' '}
+                    {progress.postAssessmentScores[dayPlan.day] >= 80 ? '(PASSED)' : '(NEEDS RETAKE)'}
+                  </span>
+                </div>
+              )}
+            </div>
           </div>
 
           <form onSubmit={handlePostSubmit} className="space-y-5">
@@ -1554,27 +1627,62 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
               {!postSubmitted ? (
                 <button
                   type="submit"
-                  className="px-6 py-3 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-extrabold text-sm transition-colors cursor-pointer"
+                  className="px-6 py-3 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-extrabold text-sm transition-colors cursor-pointer shadow-xs"
                 >
-                  Submit Post-Assessment & Unlock Day {dayPlan.day} Badge
+                  Submit Post-Assessment (Requires ≥ 80% to Unlock Badge)
                 </button>
+              ) : progress.postAssessmentScores[dayPlan.day] !== undefined && progress.postAssessmentScores[dayPlan.day] >= 80 ? (
+                <div className="flex flex-wrap items-center justify-between gap-3 w-full">
+                  <div className="text-xs font-bold text-emerald-700 flex items-center gap-1.5">
+                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    <span>Mastery Verified! Scored {progress.postAssessmentScores[dayPlan.day]}% (≥ 80%). Day {dayPlan.day} Badge Unlocked!</span>
+                  </div>
+                  <div className="flex flex-wrap items-center gap-3">
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setPostSubmitted(false);
+                        setPostAnswers({});
+                      }}
+                      className="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-[#0A192F] text-xs font-bold transition-all cursor-pointer"
+                    >
+                      Retake Post-Assessment
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => downloadBadgePNG(dayPlan.badge, user, badgeUnlockedAt)}
+                      className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border-2 border-[#0A192F] bg-white hover:bg-[#0A192F] text-[#0A192F] hover:text-white font-extrabold text-xs sm:text-sm transition-colors cursor-pointer"
+                    >
+                      <Image className="w-4 h-4" />
+                      <span>Download Day {dayPlan.day} Badge (PNG)</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => downloadBadgePDF(dayPlan.badge, user, badgeUnlockedAt)}
+                      className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-extrabold text-xs sm:text-sm transition-colors cursor-pointer shadow-xs"
+                    >
+                      <Download className="w-4 h-4" />
+                      <span>Download Day {dayPlan.day} Badge (PDF)</span>
+                    </button>
+                  </div>
+                </div>
               ) : (
-                <div className="flex flex-wrap items-center gap-3">
+                <div className="flex flex-wrap items-center justify-between gap-3 w-full p-4 rounded-xl bg-red-50 border border-red-200">
+                  <div className="text-xs font-bold text-red-800 flex items-center gap-1.5">
+                    <XCircle className="w-5 h-5 text-red-600 shrink-0" />
+                    <span>
+                      Score: {progress.postAssessmentScores[dayPlan.day] || 0}%. Passing score is strictly 80% (40/50 correct). Please review your answers and retake to unlock your badge and proceed to the next day.
+                    </span>
+                  </div>
                   <button
                     type="button"
-                    onClick={() => downloadBadgePNG(dayPlan.badge, user, badgeUnlockedAt)}
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-xl border-2 border-[#0A192F] bg-white hover:bg-[#0A192F] text-[#0A192F] hover:text-white font-extrabold text-xs sm:text-sm transition-colors cursor-pointer"
+                    onClick={() => {
+                      setPostSubmitted(false);
+                      setPostAnswers({});
+                    }}
+                    className="px-5 py-2.5 rounded-xl bg-red-700 hover:bg-red-800 text-white font-extrabold text-xs transition-all cursor-pointer shrink-0 shadow-xs"
                   >
-                    <Image className="w-4 h-4" />
-                    <span>Download Day {dayPlan.day} Badge (PNG)</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => downloadBadgePDF(dayPlan.badge, user, badgeUnlockedAt)}
-                    className="inline-flex items-center gap-2 px-5 py-3 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-extrabold text-xs sm:text-sm transition-colors cursor-pointer"
-                  >
-                    <Download className="w-4 h-4" />
-                    <span>Download Day {dayPlan.day} Badge (PDF)</span>
+                    Retake Post-Assessment Now →
                   </button>
                 </div>
               )}

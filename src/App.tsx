@@ -24,7 +24,10 @@ import { BadgeGalleryModal } from './components/BadgeGalleryModal';
 import { CertificateModal } from './components/CertificateModal';
 import { AdminLoginModal } from './components/AdminLoginModal';
 import { AdminDashboard } from './components/AdminDashboard';
+import { LearnerDashboardModal } from './components/LearnerDashboardModal';
+import { NotificationCenterModal } from './components/NotificationCenterModal';
 import { recordUserSignIn, syncLearnerProgress } from './utils/learnerRegistry';
+import { checkAndTriggerAutomaticReminders, loadInAppReminders } from './utils/pushNotifications';
 
 export function App() {
   const [user, setUser] = useState<GoogleUser | null>(() => loadStoredGoogleUser());
@@ -42,6 +45,16 @@ export function App() {
   const [showBadgesModal, setShowBadgesModal] = useState<boolean>(false);
   const [showCertificateModal, setShowCertificateModal] = useState<boolean>(false);
   const [showAdminModal, setShowAdminModal] = useState<boolean>(false);
+  const [showLearnerDashboard, setShowLearnerDashboard] = useState<boolean>(false);
+  const [showNotificationCenter, setShowNotificationCenter] = useState<boolean>(false);
+  const [unreadNotificationsCount, setUnreadNotificationsCount] = useState<number>(() => {
+    try {
+      return loadInAppReminders().filter((r) => !r.read).length;
+    } catch {
+      return 1;
+    }
+  });
+
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => {
     try {
       return sessionStorage.getItem('spsu_kapil_admin_auth_v1') === 'true';
@@ -52,6 +65,31 @@ export function App() {
 
   // Left Sidebar Expand/Collapse state (defaults to expanded on desktop, toggleable anytime)
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
+
+  // Periodic automatic reminders check
+  useEffect(() => {
+    const runReminderCheck = () => {
+      const preScore = progress.preAssessmentScores?.[selectedDay];
+      const postScore = progress.postAssessmentScores?.[selectedDay];
+      const prePassed = progress.preAssessmentPassed?.[selectedDay];
+      const postPassed = progress.postAssessmentPassed?.[selectedDay];
+
+      const newReminder = checkAndTriggerAutomaticReminders(
+        selectedDay,
+        preScore,
+        postScore,
+        prePassed,
+        postPassed
+      );
+      if (newReminder) {
+        setUnreadNotificationsCount(loadInAppReminders().filter((r) => !r.read).length);
+      }
+    };
+
+    runReminderCheck();
+    const interval = setInterval(runReminderCheck, 60000);
+    return () => clearInterval(interval);
+  }, [selectedDay, progress]);
 
   // Sync Firebase Google Auth state if popup completes or redirect returns
   useEffect(() => {
@@ -156,27 +194,29 @@ export function App() {
   };
 
   const handleSavePreScore = (day: number, scorePercent: number) => {
+    const isPassed = scorePercent >= 80;
     setProgress((prev) => ({
       ...prev,
       preAssessmentScores: { ...prev.preAssessmentScores, [day]: scorePercent },
-      preAssessmentPassed: { ...prev.preAssessmentPassed, [day]: true },
+      preAssessmentPassed: { ...prev.preAssessmentPassed, [day]: isPassed },
     }));
   };
 
   const handleSavePostScore = (day: number, scorePercent: number) => {
+    const isPassed = scorePercent >= 80;
     setProgress((prev) => {
       const nextBadges = { ...prev.unlockedBadges };
-      if (!nextBadges[day]) {
+      if (isPassed && !nextBadges[day]) {
         nextBadges[day] = new Date().toISOString();
       }
       return {
         ...prev,
         postAssessmentScores: { ...prev.postAssessmentScores, [day]: scorePercent },
-        postAssessmentPassed: { ...prev.postAssessmentPassed, [day]: true },
+        postAssessmentPassed: { ...prev.postAssessmentPassed, [day]: isPassed },
         unlockedBadges: nextBadges,
         certificateId:
-          prev.certificateId || (user ? generateOfficialCertificateId(user.email) : null),
-        certificateIssuedAt: prev.certificateIssuedAt || new Date().toISOString(),
+          prev.certificateId || (user && isPassed ? generateOfficialCertificateId(user.email) : prev.certificateId),
+        certificateIssuedAt: prev.certificateIssuedAt || (isPassed ? new Date().toISOString() : prev.certificateIssuedAt),
       };
     });
   };
@@ -253,6 +293,12 @@ export function App() {
         onOpenBadges={() => setShowBadgesModal(true)}
         onOpenCertificate={() => setShowCertificateModal(true)}
         onOpenAdmin={handleOpenAdmin}
+        onOpenLearnerDashboard={() => setShowLearnerDashboard(true)}
+        onOpenNotifications={() => {
+          setShowNotificationCenter(true);
+          setUnreadNotificationsCount(0);
+        }}
+        unreadNotificationsCount={unreadNotificationsCount}
       />
 
       {/* Main Layout: Collapsible Left Sidebar + Content Area */}
@@ -268,6 +314,11 @@ export function App() {
           onOpenBadges={() => setShowBadgesModal(true)}
           onOpenCertificate={() => setShowCertificateModal(true)}
           onOpenAdmin={handleOpenAdmin}
+          onOpenLearnerDashboard={() => setShowLearnerDashboard(true)}
+          onOpenNotifications={() => {
+            setShowNotificationCenter(true);
+            setUnreadNotificationsCount(0);
+          }}
           progress={progress}
           user={user}
         />
@@ -354,6 +405,38 @@ export function App() {
           onPromptAuth={() => {
             setShowCertificateModal(false);
             setShowAuthModal(true);
+          }}
+        />
+      )}
+
+      {showLearnerDashboard && (
+        <LearnerDashboardModal
+          isOpen={showLearnerDashboard}
+          onClose={() => setShowLearnerDashboard(false)}
+          user={user}
+          progress={progress}
+          onSelectDay={(d, tab) => {
+            setShowLearnerDashboard(false);
+            handleSelectDay(d, tab);
+          }}
+          onOpenAuth={() => {
+            setShowLearnerDashboard(false);
+            setShowAuthModal(true);
+          }}
+          onOpenCertificate={() => {
+            setShowLearnerDashboard(false);
+            setShowCertificateModal(true);
+          }}
+        />
+      )}
+
+      {showNotificationCenter && (
+        <NotificationCenterModal
+          isOpen={showNotificationCenter}
+          onClose={() => setShowNotificationCenter(false)}
+          onSelectDay={(d, tab) => {
+            setShowNotificationCenter(false);
+            handleSelectDay(d, tab);
           }}
         />
       )}

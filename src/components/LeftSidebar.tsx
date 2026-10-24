@@ -4,6 +4,7 @@ import {
   Calendar,
   Code2,
   Award,
+  Bell,
   FileCheck2,
   ChevronLeft,
   ChevronRight,
@@ -11,6 +12,7 @@ import {
   Clock,
   Sparkles,
   BookOpen,
+  Layers,
   Lock,
 } from 'lucide-react';
 import { LiveDateTime } from './LiveDateTime';
@@ -27,6 +29,8 @@ interface LeftSidebarProps {
   onOpenBadges: () => void;
   onOpenCertificate: () => void;
   onOpenAdmin: () => void;
+  onOpenLearnerDashboard?: () => void;
+  onOpenNotifications?: () => void;
   progress: UserProgress;
   user: GoogleUser | null;
 }
@@ -42,6 +46,8 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   onOpenBadges,
   onOpenCertificate,
   onOpenAdmin,
+  onOpenLearnerDashboard,
+  onOpenNotifications,
   progress,
   user,
 }) => {
@@ -127,6 +133,50 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             </div>
           )}
         </button>
+
+        {/* Learner Real-Time Scorecard Link */}
+        {onOpenLearnerDashboard && (
+          <button
+            type="button"
+            onClick={onOpenLearnerDashboard}
+            className="w-full flex items-center gap-2.5 p-2 rounded-xl text-left text-xs font-bold text-[#BFDBFE] hover:bg-[#112240] hover:text-white transition-all cursor-pointer"
+            title="My Live Scorecard (80% Passing Cutoff)"
+          >
+            <div className="w-8 h-8 rounded-lg bg-[#112240] text-[#93C5FD] flex items-center justify-center shrink-0">
+              <Layers className="w-4 h-4" />
+            </div>
+            {!isCollapsed && (
+              <div className="truncate">
+                <div className="truncate text-white">My Live Scores</div>
+                <div className="text-[10px] text-emerald-400 truncate">
+                  80% Benchmark Track
+                </div>
+              </div>
+            )}
+          </button>
+        )}
+
+        {/* Automatic Reminders Link */}
+        {onOpenNotifications && (
+          <button
+            type="button"
+            onClick={onOpenNotifications}
+            className="w-full flex items-center gap-2.5 p-2 rounded-xl text-left text-xs font-bold text-[#BFDBFE] hover:bg-[#112240] hover:text-white transition-all cursor-pointer"
+            title="Automatic Reminders & Push Notification Alerts"
+          >
+            <div className="w-8 h-8 rounded-lg bg-[#112240] text-amber-300 flex items-center justify-center shrink-0">
+              <Bell className="w-4 h-4" />
+            </div>
+            {!isCollapsed && (
+              <div className="truncate">
+                <div className="truncate text-white">Daily Reminders</div>
+                <div className="text-[10px] text-amber-300 truncate">
+                  09:00 AM & 02:30 PM
+                </div>
+              </div>
+            )}
+          </button>
+        )}
 
         {/* Divider */}
         {!isCollapsed && (

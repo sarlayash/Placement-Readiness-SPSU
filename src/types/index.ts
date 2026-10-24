@@ -25,12 +25,27 @@ export interface TestCase {
   explanation?: string;
 }
 
+export interface VisualizationStep {
+  step: number;
+  label: string;
+  description: string;
+  codeSnippet?: string;
+  variables: Record<string, string | number | boolean>;
+  arrayState?: {
+    elements: (number | string)[];
+    activeIndices?: number[];
+    pointerLabels?: Record<number, string>;
+  };
+}
+
 export interface PracticalChallenge {
   id: string;
   day: number;
   title: string;
   difficulty: 'Easy' | 'Medium' | 'Hard';
   moduleTag: string;
+  companies?: string[];
+  platforms?: string[];
   problemStatement: string;
   inputFormat: string;
   outputFormat: string;
@@ -43,6 +58,7 @@ export interface PracticalChallenge {
   starterCode: Record<SupportedLanguage, string>;
   solutionCode: Record<SupportedLanguage, string>;
   testCases: TestCase[];
+  visualizationSteps?: VisualizationStep[];
 }
 
 export interface AssessmentQuestion {

@@ -10,19 +10,27 @@ import {
   ArrowLeft,
   Award,
   BookOpen,
+  Building2,
   Check,
   CheckCircle2,
+  ChevronLeft,
+  ChevronRight,
   ClipboardCheck,
   Code2,
   Copy,
   Download,
+  Eye,
   FileCode2,
   Image,
   Lightbulb,
   Lock,
+  Pause,
   Play,
   RotateCcw,
   ShieldCheck,
+  SkipBack,
+  SkipForward,
+  Sparkles,
   Terminal,
   Unlock,
   XCircle,
@@ -90,8 +98,14 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
       actual: string;
       passed: boolean;
       isHidden: boolean;
+      explanation?: string;
     }>;
   } | null>(null);
+
+  // Execution Visualizer State
+  const [ideViewMode, setIdeViewMode] = useState<'editor' | 'visualizer'>('editor');
+  const [visualStepIdx, setVisualStepIdx] = useState<number>(0);
+  const [isAutoPlaying, setIsAutoPlaying] = useState<boolean>(false);
 
   // Pre & Post Assessment State
   const [preAnswers, setPreAnswers] = useState<Record<string, number>>({});
@@ -110,10 +124,36 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
     setPostAnswers({});
     setPostSubmitted(false);
     setTestRunResult(null);
+    setVisualStepIdx(0);
+    setIsAutoPlaying(false);
   }, [dayPlan.day]);
 
   const currentChallenge: PracticalChallenge =
     dayPlan.practicalChallenges[selectedChallengeIdx] || dayPlan.practicalChallenges[0];
+
+  useEffect(() => {
+    setVisualStepIdx(0);
+    setIsAutoPlaying(false);
+  }, [selectedChallengeIdx]);
+
+  useEffect(() => {
+    let timer: ReturnType<typeof setInterval> | null = null;
+    const stepsCount = currentChallenge?.visualizationSteps?.length || 0;
+    if (isAutoPlaying && stepsCount > 0) {
+      timer = setInterval(() => {
+        setVisualStepIdx((prev) => {
+          if (prev >= stepsCount - 1) {
+            setIsAutoPlaying(false);
+            return prev;
+          }
+          return prev + 1;
+        });
+      }, 1600);
+    }
+    return () => {
+      if (timer) clearInterval(timer);
+    };
+  }, [isAutoPlaying, currentChallenge]);
 
   useEffect(() => {
     if (!currentChallenge) return;
@@ -182,6 +222,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
           : 'Incomplete implementation: Starter stub returned default value',
         passed,
         isHidden: tc.isHidden,
+        explanation: tc.explanation,
       };
     });
 
@@ -813,35 +854,93 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
       {/* TAB 3: 70% PRACTICAL INTEGRATED MULTI-LANGUAGE IDE */}
       {activeTab === 'ide' && currentChallenge && (
         <div className="space-y-6">
-          {/* Challenge Selector if multiple challenges exist on the day */}
+          {/* Challenge Selector */}
           {dayPlan.practicalChallenges.length > 1 && (
-            <div className="flex items-center gap-2 flex-wrap">
-              {dayPlan.practicalChallenges.map((ch, idx) => {
-                const isSolved = progress.completedChallengeIds.includes(ch.id);
-                return (
-                  <button
-                    key={ch.id}
-                    type="button"
-                    onClick={() => setSelectedChallengeIdx(idx)}
-                    className={`flex items-center gap-2 px-4 py-2.5 rounded-xl border-2 text-xs font-extrabold transition-all cursor-pointer ${
-                      selectedChallengeIdx === idx
-                        ? 'bg-[#0A192F] border-[#0A192F] text-white'
-                        : 'bg-white border-slate-300 text-[#0A192F] hover:border-[#0A192F]'
-                    }`}
-                  >
-                    <span>
-                      Problem {idx + 1}: {ch.title}
-                    </span>
-                    {isSolved && <CheckCircle2 className="w-4 h-4 text-[#93C5FD]" />}
-                  </button>
-                );
-              })}
+            <div className="rounded-2xl border-2 border-[#0A192F] bg-white p-4 space-y-3 shadow-xs">
+              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-2.5">
+                <div className="flex items-center gap-2">
+                  <div className="p-1.5 rounded-lg bg-[#0A192F] text-white">
+                    <Code2 className="w-4 h-4 text-[#93C5FD]" />
+                  </div>
+                  <div>
+                    <h4 className="text-sm font-black text-[#0A192F]">
+                      Day {dayPlan.day} Solved Placement Challenges ({dayPlan.practicalChallenges.length} Basic Problems)
+                    </h4>
+                    <p className="text-[11px] text-slate-500">
+                      Standard industry questions asked in TCS, Infosys, Amazon, Wipro, Cognizant, Accenture, Zoho & LeetCode/GFG
+                    </p>
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-xs font-mono font-bold">
+                  <span className="px-3 py-1 rounded-full bg-[#EFF6FF] text-[#1E3A8A] border border-blue-200">
+                    {progress.completedChallengeIds.filter((id) =>
+                      dayPlan.practicalChallenges.some((ch) => ch.id === id)
+                    ).length}{' '}
+                    / {dayPlan.practicalChallenges.length} Solved
+                  </span>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-2">
+                {dayPlan.practicalChallenges.map((ch, idx) => {
+                  const isSolved = progress.completedChallengeIds.includes(ch.id);
+                  const isSelected = selectedChallengeIdx === idx;
+                  return (
+                    <button
+                      key={ch.id}
+                      type="button"
+                      onClick={() => setSelectedChallengeIdx(idx)}
+                      className={`p-2.5 rounded-xl border-2 text-left transition-all cursor-pointer flex flex-col justify-between h-full ${
+                        isSelected
+                          ? 'bg-[#0A192F] border-[#0A192F] text-white shadow-md'
+                          : 'bg-white border-slate-200 text-[#0A192F] hover:border-[#1E3A8A] hover:bg-[#F8FAFC]'
+                      }`}
+                    >
+                      <div className="flex items-center justify-between gap-1 mb-1">
+                        <span
+                          className={`text-[10px] font-mono font-extrabold px-1.5 py-0.5 rounded ${
+                            isSelected ? 'bg-[#1E3A8A] text-white' : 'bg-slate-100 text-slate-700'
+                          }`}
+                        >
+                          P{idx + 1}
+                        </span>
+                        {isSolved ? (
+                          <CheckCircle2
+                            className={`w-4 h-4 ${isSelected ? 'text-[#93C5FD]' : 'text-emerald-600'}`}
+                          />
+                        ) : (
+                          <span
+                            className={`text-[9px] font-bold uppercase ${
+                              isSelected ? 'text-blue-200' : 'text-slate-400'
+                            }`}
+                          >
+                            {ch.difficulty}
+                          </span>
+                        )}
+                      </div>
+                      <div className="text-xs font-bold truncate" title={ch.title}>
+                        {ch.title}
+                      </div>
+                      {ch.companies && ch.companies.length > 0 && (
+                        <div
+                          className={`text-[10px] font-medium truncate mt-1 ${
+                            isSelected ? 'text-[#93C5FD]' : 'text-[#1E3A8A]'
+                          }`}
+                        >
+                          🏢 {ch.companies.slice(0, 2).join(', ')}
+                          {ch.companies.length > 2 ? ' +' : ''}
+                        </div>
+                      )}
+                    </button>
+                  );
+                })}
+              </div>
             </div>
           )}
 
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            {/* Left Column: Problem Specification & Kapil Intuition (5 cols) */}
-            <div className="lg:col-span-5 rounded-2xl border-2 border-[#0A192F] bg-white p-5 space-y-4 flex flex-col justify-between">
+            {/* Left Column: Problem Specification & Placement Details (5 cols) */}
+            <div className="lg:col-span-5 rounded-2xl border-2 border-[#0A192F] bg-white p-5 space-y-4 flex flex-col justify-between shadow-xs">
               <div className="space-y-4">
                 <div className="flex items-center justify-between gap-2 flex-wrap border-b border-slate-200 pb-3">
                   <span className="text-xs font-mono font-bold px-2.5 py-1 rounded bg-[#EFF6FF] text-[#0A192F] border border-[#1E3A8A]">
@@ -852,9 +951,51 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
                   </span>
                 </div>
 
-                <h3 className="text-lg font-black text-[#0A192F]">
-                  {currentChallenge.title}
-                </h3>
+                <div>
+                  <h3 className="text-lg font-black text-[#0A192F]">
+                    {currentChallenge.title}
+                  </h3>
+                </div>
+
+                {/* Target Companies */}
+                {currentChallenge.companies && currentChallenge.companies.length > 0 && (
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1">
+                      <Building2 className="w-3.5 h-3.5 text-[#1E3A8A]" />
+                      <span>Asked in Placement Companies:</span>
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {currentChallenge.companies.map((c) => (
+                        <span
+                          key={c}
+                          className="text-[11px] font-bold px-2.5 py-0.5 rounded-lg bg-[#EFF6FF] text-[#1E3A8A] border border-blue-200"
+                        >
+                          🏢 {c}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
+                {/* Platforms Reference */}
+                {currentChallenge.platforms && currentChallenge.platforms.length > 0 && (
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-extrabold uppercase tracking-wider text-slate-500 flex items-center gap-1">
+                      <Award className="w-3.5 h-3.5 text-amber-600" />
+                      <span>Standard Platform References:</span>
+                    </span>
+                    <div className="flex flex-wrap gap-1.5">
+                      {currentChallenge.platforms.map((p) => (
+                        <span
+                          key={p}
+                          className="text-[11px] font-mono font-bold px-2 py-0.5 rounded-lg bg-amber-50 text-amber-900 border border-amber-200"
+                        >
+                          🎯 {p}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 <p className="text-xs sm:text-sm text-slate-700 leading-relaxed">
                   {currentChallenge.problemStatement}
@@ -887,6 +1028,18 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
                   </div>
                 </div>
 
+                {/* Constraints */}
+                {currentChallenge.constraints && currentChallenge.constraints.length > 0 && (
+                  <div className="p-3 rounded-xl bg-[#F8FAFC] border border-slate-200 text-xs space-y-1">
+                    <strong className="text-[#0A192F] font-bold block mb-1">Constraints & Bounds:</strong>
+                    <ul className="list-disc list-inside space-y-0.5 font-mono text-[11px] text-slate-600">
+                      {currentChallenge.constraints.map((c, i) => (
+                        <li key={i}>{c}</li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
                 {/* Kapil Intuition */}
                 <div className="p-3.5 rounded-xl bg-[#EFF6FF] border border-[#1E3A8A] text-xs text-[#0A192F] space-y-1">
                   <strong className="font-extrabold flex items-center gap-1.5">
@@ -903,122 +1056,399 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
               </div>
             </div>
 
-            {/* Right Column: Integrated Multi-Language Code Editor & Test Runner (7 cols) */}
-            <div className="lg:col-span-7 rounded-2xl border-2 border-[#0A192F] bg-white overflow-hidden flex flex-col">
-              {/* IDE Top Toolbar */}
-              <div className="bg-[#0A192F] text-white px-4 py-3 flex flex-wrap items-center justify-between gap-2 border-b border-[#1E3A8A]">
-                <div className="flex items-center gap-1.5 flex-wrap">
-                  {(['c', 'cpp', 'java', 'python'] as SupportedLanguage[]).map((lang) => (
-                    <button
-                      key={lang}
-                      type="button"
-                      onClick={() => setIdeLang(lang)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
-                        ideLang === lang
-                          ? 'bg-white text-[#0A192F]'
-                          : 'bg-[#112240] text-[#BFDBFE] hover:bg-[#1E3A8A] hover:text-white'
-                      }`}
-                    >
-                      {lang.toUpperCase()}
-                    </button>
-                  ))}
+            {/* Right Column: Integrated Multi-Language Code Editor & Interactive Visualizer (7 cols) */}
+            <div className="lg:col-span-7 rounded-2xl border-2 border-[#0A192F] bg-white overflow-hidden flex flex-col shadow-xs">
+              {/* Top View Mode Switcher: Editor vs Visualizer */}
+              <div className="bg-[#0A192F] px-4 py-2.5 flex items-center justify-between gap-2 border-b border-[#1E3A8A]">
+                <div className="flex items-center gap-1.5">
+                  <button
+                    type="button"
+                    onClick={() => setIdeViewMode('editor')}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      ideViewMode === 'editor'
+                        ? 'bg-white text-[#0A192F] shadow-xs'
+                        : 'text-[#BFDBFE] hover:bg-[#112240] hover:text-white'
+                    }`}
+                  >
+                    <Code2 className="w-3.5 h-3.5" />
+                    <span>Code Editor & Test Cases</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setIdeViewMode('visualizer')}
+                    className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-bold transition-all cursor-pointer ${
+                      ideViewMode === 'visualizer'
+                        ? 'bg-white text-[#0A192F] shadow-xs'
+                        : 'text-[#BFDBFE] hover:bg-[#112240] hover:text-white'
+                    }`}
+                  >
+                    <Eye className="w-3.5 h-3.5 text-amber-300" />
+                    <span>Step-by-Step Visualizer</span>
+                    {currentChallenge.visualizationSteps && (
+                      <span className="ml-1 text-[10px] font-mono px-1.5 py-0.5 rounded-full bg-[#1E3A8A] text-white">
+                        {currentChallenge.visualizationSteps.length} Steps
+                      </span>
+                    )}
+                  </button>
                 </div>
 
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handleLoadReferenceSolution}
-                    className="px-3 py-1.5 rounded-lg bg-[#1E3A8A] hover:bg-[#2563EB] text-white text-xs font-bold transition-colors cursor-pointer"
-                    title="Load Kapil's Verified Solution for current language"
-                  >
-                    Load Kapil Reference Solution
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setEditorCode(currentChallenge.starterCode[ideLang]);
-                      setTestRunResult(null);
-                    }}
-                    className="p-1.5 rounded-lg bg-[#112240] hover:bg-[#1E3A8A] text-[#BFDBFE] hover:text-white transition-colors cursor-pointer"
-                    title="Reset to Starter Code"
-                  >
-                    <RotateCcw className="w-4 h-4" />
-                  </button>
+                <div className="hidden sm:flex items-center gap-1 text-[11px] text-[#93C5FD] font-mono">
+                  <span>Day {dayPlan.day} • Placement Lab</span>
                 </div>
               </div>
 
-              {/* Code Textarea */}
-              <div className="relative flex-1 bg-[#0A192F]">
-                <textarea
-                  value={editorCode}
-                  onChange={(e) => handleCodeChange(e.target.value)}
-                  spellCheck={false}
-                  rows={15}
-                  aria-label="Integrated Code Editor"
-                  className="w-full p-4 bg-[#0A192F] text-white font-mono text-xs sm:text-sm leading-relaxed focus:outline-none resize-y border-b border-[#1E3A8A]"
-                />
-              </div>
+              {/* VIEW 1: STEP-BY-STEP EXECUTION VISUALIZER */}
+              {ideViewMode === 'visualizer' ? (
+                <div className="p-5 flex-1 flex flex-col justify-between space-y-4 bg-slate-50 min-h-[500px]">
+                  {currentChallenge.visualizationSteps && currentChallenge.visualizationSteps.length > 0 ? (
+                    (() => {
+                      const steps = currentChallenge.visualizationSteps;
+                      const activeStep = steps[visualStepIdx] || steps[0];
+                      const progressPct = Math.round(((visualStepIdx + 1) / steps.length) * 100);
 
-              {/* IDE Execution Bar */}
-              <div className="bg-[#F8FAFC] px-4 py-3 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
-                <div className="flex items-center gap-2 text-xs font-mono text-[#0A192F]">
-                  <Terminal className="w-4 h-4 text-[#1E3A8A]" />
-                  <span>Runtime: {LANGUAGE_LABELS[ideLang]}</span>
-                </div>
+                      return (
+                        <div className="space-y-4 flex-1 flex flex-col justify-between">
+                          {/* Visualizer Step Header */}
+                          <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
+                            <div className="flex items-center justify-between gap-2 flex-wrap">
+                              <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-md bg-[#0A192F] text-white">
+                                Step {activeStep.step} of {steps.length}: {activeStep.label}
+                              </span>
+                              <span className="text-xs font-mono font-bold text-[#1E3A8A]">
+                                {progressPct}% Completed
+                              </span>
+                            </div>
 
-                <div className="flex items-center gap-2">
-                  <button
-                    type="button"
-                    onClick={handleRunTests}
-                    className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white text-xs font-extrabold transition-colors cursor-pointer shadow-xs"
-                  >
-                    <Play className="w-3.5 h-3.5" />
-                    <span>Run & Verify Test Cases</span>
-                  </button>
-                </div>
-              </div>
+                            {/* Progress bar */}
+                            <div className="w-full h-2 rounded-full bg-slate-200 overflow-hidden">
+                              <div
+                                className="h-full bg-gradient-to-r from-[#0A192F] to-[#1E3A8A] transition-all duration-300"
+                                style={{ width: `${progressPct}%` }}
+                              />
+                            </div>
 
-              {/* Console Output & Test Case Matrix */}
-              <div className="p-4 bg-white space-y-3">
-                <div className="p-3 rounded-xl bg-[#0A192F] text-[#BFDBFE] font-mono text-xs whitespace-pre-wrap">
-                  {consoleLog}
-                </div>
-
-                {testRunResult && (
-                  <div className="space-y-2">
-                    {testRunResult.results.map((r, idx) => (
-                      <div
-                        key={r.id}
-                        className={`p-3 rounded-xl border text-xs flex items-center justify-between gap-3 ${
-                          r.passed
-                            ? 'bg-[#EFF6FF] border-[#0A192F] text-[#0A192F]'
-                            : 'bg-red-50 border-red-300 text-red-900'
-                        }`}
-                      >
-                        <div className="space-y-0.5 font-mono">
-                          <div className="font-bold">
-                            Test Case #{idx + 1} {r.isHidden ? '(Hidden Boundary Test)' : '(Sample Test)'}
+                            <p className="text-xs sm:text-sm font-medium text-slate-800 leading-relaxed pt-1">
+                              {activeStep.description}
+                            </p>
                           </div>
-                          <div>Expected: {r.expected}</div>
-                        </div>
-                        <span className="inline-flex items-center gap-1 font-extrabold">
-                          {r.passed ? (
-                            <>
-                              <CheckCircle2 className="w-4 h-4 text-[#0A192F]" />
-                              <span>PASSED</span>
-                            </>
-                          ) : (
-                            <>
-                              <XCircle className="w-4 h-4 text-red-600" />
-                              <span>NEEDS LOGIC</span>
-                            </>
+
+                          {/* Array & Pointer Visualization Canvas */}
+                          {activeStep.arrayState && (
+                            <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-3">
+                              <div className="text-[11px] font-extrabold uppercase text-slate-500 tracking-wider flex items-center justify-between">
+                                <span>Memory State & Array Elements:</span>
+                                <span className="font-mono text-[10px] text-slate-400">0-Indexed Layout</span>
+                              </div>
+
+                              <div className="overflow-x-auto pb-2 pt-6">
+                                <div className="flex items-center justify-center gap-3 min-w-max px-2">
+                                  {activeStep.arrayState.elements.map((elem, idx) => {
+                                    const isActive = activeStep.arrayState?.activeIndices?.includes(idx);
+                                    const pointer = activeStep.arrayState?.pointerLabels?.[idx];
+
+                                    return (
+                                      <div key={idx} className="flex flex-col items-center">
+                                        {/* Pointer Badge with Down Arrow */}
+                                        <div className="h-7 flex items-center justify-center mb-1">
+                                          {pointer ? (
+                                            <span className="px-2 py-0.5 rounded-md bg-amber-500 text-white text-[10px] font-black font-mono shadow-xs animate-bounce">
+                                              {pointer} ↓
+                                            </span>
+                                          ) : (
+                                            <span className="invisible text-[10px]">.</span>
+                                          )}
+                                        </div>
+
+                                        {/* Element Box */}
+                                        <div
+                                          className={`w-12 h-12 sm:w-14 sm:h-14 flex items-center justify-center rounded-xl font-mono text-base font-black transition-all ${
+                                            isActive
+                                              ? 'bg-[#0A192F] text-white border-2 border-[#1E3A8A] ring-4 ring-blue-300 scale-105 shadow-md'
+                                              : 'bg-slate-100 text-[#0A192F] border-2 border-slate-300'
+                                          }`}
+                                        >
+                                          {elem}
+                                        </div>
+
+                                        {/* Index label */}
+                                        <div className="mt-1 text-[10px] font-mono text-slate-400 font-bold">
+                                          [{idx}]
+                                        </div>
+                                      </div>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                            </div>
                           )}
-                        </span>
-                      </div>
-                    ))}
+
+                          {/* Live Variable Watch Panel */}
+                          <div className="p-4 rounded-xl bg-white border border-slate-200 shadow-xs space-y-2">
+                            <div className="text-[11px] font-extrabold uppercase text-slate-500 tracking-wider flex items-center gap-1.5">
+                              <Sparkles className="w-3.5 h-3.5 text-[#1E3A8A]" />
+                              <span>Live Variable Watch & Register State:</span>
+                            </div>
+
+                            <div className="flex flex-wrap gap-2">
+                              {Object.entries(activeStep.variables).map(([key, val]) => (
+                                <div
+                                  key={key}
+                                  className="px-3 py-1.5 rounded-lg bg-[#EFF6FF] border border-blue-200 text-xs font-mono flex items-center gap-2"
+                                >
+                                  <span className="text-slate-500 font-bold">{key}:</span>
+                                  <span className="text-[#0A192F] font-black">
+                                    {typeof val === 'boolean' ? (val ? 'true' : 'false') : String(val)}
+                                  </span>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Code Instruction Traced */}
+                          {activeStep.codeSnippet && (
+                            <div className="p-3 rounded-xl bg-[#0A192F] text-white space-y-1">
+                              <div className="text-[10px] uppercase font-bold text-[#93C5FD]">
+                                Active Instruction Traced:
+                              </div>
+                              <pre className="text-xs font-mono text-emerald-400 overflow-x-auto whitespace-pre-wrap">
+                                {activeStep.codeSnippet}
+                              </pre>
+                            </div>
+                          )}
+
+                          {/* Playback Controls */}
+                          <div className="p-3 rounded-xl bg-white border border-slate-200 shadow-xs flex flex-wrap items-center justify-between gap-3">
+                            <div className="flex items-center gap-1">
+                              <button
+                                type="button"
+                                onClick={() => setVisualStepIdx(0)}
+                                disabled={visualStepIdx === 0}
+                                className="p-2 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed text-[#0A192F] transition-colors cursor-pointer"
+                                title="First Step"
+                              >
+                                <SkipBack className="w-4 h-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setVisualStepIdx((p) => Math.max(0, p - 1))}
+                                disabled={visualStepIdx === 0}
+                                className="p-2 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed text-[#0A192F] transition-colors cursor-pointer"
+                                title="Previous Step"
+                              >
+                                <ChevronLeft className="w-4 h-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setIsAutoPlaying((p) => !p)}
+                                className={`px-4 py-2 rounded-lg text-xs font-extrabold flex items-center gap-1.5 transition-colors cursor-pointer ${
+                                  isAutoPlaying
+                                    ? 'bg-amber-600 text-white hover:bg-amber-700'
+                                    : 'bg-[#0A192F] text-white hover:bg-[#1E3A8A]'
+                                }`}
+                              >
+                                {isAutoPlaying ? (
+                                  <>
+                                    <Pause className="w-3.5 h-3.5" />
+                                    <span>Pause</span>
+                                  </>
+                                ) : (
+                                  <>
+                                    <Play className="w-3.5 h-3.5" />
+                                    <span>Auto-Play</span>
+                                  </>
+                                )}
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setVisualStepIdx((p) => Math.min(steps.length - 1, p + 1))}
+                                disabled={visualStepIdx >= steps.length - 1}
+                                className="p-2 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed text-[#0A192F] transition-colors cursor-pointer"
+                                title="Next Step"
+                              >
+                                <ChevronRight className="w-4 h-4" />
+                              </button>
+                              <button
+                                type="button"
+                                onClick={() => setVisualStepIdx(steps.length - 1)}
+                                disabled={visualStepIdx >= steps.length - 1}
+                                className="p-2 rounded-lg border border-slate-300 bg-white hover:bg-slate-100 disabled:opacity-40 disabled:cursor-not-allowed text-[#0A192F] transition-colors cursor-pointer"
+                                title="Last Step"
+                              >
+                                <SkipForward className="w-4 h-4" />
+                              </button>
+                            </div>
+
+                            {/* Step scrubber buttons */}
+                            <div className="flex items-center gap-1 flex-wrap">
+                              {steps.map((st, sIdx) => (
+                                <button
+                                  key={st.step}
+                                  type="button"
+                                  onClick={() => setVisualStepIdx(sIdx)}
+                                  className={`w-7 h-7 rounded-md font-mono text-xs font-bold transition-all cursor-pointer ${
+                                    visualStepIdx === sIdx
+                                      ? 'bg-[#0A192F] text-white scale-105'
+                                      : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
+                                  }`}
+                                >
+                                  {sIdx + 1}
+                                </button>
+                              ))}
+                            </div>
+
+                            <button
+                              type="button"
+                              onClick={() => setIdeViewMode('editor')}
+                              className="px-3.5 py-1.5 rounded-lg bg-[#1E3A8A] hover:bg-[#2563EB] text-white text-xs font-bold transition-colors cursor-pointer"
+                            >
+                              Open Code Editor →
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })()
+                  ) : (
+                    <div className="p-8 text-center text-slate-500 text-xs">
+                      No visualizer steps configured for this challenge. Switch to Code Editor.
+                    </div>
+                  )}
+                </div>
+              ) : (
+                /* VIEW 2: MULTI-LANGUAGE CODE EDITOR & TEST RUNNER */
+                <>
+                  {/* IDE Toolbar */}
+                  <div className="bg-[#0A192F] text-white px-4 py-3 flex flex-wrap items-center justify-between gap-2 border-b border-[#1E3A8A]">
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {(['c', 'cpp', 'java', 'python'] as SupportedLanguage[]).map((lang) => (
+                        <button
+                          key={lang}
+                          type="button"
+                          onClick={() => setIdeLang(lang)}
+                          className={`px-3 py-1.5 rounded-lg text-xs font-mono font-bold transition-all cursor-pointer ${
+                            ideLang === lang
+                              ? 'bg-white text-[#0A192F]'
+                              : 'bg-[#112240] text-[#BFDBFE] hover:bg-[#1E3A8A] hover:text-white'
+                          }`}
+                        >
+                          {lang.toUpperCase()}
+                        </button>
+                      ))}
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={handleLoadReferenceSolution}
+                        className="px-3 py-1.5 rounded-lg bg-[#1E3A8A] hover:bg-[#2563EB] text-white text-xs font-bold transition-colors cursor-pointer"
+                        title="Load Kapil's Verified Solution for current language"
+                      >
+                        Load Kapil Reference Solution
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditorCode(currentChallenge.starterCode[ideLang]);
+                          setTestRunResult(null);
+                        }}
+                        className="p-1.5 rounded-lg bg-[#112240] hover:bg-[#1E3A8A] text-[#BFDBFE] hover:text-white transition-colors cursor-pointer"
+                        title="Reset to Starter Code"
+                      >
+                        <RotateCcw className="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
-                )}
-              </div>
+
+                  {/* Code Textarea */}
+                  <div className="relative flex-1 bg-[#0A192F]">
+                    <textarea
+                      value={editorCode}
+                      onChange={(e) => handleCodeChange(e.target.value)}
+                      spellCheck={false}
+                      rows={15}
+                      aria-label="Integrated Code Editor"
+                      className="w-full p-4 bg-[#0A192F] text-white font-mono text-xs sm:text-sm leading-relaxed focus:outline-none resize-y border-b border-[#1E3A8A]"
+                    />
+                  </div>
+
+                  {/* IDE Execution Bar */}
+                  <div className="bg-[#F8FAFC] px-4 py-3 border-b border-slate-200 flex flex-wrap items-center justify-between gap-3">
+                    <div className="flex items-center gap-2 text-xs font-mono text-[#0A192F]">
+                      <Terminal className="w-4 h-4 text-[#1E3A8A]" />
+                      <span>Runtime: {LANGUAGE_LABELS[ideLang]}</span>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={handleRunTests}
+                        className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white text-xs font-extrabold transition-colors cursor-pointer shadow-xs"
+                      >
+                        <Play className="w-3.5 h-3.5" />
+                        <span>Run & Verify Test Cases</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Console Output & Test Case Matrix */}
+                  <div className="p-4 bg-white space-y-3">
+                    <div className="p-3 rounded-xl bg-[#0A192F] text-[#BFDBFE] font-mono text-xs whitespace-pre-wrap">
+                      {consoleLog}
+                    </div>
+
+                    {testRunResult && (
+                      <div className="space-y-2">
+                        {testRunResult.results.map((r, idx) => (
+                          <div
+                            key={r.id}
+                            className={`p-3.5 rounded-xl border text-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 ${
+                              r.passed
+                                ? 'bg-[#EFF6FF] border-[#0A192F] text-[#0A192F]'
+                                : 'bg-red-50 border-red-300 text-red-900'
+                            }`}
+                          >
+                            <div className="space-y-1 font-mono flex-1">
+                              <div className="font-extrabold text-sm flex items-center gap-2">
+                                <span>Test Case #{idx + 1}</span>
+                                <span className="text-[10px] font-sans px-2 py-0.5 rounded-full bg-white border border-slate-300">
+                                  {r.isHidden ? 'Hidden Boundary Test' : 'Sample Test'}
+                                </span>
+                              </div>
+                              <div className="text-slate-600">
+                                <span className="font-bold">Input:</span> {r.input}
+                              </div>
+                              <div>
+                                <span className="font-bold">Expected Output:</span> {r.expected}
+                              </div>
+                              <div>
+                                <span className="font-bold">Actual Output:</span> {r.actual}
+                              </div>
+                              {r.explanation && (
+                                <div className="text-[11px] font-sans text-slate-500 italic mt-0.5">
+                                  Intuition: {r.explanation}
+                                </div>
+                              )}
+                            </div>
+                            <span className="inline-flex items-center gap-1.5 font-extrabold self-start sm:self-center px-3 py-1.5 rounded-lg bg-white border">
+                              {r.passed ? (
+                                <>
+                                  <CheckCircle2 className="w-4 h-4 text-[#0A192F]" />
+                                  <span className="text-[#0A192F]">PASSED</span>
+                                </>
+                              ) : (
+                                <>
+                                  <XCircle className="w-4 h-4 text-red-600" />
+                                  <span className="text-red-700">NEEDS LOGIC</span>
+                                </>
+                              )}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                </>
+              )}
             </div>
           </div>
         </div>

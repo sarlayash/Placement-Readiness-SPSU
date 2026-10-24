@@ -12,7 +12,7 @@ import {
   saveStoredProgress,
   generateOfficialCertificateId,
 } from './utils/storage';
-import { auth, signOutGoogle } from './utils/firebase';
+import { auth, signOutGoogle, checkRedirectAuth } from './utils/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { Navbar } from './components/Navbar';
 import { LandingDayPlanner } from './components/LandingDayPlanner';
@@ -37,9 +37,15 @@ export function App() {
   const [showBadgesModal, setShowBadgesModal] = useState<boolean>(false);
   const [showCertificateModal, setShowCertificateModal] = useState<boolean>(false);
 
-  // Sync Firebase Google Auth state if popup completes
+  // Sync Firebase Google Auth state if popup completes or redirect returns
   useEffect(() => {
     try {
+      checkRedirectAuth().then((redirectUser) => {
+        if (redirectUser && redirectUser.email) {
+          handleAuthSuccess(redirectUser);
+        }
+      });
+
       const unsub = onAuthStateChanged(auth, (fbUser) => {
         if (fbUser && fbUser.email) {
           const mapped: GoogleUser = {

@@ -171,10 +171,10 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                   Kapil
                 </div>
                 <div className="text-xs font-bold text-[#1E3A8A]">
-                  Mentor & Program Architect
+                  Placement Mentor (Independent Technical Mentor)
                 </div>
                 <div className="text-[11px] text-slate-600 font-medium">
-                  SPSU Udaipur Mentorship By Kapil
+                  SPSU Udaipur Placement Readiness Boot Camp
                 </div>
               </div>
             </div>

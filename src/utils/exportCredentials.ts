@@ -466,11 +466,11 @@ export function renderCertificateCanvas(
 
   ctx.fillStyle = '#1E3A8A';
   ctx.font = '700 16px "Inter", sans-serif';
-  ctx.fillText('Mentor & Program Architect', width - 140, 924);
+  ctx.fillText('Placement Mentor (Independent Technical Mentor)', width - 140, 924);
 
   ctx.fillStyle = '#475569';
   ctx.font = '600 15px "Inter", sans-serif';
-  ctx.fillText('SPSU Udaipur Mentorship By Kapil', width - 140, 948);
+  ctx.fillText('SPSU Udaipur Placement Readiness Boot Camp', width - 140, 948);
 
   return canvas;
 }

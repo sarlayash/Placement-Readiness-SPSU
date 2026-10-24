@@ -219,7 +219,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                 </div>
 
                 <div className="text-[11px] font-mono text-slate-500 space-y-1 bg-slate-50 p-3 rounded-xl border border-slate-100">
-                  <div>• Signatory: <strong>Mentor Kapil (Lead Algorithmic Trainer)</strong></div>
+                  <div>• Signatory: <strong>Placement Mentor – Kapil (Independent Technical Mentor)</strong></div>
                   <div>• Security: <strong>Cryptographic Digital Stamp & SHA Verification</strong></div>
                   <div>• Recommendation: <strong className="text-[#1E3A8A]">SDE-1 / MTS High Recommendation</strong></div>
                 </div>
@@ -340,7 +340,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
         {/* Footer */}
         <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between">
           <span className="text-xs text-slate-500 hidden sm:inline">
-            All downloaded documents bear official SPSU Placement Cell credentials and Mentor Kapil accreditation.
+            All downloaded documents bear official SPSU Placement Boot Camp verification and accreditation by Placement Mentor – Kapil (Independent Entity).
           </span>
           <button
             type="button"

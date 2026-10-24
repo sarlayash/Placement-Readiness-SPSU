@@ -91,7 +91,10 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
                 Kapil
               </div>
               <div className="text-xs text-[#93C5FD] font-semibold mt-0.5">
-                Official Mentor & Signatory • SPSU Udaipur Placement Readiness
+                Placement Mentor – Kapil (Independent Technical Mentor)
+              </div>
+              <div className="text-[11px] text-[#BFDBFE]/80 mt-0.5">
+                Placement Readiness Boot Camp in collaboration with SPSU Udaipur
               </div>
             </div>
           </div>
@@ -100,7 +103,7 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
           <div className="lg:col-span-7 space-y-5">
             <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1E3A8A]/70 border border-[#93C5FD]/40 text-xs font-mono font-bold text-[#93C5FD]">
               <Sparkles className="w-4 h-4 text-amber-300" />
-              <span>OFFICIAL MENTOR ADDRESS • SPSU UDAIPUR</span>
+              <span>OFFICIAL MENTOR ADDRESS • INDEPENDENT PLACEMENT MENTOR</span>
             </div>
 
             <div className="space-y-1.5">

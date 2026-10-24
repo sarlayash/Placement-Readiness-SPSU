@@ -50,21 +50,22 @@ export function download360DegreeReportPDF(
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(16);
-  doc.text('SIR PADAMPAT SINGHANIA UNIVERSITY (SPSU), UDAIPUR', pageWidth / 2, 14, { align: 'center' });
+  doc.text('SIR PADAMPAT SINGHANIA UNIVERSITY (SPSU), UDAIPUR', pageWidth / 2, 13, { align: 'center' });
 
-  doc.setFontSize(10);
+  doc.setFontSize(9.5);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(191, 219, 254); // #BFDBFE
-  doc.text('DEPARTMENT OF COMPUTER SCIENCE & ENGINEERING • PLACEMENT TRAINING CELL', pageWidth / 2, 21, { align: 'center' });
+  doc.text('10-DAY INTENSIVE PLACEMENT READINESS BOOT CAMP', pageWidth / 2, 19, { align: 'center' });
+  doc.text('Conducted by Placement Mentor – Kapil (Independent Technical Mentor)', pageWidth / 2, 24, { align: 'center' });
 
   doc.setFontSize(12);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(245, 158, 11); // Amber
-  doc.text('360-DEGREE PLACEMENT READINESS EVALUATION REPORT', pageWidth / 2, 31, { align: 'center' });
+  doc.text('360-DEGREE PLACEMENT READINESS EVALUATION REPORT', pageWidth / 2, 33, { align: 'center' });
 
   doc.setFontSize(8);
   doc.setTextColor(203, 213, 225);
-  doc.text(`Official Mentorship by Mentor Kapil • Ref: ${refCode}`, pageWidth / 2, 37, { align: 'center' });
+  doc.text(`Evaluated & Certified by Placement Mentor – Kapil (Independent Entity) • Ref: ${refCode}`, pageWidth / 2, 38, { align: 'center' });
 
   // Candidate Summary Card
   doc.setDrawColor(226, 232, 240);
@@ -218,7 +219,7 @@ export function download360DegreeReportPDF(
   // Footer of Page 1
   doc.setFontSize(7.5);
   doc.setTextColor(148, 163, 184);
-  doc.text(`Page 1 of 2 • SPSU Udaipur Placement 360° Evaluation • Authorized Signatory: Mentor Kapil`, pageWidth / 2, pageHeight - 8, { align: 'center' });
+  doc.text(`Page 1 of 2 • SPSU Placement Readiness Boot Camp • Placement Mentor – Kapil (Independent Entity)`, pageWidth / 2, pageHeight - 8, { align: 'center' });
 
   // ---------- PAGE 2: DAY-BY-DAY AUDIT, STRENGTHS & LOR ENDORSEMENT ----------
   doc.addPage();
@@ -347,29 +348,29 @@ export function download360DegreeReportPDF(
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9);
   doc.setTextColor(10, 25, 47);
-  doc.text('ENDORSED & APPROVED BY:', sigX, tableY + 7);
+  doc.text('EVALUATED & APPROVED BY:', sigX, tableY + 7);
 
   doc.setFont('times', 'italic');
   doc.setFontSize(14);
   doc.setTextColor(30, 58, 138);
-  doc.text('Kapil (Lead Mentor)', sigX, tableY + 17);
+  doc.text('Mentor Kapil', sigX, tableY + 17);
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
   doc.setTextColor(10, 25, 47);
-  doc.text('MENTOR KAPIL', sigX, tableY + 23);
+  doc.text('PLACEMENT MENTOR – KAPIL', sigX, tableY + 23);
 
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7);
   doc.setTextColor(71, 85, 105);
-  doc.text('Head of Placement Mentorship & Algorithmic Rigor', sigX, tableY + 28);
-  doc.text('Sir Padampat Singhania University (SPSU), Udaipur', sigX, tableY + 32);
-  doc.text('Department of Computer Science & Engineering', sigX, tableY + 36);
+  doc.text('Placement Mentor (Independent Technical Mentor)', sigX, tableY + 28);
+  doc.text('Lead Evaluator, 10-Day Placement Readiness Boot Camp', sigX, tableY + 32);
+  doc.text('Conducted for Sir Padampat Singhania University (SPSU)', sigX, tableY + 36);
 
   // Footer of Page 2
   doc.setFontSize(7.5);
   doc.setTextColor(148, 163, 184);
-  doc.text(`Page 2 of 2 • Official 360° Evaluation • SPSU Placement Cell Udaipur`, pageWidth / 2, pageHeight - 8, { align: 'center' });
+  doc.text(`Page 2 of 2 • Official 360° Evaluation • Placement Mentor – Kapil (Independent Entity)`, pageWidth / 2, pageHeight - 8, { align: 'center' });
 
   // Save the document
   const safeName = learnerName.replace(/[^a-zA-Z0-9]/g, '_');
@@ -413,8 +414,8 @@ export function downloadMentorKapilLorPDF(
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
   doc.setTextColor(191, 219, 254);
-  doc.text('CAMPUS PLACEMENT & TECHNICAL TRAINING CELL • DEPARTMENT OF CSE', pageWidth / 2, 19, { align: 'center' });
-  doc.text('Udaipur-Chittorgarh Road, Bhatewar, Udaipur, Rajasthan 313601 | www.spsu.ac.in', pageWidth / 2, 24, { align: 'center' });
+  doc.text('10-DAY INTENSIVE PLACEMENT READINESS BOOT CAMP', pageWidth / 2, 19, { align: 'center' });
+  doc.text('Conducted in Academic Collaboration with Sir Padampat Singhania University (SPSU), Udaipur', pageWidth / 2, 24, { align: 'center' });
 
   doc.setFontSize(11);
   doc.setFont('helvetica', 'bold');
@@ -426,7 +427,7 @@ export function downloadMentorKapilLorPDF(
   doc.setFontSize(8.5);
   doc.setFont('courier', 'bold');
   doc.setTextColor(71, 85, 105);
-  doc.text(`REF NO: SPSU/TPO/KAPIL-LOR/2026/${refCode.substring(7)}`, 16, y);
+  doc.text(`REF NO: MENTOR-KAPIL/LOR/SPSU-2026/${refCode.substring(7)}`, 16, y);
   doc.setFont('helvetica', 'normal');
   doc.text(`DATE: ${today}`, pageWidth - 16, y, { align: 'right' });
 
@@ -449,7 +450,7 @@ export function downloadMentorKapilLorPDF(
   doc.setFontSize(10);
   doc.setTextColor(15, 23, 42); // slate-900
 
-  const p1 = `It is with immense pleasure and unreserved enthusiasm that I write this official Letter of Recommendation in support of ${learnerName}. As Head of Placement Mentorship and Algorithmic Training at Sir Padampat Singhania University (SPSU), Udaipur, I have closely evaluated ${learnerName}'s technical intellect, algorithmic intuition, and execution speed throughout our intensive 10-Day Placement Readiness Boot Camp.`;
+  const p1 = `It is with immense pleasure and unreserved enthusiasm that I write this official Letter of Recommendation in support of ${learnerName}. As an independent Placement Mentor conducting the intensive 10-Day Placement Readiness Boot Camp in collaboration with Sir Padampat Singhania University (SPSU), Udaipur, I have closely evaluated ${learnerName}'s technical intellect, algorithmic intuition, and execution speed throughout our intensive curriculum.`;
   const splitP1 = doc.splitTextToSize(p1, pageWidth - 32);
   doc.text(splitP1, 16, y);
   y += splitP1.length * 5 + 3;
@@ -470,7 +471,7 @@ export function downloadMentorKapilLorPDF(
   doc.text(splitP4, 16, y);
   y += splitP4.length * 5 + 3;
 
-  const p5 = `Should you require any further empirical verification regarding ${learnerName}'s assessment performance, code traces, or attendance records, please do not hesitate to contact our placement training office.`;
+  const p5 = `Should you require any further empirical verification regarding ${learnerName}'s assessment performance, code traces, or attendance records, please do not hesitate to reach out.`;
   const splitP5 = doc.splitTextToSize(p5, pageWidth - 32);
   doc.text(splitP5, 16, y);
   y += splitP5.length * 5 + 8;
@@ -498,13 +499,13 @@ export function downloadMentorKapilLorPDF(
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(8.5);
   doc.setTextColor(51, 65, 85);
-  doc.text('Head of Placement Mentorship & Algorithmic Training', 16, y);
+  doc.text('Placement Mentor (Independent Technical Mentor)', 16, y);
   y += 4;
-  doc.text('Department of Computer Science & Engineering', 16, y);
+  doc.text('Lead Evaluator • 10-Day Placement Readiness Boot Camp', 16, y);
   y += 4;
-  doc.text('Sir Padampat Singhania University (SPSU), Udaipur (Rajasthan)', 16, y);
+  doc.text('Conducted for Sir Padampat Singhania University (SPSU), Udaipur (Rajasthan)', 16, y);
   y += 4;
-  doc.text('Email: kapil.mentor@spsu.ac.in | Office of Placement Readiness', 16, y);
+  doc.text('Independent Placement Mentorship & Industry Readiness Program', 16, y);
 
   // Official Stamp Box (Right Side)
   const stampX = pageWidth - 76;
@@ -516,10 +517,10 @@ export function downloadMentorKapilLorPDF(
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(8);
   doc.setTextColor(30, 58, 138);
-  doc.text('SPSU UDAIPUR • PLACEMENT CELL', stampX + 30, stampY + 7, { align: 'center' });
+  doc.text('PLACEMENT MENTORSHIP', stampX + 30, stampY + 7, { align: 'center' });
   doc.setFontSize(7);
   doc.setTextColor(100, 116, 139);
-  doc.text('AUTHENTICATED DOCUMENT', stampX + 30, stampY + 12, { align: 'center' });
+  doc.text('INDEPENDENT EVALUATION EMBLEM', stampX + 30, stampY + 12, { align: 'center' });
 
   doc.setFont('courier', 'bold');
   doc.setFontSize(7);
@@ -530,13 +531,13 @@ export function downloadMentorKapilLorPDF(
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(6.5);
   doc.setTextColor(16, 185, 129);
-  doc.text('★ MENTOR ACCREDITED ★', stampX + 30, stampY + 30, { align: 'center' });
+  doc.text('★ MENTOR KAPIL ACCREDITED ★', stampX + 30, stampY + 30, { align: 'center' });
 
   // Bottom Security Line
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(7.5);
   doc.setTextColor(148, 163, 184);
-  doc.text(`SPSU Official Placement LOR • Digital Hash: ${refCode} • Generated via SPSU Placement Readiness Portal`, pageWidth / 2, pageHeight - 8, { align: 'center' });
+  doc.text(`Official Placement LOR • Digital Hash: ${refCode} • Issued by Placement Mentor – Kapil (Independent Entity)`, pageWidth / 2, pageHeight - 8, { align: 'center' });
 
   // Save the document
   const safeName = learnerName.replace(/[^a-zA-Z0-9]/g, '_');
@@ -618,7 +619,7 @@ export function downloadBadgeCardImage(
   // Footer
   ctx.fillStyle = '#94A3B8';
   ctx.font = 'normal 14px Arial';
-  ctx.fillText('Mentorship by Mentor Kapil • 80%+ Verified Performance • Official Credential', 400, 435);
+  ctx.fillText('Placement Mentor – Kapil (Independent Entity) • 10-Day SPSU Placement Boot Camp', 400, 435);
 
   // Trigger Download
   const link = document.createElement('a');

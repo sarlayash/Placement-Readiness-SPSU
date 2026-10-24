@@ -15,6 +15,8 @@ import {
 import { auth, signOutGoogle, checkRedirectAuth } from './utils/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
 import { Navbar } from './components/Navbar';
+import { LeftSidebar } from './components/LeftSidebar';
+import { Footer } from './components/Footer';
 import { LandingDayPlanner } from './components/LandingDayPlanner';
 import { DayWorkspace } from './components/DayWorkspace';
 import { GoogleAuthModal } from './components/GoogleAuthModal';
@@ -36,6 +38,9 @@ export function App() {
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
   const [showBadgesModal, setShowBadgesModal] = useState<boolean>(false);
   const [showCertificateModal, setShowCertificateModal] = useState<boolean>(false);
+
+  // Left Sidebar Expand/Collapse state (defaults to expanded on desktop, toggleable anytime)
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState<boolean>(false);
 
   // Sync Firebase Google Auth state if popup completes or redirect returns
   useEffect(() => {
@@ -166,11 +171,14 @@ export function App() {
 
   return (
     <div className="min-h-screen flex flex-col bg-white text-[#0A192F]">
+      {/* Sticky Header with Real Live Date/Time & Actions */}
       <Navbar
         user={user}
         progress={progress}
         activeView={activeView}
         selectedDay={selectedDay}
+        isSidebarCollapsed={isSidebarCollapsed}
+        onToggleSidebar={() => setIsSidebarCollapsed((prev) => !prev)}
         onSelectPlanner={() => setActiveView('planner')}
         onSelectDay={(d) => handleSelectDay(d, 'notes')}
         onOpenAuth={() => setShowAuthModal(true)}
@@ -179,59 +187,65 @@ export function App() {
         onOpenCertificate={() => setShowCertificateModal(true)}
       />
 
-      <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 pt-6">
-        {activeView === 'planner' ? (
-          <LandingDayPlanner
-            days={COMPLETE_10_DAY_PLAN}
-            modules={SYLLABUS_MODULES}
-            user={user}
-            progress={progress}
-            onSelectDay={handleSelectDay}
-            onOpenAuth={() => setShowAuthModal(true)}
+      {/* Main Layout: Collapsible Left Sidebar + Content Area */}
+      <div className="flex-1 flex w-full relative">
+        <LeftSidebar
+          days={COMPLETE_10_DAY_PLAN}
+          selectedDay={selectedDay}
+          activeView={activeView}
+          isCollapsed={isSidebarCollapsed}
+          onToggleCollapse={() => setIsSidebarCollapsed((prev) => !prev)}
+          onSelectPlanner={() => setActiveView('planner')}
+          onSelectDay={(d) => handleSelectDay(d, 'notes')}
+          onOpenBadges={() => setShowBadgesModal(true)}
+          onOpenCertificate={() => setShowCertificateModal(true)}
+          progress={progress}
+          user={user}
+        />
+
+        {/* Dynamic Margin for Content Area based on Left Sidebar state */}
+        <div
+          className={`flex-1 transition-all duration-300 w-full flex flex-col ${
+            isSidebarCollapsed ? 'pl-16' : 'pl-16 md:pl-72'
+          }`}
+        >
+          <main className="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+            {activeView === 'planner' ? (
+              <LandingDayPlanner
+                days={COMPLETE_10_DAY_PLAN}
+                modules={SYLLABUS_MODULES}
+                user={user}
+                progress={progress}
+                onSelectDay={handleSelectDay}
+                onOpenAuth={() => setShowAuthModal(true)}
+                onOpenBadges={() => setShowBadgesModal(true)}
+                onOpenCertificate={() => setShowCertificateModal(true)}
+              />
+            ) : (
+              <DayWorkspace
+                dayPlan={activeDayPlan}
+                allDays={COMPLETE_10_DAY_PLAN}
+                initialTab={initialDayTab}
+                user={user}
+                progress={progress}
+                onSelectDay={(d) => handleSelectDay(d, activeView === 'day-workspace' ? initialDayTab : 'notes')}
+                onBackToPlanner={() => setActiveView('planner')}
+                onRequireAuth={() => setShowAuthModal(true)}
+                onSavePreScore={handleSavePreScore}
+                onSavePostScore={handleSavePostScore}
+                onMarkChallengeSolved={handleMarkChallengeSolved}
+                onSaveUserCode={handleSaveUserCode}
+              />
+            )}
+          </main>
+
+          {/* Proper Navy Blue & White Footer with Real Date & Time */}
+          <Footer
             onOpenBadges={() => setShowBadgesModal(true)}
             onOpenCertificate={() => setShowCertificateModal(true)}
           />
-        ) : (
-          <DayWorkspace
-            dayPlan={activeDayPlan}
-            allDays={COMPLETE_10_DAY_PLAN}
-            initialTab={initialDayTab}
-            user={user}
-            progress={progress}
-            onSelectDay={(d) => handleSelectDay(d, activeView === 'day-workspace' ? initialDayTab : 'notes')}
-            onBackToPlanner={() => setActiveView('planner')}
-            onRequireAuth={() => setShowAuthModal(true)}
-            onSavePreScore={handleSavePreScore}
-            onSavePostScore={handleSavePostScore}
-            onMarkChallengeSolved={handleMarkChallengeSolved}
-            onSaveUserCode={handleSaveUserCode}
-          />
-        )}
-      </main>
-
-      {/* Navy Blue & White Footer */}
-      <footer className="bg-[#0A192F] text-white border-t-2 border-[#1E3A8A] py-8 mt-auto">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs">
-          <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-lg bg-white text-[#0A192F] font-black flex items-center justify-center">
-              K
-            </div>
-            <div>
-              <div className="font-black text-white">
-                SPSU Udaipur • Mentorship By Kapil
-              </div>
-              <div className="text-[#BFDBFE]">
-                10-Day Placement & Technical Assessment Portal • 30% Theory & 70% Practical
-              </div>
-            </div>
-          </div>
-
-          <div className="text-[#BFDBFE] font-mono text-center sm:text-right">
-            <div>C • C++ • Java • Python | Daily Pre & Post Assessments</div>
-            <div>Badges & Certificates Powered Exclusively By Kapil (PNG & PDF)</div>
-          </div>
         </div>
-      </footer>
+      </div>
 
       {showAuthModal && (
         <GoogleAuthModal

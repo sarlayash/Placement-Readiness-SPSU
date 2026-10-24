@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { LearnerRecord } from '../types';
-import { fetchAllLearners, downloadAssessmentScoresCSV } from '../utils/learnerRegistry';
+import { fetchAllLearners, subscribeToLearners, downloadAssessmentScoresCSV } from '../utils/learnerRegistry';
 import { LiveDateTime } from './LiveDateTime';
 import {
   Award,
@@ -53,7 +53,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   };
 
   useEffect(() => {
-    loadData();
+    setIsLoading(true);
+    const unsubscribe = subscribeToLearners((liveLearners) => {
+      setLearners(liveLearners);
+      setIsLoading(false);
+    });
+    return () => unsubscribe();
   }, []);
 
   // Filtered Learners
@@ -297,10 +302,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       <section className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
-            <h3 className="text-xl font-black text-[#0A192F]">
-              Authenticated Learners & Activity Log
-            </h3>
-            <p className="text-xs text-slate-600">
+            <div className="flex items-center gap-2 flex-wrap">
+              <h3 className="text-xl font-black text-[#0A192F]">
+                Authenticated Learners & Activity Log
+              </h3>
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 font-mono text-[10px] font-bold">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Live Firebase Sync Active</span>
+              </span>
+            </div>
+            <p className="text-xs text-slate-600 mt-0.5">
               Showing {filteredLearners.length} of {learners.length} registered learners with verified Google Firebase sign-ups.
             </p>
           </div>

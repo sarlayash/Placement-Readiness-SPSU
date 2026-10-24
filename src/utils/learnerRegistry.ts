@@ -1,4 +1,4 @@
-import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
+import { collection, doc, getDocs, setDoc, onSnapshot } from 'firebase/firestore';
 import { db } from './firebase';
 import { GoogleUser, UserProgress, LearnerRecord } from '../types';
 import { INITIAL_FIREBASE_AUTH_USERS } from '../data/firebaseAuthUsers';
@@ -49,9 +49,9 @@ export async function recordUserSignIn(
 
   const updatedRecord: LearnerRecord = {
     uid: user.uid,
-    name: user.name || 'SPSU Learner',
-    email: user.email.toLowerCase(),
-    photoURL: user.photoURL,
+    name: (user.name || 'SPSU Learner').slice(0, 150),
+    email: user.email.toLowerCase().slice(0, 150),
+    photoURL: user.photoURL ? user.photoURL.slice(0, 1000) : '',
     firstLogin: existing?.firstLogin || user.signedInAt || now,
     lastLoginAttempt: now,
     preAssessmentScores: currentProgress?.preAssessmentScores || existing?.preAssessmentScores || {},
@@ -68,12 +68,13 @@ export async function recordUserSignIn(
   localRegistry[user.email.toLowerCase()] = updatedRecord;
   saveLocalLearnersRegistry(localRegistry);
 
-  // Sync to Firebase Firestore asynchronously
+  // Sync to Firebase Firestore
   try {
-    const learnerDocRef = doc(db, 'learners', user.uid || user.email.toLowerCase());
+    const learnerDocRef = doc(db, 'learners', user.uid);
     await setDoc(learnerDocRef, updatedRecord, { merge: true });
+    console.log('Learner synced successfully to Firestore:', user.uid);
   } catch (err) {
-    console.warn('Firestore learner sync notice (will use local registry):', err);
+    console.warn('Firestore learner sync notice (local registry preserved):', err);
   }
 
   return updatedRecord;
@@ -92,9 +93,9 @@ export async function syncLearnerProgress(
 
   const updatedRecord: LearnerRecord = {
     uid: user.uid,
-    name: user.name || existing?.name || 'SPSU Learner',
-    email: user.email.toLowerCase(),
-    photoURL: user.photoURL || existing?.photoURL,
+    name: (user.name || existing?.name || 'SPSU Learner').slice(0, 150),
+    email: user.email.toLowerCase().slice(0, 150),
+    photoURL: (user.photoURL || existing?.photoURL || '').slice(0, 1000),
     firstLogin: existing?.firstLogin || user.signedInAt || now,
     lastLoginAttempt: now,
     preAssessmentScores: { ...(existing?.preAssessmentScores || {}), ...progress.preAssessmentScores },
@@ -111,7 +112,7 @@ export async function syncLearnerProgress(
   saveLocalLearnersRegistry(localRegistry);
 
   try {
-    const learnerDocRef = doc(db, 'learners', user.uid || user.email.toLowerCase());
+    const learnerDocRef = doc(db, 'learners', user.uid);
     await setDoc(learnerDocRef, updatedRecord, { merge: true });
   } catch (err) {
     console.warn('Firestore progress sync notice:', err);
@@ -168,6 +169,55 @@ export async function fetchAllLearners(): Promise<LearnerRecord[]> {
   });
 
   return list;
+}
+
+/**
+ * Real-time subscription to learners collection in Firestore.
+ * Automatically pushes updates to the Admin Dashboard when any user signs up or updates progress.
+ */
+export function subscribeToLearners(callback: (learners: LearnerRecord[]) => void): () => void {
+  // Push initial merged cache immediately
+  fetchAllLearners().then(callback);
+
+  try {
+    const unsub = onSnapshot(
+      collection(db, 'learners'),
+      (snapshot) => {
+        const mergedMap: Record<string, LearnerRecord> = {};
+        for (const initUser of INITIAL_FIREBASE_AUTH_USERS) {
+          mergedMap[initUser.email.toLowerCase()] = { ...initUser };
+        }
+        const localRegistry = getLocalLearnersRegistry();
+        for (const [key, record] of Object.entries(localRegistry)) {
+          const normKey = (record.email || key).toLowerCase();
+          mergedMap[normKey] = { ...(mergedMap[normKey] || {}), ...record };
+        }
+        snapshot.forEach((docSnap) => {
+          if (docSnap.exists()) {
+            const data = docSnap.data() as LearnerRecord;
+            if (data && (data.email || data.uid)) {
+              const key = (data.email || data.uid).toLowerCase();
+              mergedMap[key] = { ...(mergedMap[key] || {}), ...data };
+            }
+          }
+        });
+        const list = Object.values(mergedMap);
+        list.sort((a, b) => {
+          const tA = new Date(a.lastLoginAttempt || a.firstLogin || 0).getTime();
+          const tB = new Date(b.lastLoginAttempt || b.firstLogin || 0).getTime();
+          return tB - tA;
+        });
+        callback(list);
+      },
+      (err) => {
+        console.warn('Real-time listener notice:', err);
+      }
+    );
+    return unsub;
+  } catch (err) {
+    console.warn('Real-time subscription setup error:', err);
+    return () => {};
+  }
 }
 
 /**

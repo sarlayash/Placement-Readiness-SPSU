@@ -1,0 +1,170 @@
+rules_version = '2';
+
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Application: SPSU 10-Day Placement Readiness Portal
+// Project ID: placement-readiness-spsu
+//
+// Collection: learners
+// Document ID: {learnerId}
+//   - Pattern: Learner's Firebase Auth UID or normalized email address
+//
+// Fields:
+//   - uid: string (required, 1-128 chars, immutable) - Firebase Authentication UID
+//   - name: string (required, 1-150 chars) - Learner's full display name
+//   - email: string (required, 3-150 chars, valid email format) - Learner's email address
+//   - photoURL: string (optional, 0-1000 chars) - Avatar profile image URL
+//   - firstLogin: string (required, 10-50 chars, immutable) - ISO 8601 initial registration timestamp
+//   - lastLoginAttempt: string (required, 10-50 chars) - ISO 8601 latest sign-in timestamp
+//   - preAssessmentScores: map (optional, max 20 entries) - Day index -> score percentage (0..100)
+//   - postAssessmentScores: map (optional, max 20 entries) - Day index -> score percentage (0..100)
+//   - preAssessmentPassed: map (optional, max 20 entries) - Day index -> boolean pass status
+//   - postAssessmentPassed: map (optional, max 20 entries) - Day index -> boolean pass status
+//   - completedDays: map (optional, max 20 entries) - Day index -> boolean completion status
+//   - unlockedBadges: map (optional, max 20 entries) - Day index -> ISO timestamp of unlocked badge
+//   - certificateId: string or null (optional, 0-100 chars) - Verifiable certificate ID
+//   - certificateIssuedAt: string or null (optional, 0-50 chars) - Certificate issuance ISO timestamp
+//
+// ===============================================================
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Global Helper Functions
+    // ===============================================================
+
+    // Check if request is authenticated via Firebase Auth
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    // Validate email string format
+    function isValidEmail(email) {
+      return email is string &&
+        email.size() >= 3 &&
+        email.size() <= 150 &&
+        email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    // Check that document contains strictly only the allowed schema fields (prevents schema pollution)
+    function hasOnlyAllowedFields(data, allowedKeys) {
+      return data.keys().hasOnly(allowedKeys);
+    }
+
+    // Check that all mandatory fields exist
+    function hasRequiredFields(data, requiredKeys) {
+      return data.keys().hasAll(requiredKeys);
+    }
+
+    // Check optional string field validity and bounded length
+    function isValidOptionalString(data, field, maxLen) {
+      return !(field in data) ||
+        (data[field] is string && data[field].size() <= maxLen);
+    }
+
+    // Check optional nullable string field validity (string or null)
+    function isValidOptionalNullableString(data, field, maxLen) {
+      return !(field in data) ||
+        data[field] == null ||
+        (data[field] is string && data[field].size() <= maxLen);
+    }
+
+    // Check optional map field validity and bounded size (prevents DoS/resource exhaustion)
+    function isValidOptionalMap(data, field, maxSize) {
+      return !(field in data) ||
+        (data[field] is map && data[field].size() <= maxSize);
+    }
+
+    // Domain validator for learner record (used on both create and update)
+    function isValidLearnerRecord(data) {
+      let allowedFields = [
+        'uid', 'name', 'email', 'photoURL',
+        'firstLogin', 'lastLoginAttempt',
+        'preAssessmentScores', 'postAssessmentScores',
+        'preAssessmentPassed', 'postAssessmentPassed',
+        'completedDays', 'unlockedBadges',
+        'certificateId', 'certificateIssuedAt'
+      ];
+      let requiredFields = [
+        'uid', 'name', 'email', 'firstLogin', 'lastLoginAttempt'
+      ];
+
+      return hasOnlyAllowedFields(data, allowedFields) &&
+        hasRequiredFields(data, requiredFields) &&
+        data.uid is string &&
+        data.uid.size() >= 1 &&
+        data.uid.size() <= 128 &&
+        data.name is string &&
+        data.name.size() >= 1 &&
+        data.name.size() <= 150 &&
+        isValidEmail(data.email) &&
+        isValidOptionalString(data, 'photoURL', 1000) &&
+        data.firstLogin is string &&
+        data.firstLogin.size() >= 10 &&
+        data.firstLogin.size() <= 50 &&
+        data.lastLoginAttempt is string &&
+        data.lastLoginAttempt.size() >= 10 &&
+        data.lastLoginAttempt.size() <= 50 &&
+        isValidOptionalMap(data, 'preAssessmentScores', 20) &&
+        isValidOptionalMap(data, 'postAssessmentScores', 20) &&
+        isValidOptionalMap(data, 'preAssessmentPassed', 20) &&
+        isValidOptionalMap(data, 'postAssessmentPassed', 20) &&
+        isValidOptionalMap(data, 'completedDays', 20) &&
+        isValidOptionalMap(data, 'unlockedBadges', 20) &&
+        isValidOptionalNullableString(data, 'certificateId', 100) &&
+        isValidOptionalNullableString(data, 'certificateIssuedAt', 50);
+    }
+
+    // Validate ownership upon learner document creation
+    function isLearnerCreate(learnerId) {
+      return isAuthenticated() &&
+        request.resource.data.uid == request.auth.uid &&
+        (
+          request.auth.uid == learnerId ||
+          (request.auth.token.email != null && request.auth.token.email.lower() == learnerId.lower()) ||
+          request.resource.data.email.lower() == learnerId.lower()
+        );
+    }
+
+    // Validate ownership upon learner document update
+    function isLearnerUpdate(learnerId) {
+      return isAuthenticated() &&
+        (
+          resource.data.uid == request.auth.uid ||
+          request.auth.uid == learnerId ||
+          (request.auth.token.email != null && request.auth.token.email.lower() == learnerId.lower())
+        ) &&
+        request.resource.data.uid == resource.data.uid &&
+        request.resource.data.firstLogin == resource.data.firstLogin;
+    }
+
+    // ===============================================================
+    // Root Rule: Default Deny
+    // ===============================================================
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // ===============================================================
+    // Learners Collection Rules
+    // ===============================================================
+    match /learners/{learnerId} {
+      // Allow read access for admin dashboard inspection, progress export, and verification
+      allow read: if true;
+
+      // Allow authenticated learners to create their own record
+      allow create: if isLearnerCreate(learnerId) &&
+                       isValidLearnerRecord(request.resource.data);
+
+      // Allow authenticated learners to update their own existing record
+      allow update: if isLearnerUpdate(learnerId) &&
+                       isValidLearnerRecord(request.resource.data);
+
+      // Client-side deletions are disallowed to preserve academic records and credentials
+      allow delete: if false;
+    }
+  }
+}

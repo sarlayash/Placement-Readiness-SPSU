@@ -1,6 +1,7 @@
 import { collection, doc, getDocs, setDoc } from 'firebase/firestore';
 import { db } from './firebase';
 import { GoogleUser, UserProgress, LearnerRecord } from '../types';
+import { INITIAL_FIREBASE_AUTH_USERS } from '../data/firebaseAuthUsers';
 
 const LOCAL_REGISTRY_KEY = 'spsu_kapil_all_learners_registry_v1';
 
@@ -8,12 +9,18 @@ const LOCAL_REGISTRY_KEY = 'spsu_kapil_all_learners_registry_v1';
  * Reads local learners registry from localStorage as a fallback or hybrid store.
  */
 export function getLocalLearnersRegistry(): Record<string, LearnerRecord> {
+  const seed: Record<string, LearnerRecord> = {};
+  for (const u of INITIAL_FIREBASE_AUTH_USERS) {
+    seed[u.email.toLowerCase()] = { ...u };
+  }
+
   try {
     const raw = localStorage.getItem(LOCAL_REGISTRY_KEY);
-    if (!raw) return {};
-    return JSON.parse(raw) as Record<string, LearnerRecord>;
+    if (!raw) return seed;
+    const parsed = JSON.parse(raw) as Record<string, LearnerRecord>;
+    return { ...seed, ...parsed };
   } catch {
-    return {};
+    return seed;
   }
 }
 
@@ -115,8 +122,24 @@ export async function syncLearnerProgress(
  * Fetch all registered learners from Firebase Firestore, merged with local registry.
  */
 export async function fetchAllLearners(): Promise<LearnerRecord[]> {
-  const mergedMap: Record<string, LearnerRecord> = { ...getLocalLearnersRegistry() };
+  const mergedMap: Record<string, LearnerRecord> = {};
 
+  // 1. Seed initial verified Firebase Auth users
+  for (const initUser of INITIAL_FIREBASE_AUTH_USERS) {
+    mergedMap[initUser.email.toLowerCase()] = { ...initUser };
+  }
+
+  // 2. Layer any local registry updates
+  const localRegistry = getLocalLearnersRegistry();
+  for (const [key, record] of Object.entries(localRegistry)) {
+    const normKey = (record.email || key).toLowerCase();
+    mergedMap[normKey] = {
+      ...(mergedMap[normKey] || {}),
+      ...record,
+    };
+  }
+
+  // 3. Layer Firestore collection 'learners' data
   try {
     const snapshot = await getDocs(collection(db, 'learners'));
     snapshot.forEach((docSnap) => {
@@ -125,7 +148,7 @@ export async function fetchAllLearners(): Promise<LearnerRecord[]> {
         if (data && (data.email || data.uid)) {
           const key = (data.email || data.uid).toLowerCase();
           mergedMap[key] = {
-            ...mergedMap[key],
+            ...(mergedMap[key] || {}),
             ...data,
           };
         }

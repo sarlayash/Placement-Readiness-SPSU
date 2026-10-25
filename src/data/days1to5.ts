@@ -2,6 +2,7 @@ import { DayPlan } from '../types';
 import { DAY_1_PROGRAMMING_NOTES } from './day1ProgrammingNotes';
 import { DAY_1_PRE_ASSESSMENT_50, DAY_1_POST_ASSESSMENT_50 } from './day1Assessments50';
 import { DAY_1_PRACTICAL_CHALLENGES_10 } from './day1Challenges10';
+import { DAY_1_MINI_PROJECT } from './day1MiniProject';
 import { DAY_2_PROGRAMMING_NOTES } from './day2ProgrammingNotes';
 import { DAY_2_PRE_ASSESSMENT_50, DAY_2_POST_ASSESSMENT_50 } from './day2Assessments50';
 import { DAY_2_PRACTICAL_CHALLENGES_10 } from './day2Challenges10';
@@ -49,6 +50,7 @@ export const DAYS_1_TO_5: DayPlan[] = [
     ],
     programmingNotes: DAY_1_PROGRAMMING_NOTES,
     practicalChallenges: DAY_1_PRACTICAL_CHALLENGES_10,
+    miniProject: DAY_1_MINI_PROJECT,
     preAssessment: DAY_1_PRE_ASSESSMENT_50,
     postAssessment: DAY_1_POST_ASSESSMENT_50,
     badge: {

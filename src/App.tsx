@@ -43,7 +43,7 @@ export function App() {
   // Landing page defaults to Complete Day Planner ('planner'), can be 'day-workspace' or 'admin'
   const [activeView, setActiveView] = useState<'planner' | 'day-workspace' | 'admin'>('planner');
   const [selectedDay, setSelectedDay] = useState<number>(1);
-  const [initialDayTab, setInitialDayTab] = useState<'notes' | 'ide' | 'pre' | 'post'>('notes');
+  const [initialDayTab, setInitialDayTab] = useState<'notes' | 'ide' | 'pre' | 'post' | 'project'>('notes');
 
   // Modals & Admin Session
   const [showAuthModal, setShowAuthModal] = useState<boolean>(false);
@@ -198,7 +198,7 @@ export function App() {
     setActiveView('planner');
   };
 
-  const handleSelectDay = (day: number, tab: 'notes' | 'ide' | 'pre' | 'post' = 'notes') => {
+  const handleSelectDay = (day: number, tab: 'notes' | 'ide' | 'pre' | 'post' | 'project' = 'notes') => {
     setSelectedDay(day);
     setInitialDayTab(tab);
     setActiveView('day-workspace');

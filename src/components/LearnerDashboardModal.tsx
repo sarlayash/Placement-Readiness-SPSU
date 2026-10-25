@@ -39,7 +39,7 @@ interface LearnerDashboardModalProps {
   onClose: () => void;
   user: GoogleUser | null;
   progress: UserProgress;
-  onSelectDay: (day: number, tab?: 'notes' | 'ide' | 'pre' | 'post') => void;
+  onSelectDay: (day: number, tab?: 'notes' | 'ide' | 'pre' | 'post' | 'project') => void;
   onOpenAuth: () => void;
   onOpenCertificate: () => void;
   onOpenStressWheel?: () => void;

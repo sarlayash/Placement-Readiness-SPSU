@@ -79,6 +79,42 @@ export interface DayScheduleSlot {
   duration: string;
 }
 
+export interface MiniProject {
+  id: string;
+  day: number;
+  title: string;
+  subtitle: string;
+  description: string;
+  features: string[];
+  conceptsCovered: {
+    dataTypes: string[];
+    conditionals: string[];
+    loops: string[];
+    constraints: string[];
+  };
+  codeByLanguage: Record<SupportedLanguage, string>;
+  educationalNotes: Array<{
+    number: number;
+    title: string;
+    details: string;
+  }>;
+  complexity: {
+    basicOperations: string;
+    powerCalculation: string;
+    menuDisplay: string;
+    auxiliarySpace: string;
+  };
+  interactiveScenarios: Array<{
+    id: string;
+    name: string;
+    choice: number;
+    description: string;
+    sampleInputs: string[];
+    expectedOutput: string;
+    explanation: string;
+  }>;
+}
+
 export interface DayPlan {
   day: number;
   title: string;
@@ -94,6 +130,7 @@ export interface DayPlan {
   preAssessment: AssessmentQuestion[];
   postAssessment: AssessmentQuestion[];
   badge: DailyBadge;
+  miniProject?: MiniProject;
 }
 
 export interface DailyBadge {

@@ -949,4 +949,417 @@ if __name__ == "__main__":
     complexity_trace_demo()`,
     },
   },
+  {
+    id: 'd1-note-12',
+    title: '12. Capstone Mini-Project: Educational Calculator & All Data Types Inspector',
+    conceptSummary:
+      'Capstone Mini-Project: A complete, industrial-grade interactive console calculator written under strict educational constraints (only `#include <stdio.h>` allowed, zero external headers like <math.h> or <stdlib.h>). It comprehensively integrates ALL 10 fundamental C data types (char, short, int, unsigned int, long, long long, float, double, long double, _Bool), all control flow statements (if-else, nested zero guards, switch-case, ternary), and all three looping paradigms (for, while input-stream buffer discard, do-while menu repetition). Demonstrates manual exponentiation without library dependencies and robust stream flushing to prevent runaway infinite input loops.',
+    timeSpaceNote: 'Operations 1-5, 7: O(1) Time | Operation 6 (Power): O(|exp|) Time | O(1) Stack Space',
+    kapilMentorTip:
+      'In campus technical interviews, recruiters test if you truly understand what happens under the hood when standard libraries are withheld. Implementing power without math.h and handling input buffer flushing via `while (getchar() != \'\\n\');` proves real systems engineering capability.',
+    codeByLanguage: {
+      c: `#include <stdio.h>
+
+/*
+ * DAY 1 CAPSTONE MINI-PROJECT: Calculator & All Data Types Inspector
+ * STRICT CONSTRAINT: ONLY #include <stdio.h> ALLOWED. Zero external headers.
+ * Covered: 10 Data Types, Conditionals (if-else, switch, ternary), Loops (for, while, do-while).
+ */
+
+int main(void) {
+    int choice;
+    int repeat;
+    int loop_counter;
+
+    /* 10 Primitive and Extended C Data Types */
+    char c_val;
+    short s_val;
+    int i_val;
+    unsigned int u_val;
+    long l_val;
+    long long ll_val;
+    float f_val;
+    double d_val;
+    long double ld_val;
+    _Bool b_val;
+
+    /* Calculator Operands & Results */
+    double num1, num2, result;
+    long long mod_a, mod_b, mod_result;
+    double base, pow_result;
+    int exp_val, abs_exp;
+
+    do {
+        printf("================================================================\\n");
+        printf("       EDUCATIONAL CALCULATOR — SINGLE HEADER (<stdio.h>)      \\n");
+        printf("================================================================\\n");
+        printf(" 1. Addition       (double + double)                            \\n");
+        printf(" 2. Subtraction    (double - double)                            \\n");
+        printf(" 3. Multiplication (double * double)                            \\n");
+        printf(" 4. Division       (double / double with zero-division guard)   \\n");
+        printf(" 5. Modulus        (long long %% long long with zero-mod guard)  \\n");
+        printf(" 6. Power          (base ^ exponent — iterative, no math.h)     \\n");
+        printf(" 7. Data Types     (inspector across 10 fundamental data types) \\n");
+        printf(" 8. Exit                                                        \\n");
+        printf("================================================================\\n");
+        printf("Select an operation (1 - 8): ");
+
+        if (scanf("%d", &choice) != 1) {
+            printf("\\n[ERROR] Invalid input. An integer is required.\\n");
+            while (getchar() != '\\n');
+            choice = 0;
+        }
+
+        switch (choice) {
+            case 1:
+                printf("\\n--- Addition ---\\nEnter two numbers: ");
+                if (scanf("%lf %lf", &num1, &num2) != 2) {
+                    printf("[ERROR] Invalid numeric input.\\n");
+                    while (getchar() != '\\n');
+                } else {
+                    result = num1 + num2;
+                    printf("Result: %.6f + %.6f = %.6f\\n", num1, num2, result);
+                }
+                break;
+
+            case 2:
+                printf("\\n--- Subtraction ---\\nEnter two numbers: ");
+                if (scanf("%lf %lf", &num1, &num2) != 2) {
+                    printf("[ERROR] Invalid numeric input.\\n");
+                    while (getchar() != '\\n');
+                } else {
+                    result = num1 - num2;
+                    printf("Result: %.6f - %.6f = %.6f\\n", num1, num2, result);
+                }
+                break;
+
+            case 3:
+                printf("\\n--- Multiplication ---\\nEnter two numbers: ");
+                if (scanf("%lf %lf", &num1, &num2) != 2) {
+                    printf("[ERROR] Invalid numeric input.\\n");
+                    while (getchar() != '\\n');
+                } else {
+                    result = num1 * num2;
+                    printf("Result: %.6f * %.6f = %.6f\\n", num1, num2, result);
+                }
+                break;
+
+            case 4:
+                printf("\\n--- Division ---\\nEnter numerator and denominator: ");
+                if (scanf("%lf %lf", &num1, &num2) != 2) {
+                    printf("[ERROR] Invalid numeric input.\\n");
+                    while (getchar() != '\\n');
+                } else {
+                    if (num2 == 0.0) {
+                        printf("[ERROR] Division by zero is undefined.\\n");
+                    } else {
+                        result = num1 / num2;
+                        printf("Result: %.6f / %.6f = %.6f\\n", num1, num2, result);
+                    }
+                }
+                break;
+
+            case 5:
+                printf("\\n--- Modulus ---\\nEnter two integers (long long): ");
+                if (scanf("%lld %lld", &mod_a, &mod_b) != 2) {
+                    printf("[ERROR] Invalid integer input.\\n");
+                    while (getchar() != '\\n');
+                } else {
+                    if (mod_b == 0) {
+                        printf("[ERROR] Modulo by zero is undefined.\\n");
+                    } else {
+                        mod_result = mod_a % mod_b;
+                        printf("Result: %lld %% %lld = %lld\\n", mod_a, mod_b, mod_result);
+                    }
+                }
+                break;
+
+            case 6:
+                printf("\\n--- Power (Iterative, No math.h) ---\\nEnter base (double) and exponent (integer): ");
+                if (scanf("%lf %d", &base, &exp_val) != 2) {
+                    printf("[ERROR] Invalid input.\\n");
+                    while (getchar() != '\\n');
+                } else {
+                    if (base == 0.0 && exp_val < 0) {
+                        printf("[ERROR] Zero base with negative exponent results in division by zero.\\n");
+                    } else if (base == 0.0 && exp_val == 0) {
+                        printf("Result: 0 ^ 0 is indeterminate (conventionally 1.000000).\\n");
+                    } else {
+                        pow_result = 1.0;
+                        abs_exp = (exp_val < 0) ? -exp_val : exp_val;
+                        for (loop_counter = 0; loop_counter < abs_exp; loop_counter++) {
+                            pow_result *= base;
+                        }
+                        if (exp_val < 0) {
+                            pow_result = 1.0 / pow_result;
+                        }
+                        printf("Result: %.6f ^ %d = %.6f\\n", base, exp_val, pow_result);
+                    }
+                }
+                break;
+
+            case 7:
+                printf("\\n================================================================\\n");
+                printf("          C FUNDAMENTAL DATA TYPES DEMONSTRATION & SIZES        \\n");
+                printf("================================================================\\n");
+                c_val = 'Z';
+                s_val = -32768;
+                i_val = 2147483647;
+                u_val = 4294967295U;
+                l_val = 2147483647L;
+                ll_val = 9223372036854775807LL;
+                f_val = 3.141592f;
+                d_val = 2.718281828459045;
+                ld_val = 1.4142135623730950488L;
+                b_val = 1;
+
+                printf(" Type          Format   Size (bytes)  Sample Value\\n");
+                printf(" --------------------------------------------------------------\\n");
+                printf(" char          %%c       %zu             %c\\n", sizeof(c_val), c_val);
+                printf(" short         %%hd      %zu             %hd\\n", sizeof(s_val), s_val);
+                printf(" int           %%d       %zu             %d\\n", sizeof(i_val), i_val);
+                printf(" unsigned int  %%u       %zu             %u\\n", sizeof(u_val), u_val);
+                printf(" long          %%ld      %zu             %ld\\n", sizeof(l_val), l_val);
+                printf(" long long     %%lld     %zu             %lld\\n", sizeof(ll_val), ll_val);
+                printf(" float         %%f       %zu             %.6f\\n", sizeof(f_val), f_val);
+                printf(" double        %%lf      %zu             %.10f\\n", sizeof(d_val), d_val);
+                printf(" long double   %%Lf      %zu            %.14Lf\\n", sizeof(ld_val), ld_val);
+                printf(" _Bool         %%d       %zu             %d (true)\\n", sizeof(b_val), b_val);
+                printf("================================================================\\n");
+                break;
+
+            case 8:
+                printf("\\nTerminating educational calculator. Happy Coding!\\n");
+                return 0;
+
+            default:
+                printf("\\n[ERROR] Choice out of range. Please enter 1 through 8.\\n");
+                break;
+        }
+
+        printf("\\nPerform another operation? (1 = Yes, Any other integer = No): ");
+        if (scanf("%d", &repeat) != 1) {
+            repeat = 0;
+            while (getchar() != '\\n');
+        }
+        printf("\\n");
+    } while (repeat == 1);
+
+    printf("Terminating educational calculator. Goodbye!\\n");
+    return 0;
+}`,
+      cpp: `#include <iostream>
+#include <iomanip>
+using namespace std;
+
+// DAY 1 CAPSTONE MINI-PROJECT: C++ Educational Calculator & Types Demo
+int main() {
+    int choice = 0;
+    int repeat = 0;
+
+    do {
+        cout << "================================================================\\n";
+        cout << "       EDUCATIONAL CALCULATOR — C++ STANDARD STREAM I/O         \\n";
+        cout << "================================================================\\n";
+        cout << " 1. Addition       2. Subtraction    3. Multiplication\\n";
+        cout << " 4. Division       5. Modulus        6. Power (Iterative, No <cmath>)\\n";
+        cout << " 7. Data Types     8. Exit\\n";
+        cout << "================================================================\\n";
+        cout << "Select operation (1 - 8): ";
+
+        if (!(cin >> choice)) {
+            cout << "\\n[ERROR] Invalid integer input.\\n";
+            cin.clear();
+            cin.ignore(10000, '\\n');
+            continue;
+        }
+
+        if (choice == 1) {
+            double a, b;
+            cout << "Enter two numbers: ";
+            if (cin >> a >> b) cout << "Result: " << fixed << setprecision(6) << (a + b) << "\\n";
+        } else if (choice == 2) {
+            double a, b;
+            cout << "Enter two numbers: ";
+            if (cin >> a >> b) cout << "Result: " << fixed << setprecision(6) << (a - b) << "\\n";
+        } else if (choice == 3) {
+            double a, b;
+            cout << "Enter two numbers: ";
+            if (cin >> a >> b) cout << "Result: " << fixed << setprecision(6) << (a * b) << "\\n";
+        } else if (choice == 4) {
+            double a, b;
+            cout << "Enter numerator and denominator: ";
+            if (cin >> a >> b) {
+                if (b == 0.0) cout << "[ERROR] Division by zero is undefined.\\n";
+                else cout << "Result: " << fixed << setprecision(6) << (a / b) << "\\n";
+            }
+        } else if (choice == 5) {
+            long long a, b;
+            cout << "Enter two integers: ";
+            if (cin >> a >> b) {
+                if (b == 0) cout << "[ERROR] Modulo by zero is undefined.\\n";
+                else cout << "Result: " << (a % b) << "\\n";
+            }
+        } else if (choice == 6) {
+            double base;
+            int exp;
+            cout << "Enter base and integer exponent: ";
+            if (cin >> base >> exp) {
+                if (base == 0.0 && exp < 0) {
+                    cout << "[ERROR] Division by zero.\\n";
+                } else {
+                    double p = 1.0;
+                    int abs_exp = (exp < 0) ? -exp : exp;
+                    for (int i = 0; i < abs_exp; ++i) p *= base;
+                    if (exp < 0) p = 1.0 / p;
+                    cout << "Result: " << fixed << setprecision(6) << p << "\\n";
+                }
+            }
+        } else if (choice == 7) {
+            cout << "char: " << sizeof(char) << "B, short: " << sizeof(short) << "B, int: " << sizeof(int)
+                 << "B, long long: " << sizeof(long long) << "B, double: " << sizeof(double) << "B\\n";
+        } else if (choice == 8) {
+            break;
+        }
+
+        cout << "\\nContinue? (1 = Yes, 0 = No): ";
+        cin >> repeat;
+    } while (repeat == 1);
+
+    cout << "Calculator closed.\\n";
+    return 0;
+}`,
+      java: `import java.util.Scanner;
+
+public class Day1CalculatorMiniProject {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int repeat = 0;
+
+        do {
+            System.out.println("================================================================");
+            System.out.println("            EDUCATIONAL CALCULATOR — JAVA CONSOLE               ");
+            System.out.println("================================================================");
+            System.out.println("1. Addition    2. Subtraction  3. Multiplication 4. Division");
+            System.out.println("5. Modulus     6. Power (Iterative, No Math.pow) 7. Data Types  8. Exit");
+            System.out.print("Select operation (1-8): ");
+
+            if (!scanner.hasNextInt()) {
+                System.out.println("[ERROR] Integer required.");
+                scanner.next();
+                continue;
+            }
+            int choice = scanner.nextInt();
+
+            if (choice == 1) {
+                System.out.print("Enter two numbers: ");
+                double a = scanner.nextDouble(), b = scanner.nextDouble();
+                System.out.printf("Result: %.6f%n", (a + b));
+            } else if (choice == 4) {
+                System.out.print("Enter numerator and denominator: ");
+                double a = scanner.nextDouble(), b = scanner.nextDouble();
+                if (b == 0.0) System.out.println("[ERROR] Division by zero.");
+                else System.out.printf("Result: %.6f%n", (a / b));
+            } else if (choice == 6) {
+                System.out.print("Enter base and integer exponent: ");
+                double base = scanner.nextDouble();
+                int exp = scanner.nextInt();
+                if (base == 0.0 && exp < 0) {
+                    System.out.println("[ERROR] Zero base with negative exponent.");
+                } else {
+                    double pow = 1.0;
+                    int absExp = Math.abs(exp);
+                    for (int i = 0; i < absExp; i++) pow *= base;
+                    if (exp < 0) pow = 1.0 / pow;
+                    System.out.printf("Result: %.6f%n", pow);
+                }
+            } else if (choice == 7) {
+                System.out.println("Java Types: byte(1B), short(2B), int(4B), long(8B), float(4B), double(8B), char(2B), boolean(1-bit logic)");
+            } else if (choice == 8) {
+                break;
+            }
+
+            System.out.print("Continue? (1 = Yes, 0 = No): ");
+            repeat = scanner.hasNextInt() ? scanner.nextInt() : 0;
+        } while (repeat == 1);
+
+        System.out.println("Exiting Java Calculator.");
+    }
+}`,
+      python: `def educational_calculator():
+    """
+    DAY 1 CAPSTONE MINI-PROJECT: Educational Calculator & Data Types Inspector
+    Iterative power without math.pow, guarded division, and data types inspection.
+    """
+    while True:
+        print("=" * 64)
+        print("          EDUCATIONAL CALCULATOR — PYTHON 3.12")
+        print("=" * 64)
+        print("1. Addition       2. Subtraction    3. Multiplication")
+        print("4. Division       5. Modulus        6. Power (Iterative, No math.pow)")
+        print("7. Data Types     8. Exit")
+        print("=" * 64)
+        
+        try:
+            choice = int(input("Select operation (1 - 8): "))
+        except ValueError:
+            print("[ERROR] Please enter an integer from 1 to 8.\\n")
+            continue
+
+        if choice == 1:
+            a = float(input("Enter first number: "))
+            b = float(input("Enter second number: "))
+            print(f"Result: {a} + {b} = {a + b:.6f}")
+        elif choice == 2:
+            a = float(input("Enter first number: "))
+            b = float(input("Enter second number: "))
+            print(f"Result: {a} - {b} = {a - b:.6f}")
+        elif choice == 3:
+            a = float(input("Enter first number: "))
+            b = float(input("Enter second number: "))
+            print(f"Result: {a} * {b} = {a * b:.6f}")
+        elif choice == 4:
+            a = float(input("Enter numerator: "))
+            b = float(input("Enter denominator: "))
+            if b == 0.0:
+                print("[ERROR] Division by zero is undefined.")
+            else:
+                print(f"Result: {a} / {b} = {a / b:.6f}")
+        elif choice == 5:
+            a = int(input("Enter first integer: "))
+            b = int(input("Enter second integer: "))
+            if b == 0:
+                print("[ERROR] Modulo by zero is undefined.")
+            else:
+                print(f"Result: {a} % {b} = {a % b}")
+        elif choice == 6:
+            base = float(input("Enter base: "))
+            exp = int(input("Enter integer exponent: "))
+            if base == 0.0 and exp < 0:
+                print("[ERROR] Zero base with negative exponent results in division by zero.")
+            else:
+                pow_res = 1.0
+                abs_exp = abs(exp)
+                for _ in range(abs_exp):
+                    pow_res *= base
+                if exp < 0:
+                    pow_res = 1.0 / pow_res
+                print(f"Result: {base} ^ {exp} = {pow_res:.6f}")
+        elif choice == 7:
+            print("Python types: int (arbitrary precision), float (IEEE 754 64-bit), bool (subclass of int), str, bytes")
+        elif choice == 8:
+            print("Terminating calculator. Happy Coding!")
+            break
+        else:
+            print("[ERROR] Invalid choice. Enter 1 to 8.")
+
+        cont = input("\\nPerform another operation? (1 = Yes, Any other key = No): ")
+        if cont.strip() != "1":
+            print("Terminating calculator. Goodbye!")
+            break
+
+if __name__ == "__main__":
+    educational_calculator()`,
+    },
+  },
 ];

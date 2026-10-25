@@ -8,6 +8,7 @@ import {
 } from '../types';
 import {
   ArrowLeft,
+  ArrowRight,
   Award,
   BookOpen,
   Building2,
@@ -38,11 +39,12 @@ import {
 import confetti from 'canvas-confetti';
 import { downloadBadgePNG, downloadBadgePDF } from '../utils/exportCredentials';
 import { isDayUnlocked, isDayCompleted, getDaySectionStatus } from '../utils/dayLocking';
+import { MiniProjectWorkspace } from './MiniProjectWorkspace';
 
 interface DayWorkspaceProps {
   dayPlan: DayPlan;
   allDays: DayPlan[];
-  initialTab?: 'notes' | 'ide' | 'pre' | 'post';
+  initialTab?: 'notes' | 'ide' | 'pre' | 'post' | 'project';
   user: GoogleUser | null;
   progress: UserProgress;
   onSelectDay: (day: number) => void;
@@ -77,7 +79,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
   onMarkDayCompleted,
   onSaveUserCode,
 }) => {
-  const [activeTab, setActiveTab] = useState<'notes' | 'ide' | 'pre' | 'post'>(initialTab);
+  const [activeTab, setActiveTab] = useState<'notes' | 'ide' | 'pre' | 'post' | 'project'>(initialTab);
   const [noteLang, setNoteLang] = useState<SupportedLanguage>('cpp');
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
@@ -570,8 +572,8 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
           </div>
         </div>
 
-        {/* 4 Core Mode Tabs: Pre-Assessment | 30% Theory Notes (C, C++, Java, Python) | 70% Practical IDE | Post-Assessment */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-5">
+        {/* Core Mode Tabs: Pre-Assessment | 30% Theory Notes | 70% Practical IDE | Mini-Project (if available) | Post-Assessment */}
+        <div className={`grid ${dayPlan.miniProject ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5' : 'grid-cols-2 sm:grid-cols-4'} gap-2.5 pt-5`}>
           <button
             type="button"
             onClick={() => setActiveTab('pre')}
@@ -615,6 +617,21 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
             <Code2 className="w-4 h-4" />
             <span>3. Integrated IDE (70% Lab)</span>
           </button>
+
+          {dayPlan.miniProject && (
+            <button
+              type="button"
+              onClick={() => setActiveTab('project')}
+              className={`flex items-center justify-center gap-2 py-3 px-4 rounded-xl border-2 text-xs sm:text-sm font-extrabold transition-all cursor-pointer ${
+                activeTab === 'project'
+                  ? 'bg-amber-400 border-amber-400 text-[#0A192F] shadow-sm font-black'
+                  : 'bg-amber-50 border-amber-300 hover:border-amber-500 text-amber-950 font-black'
+              }`}
+            >
+              <Sparkles className="w-4 h-4 text-amber-600" />
+              <span>Mini-Project (Calculator)</span>
+            </button>
+          )}
 
           <button
             type="button"
@@ -831,6 +848,37 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
               ))}
             </div>
           </div>
+
+          {/* Mini-Project Callout Banner for Day 1 */}
+          {dayPlan.miniProject && (
+            <div className="rounded-2xl border-2 border-amber-300 bg-amber-50/90 p-5 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex items-start sm:items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-400 text-[#0A192F] flex items-center justify-center shrink-0 shadow-xs">
+                  <Sparkles className="w-5 h-5" />
+                </div>
+                <div>
+                  <div className="text-[11px] font-mono uppercase font-black text-amber-900 tracking-wider">
+                    Capstone Mini-Project Available
+                  </div>
+                  <div className="text-base font-black text-[#0A192F]">
+                    {dayPlan.miniProject.title}
+                  </div>
+                  <div className="text-xs text-slate-700 mt-0.5">
+                    Strict Constraint: <code className="font-mono font-bold text-[#0A192F]">ONLY #include &lt;stdio.h&gt;</code> • 10 Data Types • Control Flow &amp; Loops
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setActiveTab('project')}
+                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white text-xs font-black transition-all cursor-pointer shadow-md hover:scale-[1.02] shrink-0"
+              >
+                <span>Launch Mini-Project Studio</span>
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+          )}
 
           {dayPlan.programmingNotes.map((note) => (
             <div
@@ -1508,6 +1556,26 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
             </div>
           </div>
         </div>
+      )}
+
+      {/* TAB: CAPSTONE MINI-PROJECT */}
+      {activeTab === 'project' && dayPlan.miniProject && (
+        <MiniProjectWorkspace
+          miniProject={dayPlan.miniProject}
+          user={user}
+          onLoadIntoIDE={(code, lang) => {
+            setIdeLang(lang);
+            setEditorCode(code);
+            setActiveTab('ide');
+            setConsoleLog(
+              `[DAY ${dayPlan.day} CAPSTONE MINI-PROJECT LOADED INTO IDE]\n` +
+              `Title: ${dayPlan.miniProject?.title}\n` +
+              `Language: ${LANGUAGE_LABELS[lang]}\n` +
+              `Strict Educational Constraint: ONLY #include <stdio.h> allowed. Zero external math/stdlib headers.\n` +
+              `Click "Run Code & Validate Solution" to test or modify your code.`
+            );
+          }}
+        />
       )}
 
       {/* TAB 4: DAILY POST-ASSESSMENT & BADGE UNLOCK */}

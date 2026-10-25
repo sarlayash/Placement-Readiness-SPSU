@@ -31,7 +31,7 @@ interface LandingDayPlannerProps {
   modules: CurriculumModule[];
   user: GoogleUser | null;
   progress: UserProgress;
-  onSelectDay: (day: number, initialTab?: 'notes' | 'ide' | 'pre' | 'post') => void;
+  onSelectDay: (day: number, initialTab?: 'notes' | 'ide' | 'pre' | 'post' | 'project') => void;
   onOpenAuth: () => void;
   onOpenBadges: () => void;
   onOpenCertificate: () => void;
@@ -783,6 +783,26 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
                         >
                           <Award className="w-3.5 h-3.5 text-[#1E3A8A]" />
                           <span>Post-Test {postScore !== undefined ? `(${postScore}%)` : ''}</span>
+                        </button>
+                      </div>
+                    )}
+
+                    {/* Capstone Mini-Project Launcher Button (if day has miniProject) */}
+                    {dayPlan.miniProject && unlocked && (
+                      <div className="pt-0.5">
+                        <button
+                          type="button"
+                          onClick={() => onSelectDay(dayPlan.day, 'project')}
+                          className="w-full flex items-center justify-between gap-2 px-3.5 py-2.5 rounded-xl bg-gradient-to-r from-amber-50 to-amber-100/70 hover:from-amber-100 hover:to-amber-200/80 border border-amber-300 text-amber-950 font-bold text-xs transition-all cursor-pointer shadow-xs hover:scale-[1.01]"
+                        >
+                          <span className="flex items-center gap-2 truncate">
+                            <Sparkles className="w-4 h-4 text-amber-600 shrink-0" />
+                            <span className="font-black text-[#0A192F]">Capstone Mini-Project:</span>
+                            <span className="truncate text-slate-800 font-semibold">{dayPlan.miniProject.title}</span>
+                          </span>
+                          <span className="px-2.5 py-0.5 rounded-lg bg-amber-400 text-[#0A192F] font-mono text-[10px] font-black shrink-0 shadow-xs">
+                            Single Header C17
+                          </span>
                         </button>
                       </div>
                     )}

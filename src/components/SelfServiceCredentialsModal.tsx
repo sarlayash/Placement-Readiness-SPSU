@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { GoogleUser, UserProgress } from '../types';
 import { COMPLETE_10_DAY_PLAN } from '../data/curriculum10Days';
+import spsuPortalBannerImg from '../assets/spsu-kapil-portal-banner.png';
 import {
   download360DegreeReportPDF,
   downloadMentorKapilLorPDF,
@@ -438,6 +439,49 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                   >
                     <Download className="w-4 h-4 text-amber-300" />
                     <span>Download Day {selectedBadgeDay} Badge Card (PNG)</span>
+                  </button>
+                </div>
+
+                {/* 5. Official Commemorative Institutional & Mentorship Banner */}
+                <div className="md:col-span-2 p-5 rounded-3xl bg-gradient-to-r from-[#0A192F] via-[#112240] to-[#0A192F] text-white border-2 border-[#1E3A8A] transition-all shadow-md flex flex-col sm:flex-row items-center justify-between gap-5">
+                  <div className="flex flex-col sm:flex-row items-center gap-4 max-w-2xl">
+                    <div className="w-40 sm:w-56 rounded-xl overflow-hidden border border-white/20 shadow-lg shrink-0">
+                      <img
+                        src={spsuPortalBannerImg}
+                        alt="SPSU Udaipur Mentor Kapil Commemorative Banner"
+                        className="w-full h-auto object-cover"
+                      />
+                    </div>
+                    <div className="space-y-1 text-center sm:text-left">
+                      <div className="flex items-center justify-center sm:justify-start gap-2">
+                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-400 text-[#0A192F] font-black uppercase">
+                          Official Commemorative Keepsake
+                        </span>
+                        <span className="text-[10px] text-[#BFDBFE] font-mono">High-Res PNG</span>
+                      </div>
+                      <h4 className="text-base font-black text-white">
+                        SPSU Udaipur × Google Classroom • Powered by Kapil
+                      </h4>
+                      <p className="text-xs text-slate-300 leading-relaxed">
+                        Features verified accreditations (QS I-GAUGE Gold, Ranked #3 in Rajasthan), Udaipur Lake Palace, Mentor Kapil &amp; students, and the 7 core career pillars.
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const link = document.createElement('a');
+                      link.href = spsuPortalBannerImg;
+                      link.download = 'SPSU-Udaipur-Mentor-Kapil-Placement-Banner.png';
+                      document.body.appendChild(link);
+                      link.click();
+                      document.body.removeChild(link);
+                    }}
+                    className="px-5 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-[#0A192F] text-xs font-black transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 shrink-0 hover:scale-[1.02]"
+                  >
+                    <Download className="w-4 h-4" />
+                    <span>Download Official Banner (PNG)</span>
                   </button>
                 </div>
               </div>

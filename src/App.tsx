@@ -365,6 +365,7 @@ export function App() {
                 onOpenStressWheel={() => setShowStressWheel(true)}
                 onOpenAptitude={() => setShowAptitude(true)}
                 onOpenSelfService={() => setShowSelfService(true)}
+                onOpenLearnerDashboard={() => setShowLearnerDashboard(true)}
               />
             ) : (
               <DayWorkspace

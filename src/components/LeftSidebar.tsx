@@ -312,18 +312,14 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 key={day.day}
                 type="button"
                 onClick={() => {
-                  if (isUnlocked) {
-                    onSelectDay(day.day);
-                  } else {
-                    alert(`Day ${day.day} is locked! Complete all sections of Day ${day.day - 1} (Pre-Assessment, Notes, IDE Lab, and Post-Assessment) to unlock.`);
-                  }
+                  onSelectDay(day.day);
                 }}
-                className={`w-full flex items-center gap-2 p-1.5 rounded-xl text-left text-xs transition-all ${
+                className={`w-full flex items-center gap-2 p-1.5 rounded-xl text-left text-xs transition-all cursor-pointer ${
                   !isUnlocked
-                    ? 'opacity-50 text-slate-400 hover:bg-[#112240]/40 cursor-not-allowed'
+                    ? 'opacity-60 text-slate-400 hover:bg-[#112240]/60'
                     : isSelected
-                    ? 'bg-[#1E3A8A] text-white font-extrabold ring-1 ring-white/40 cursor-pointer'
-                    : 'text-[#BFDBFE] hover:bg-[#112240] hover:text-white cursor-pointer'
+                    ? 'bg-[#1E3A8A] text-white font-extrabold ring-1 ring-white/40'
+                    : 'text-[#BFDBFE] hover:bg-[#112240] hover:text-white'
                 }`}
                 title={
                   !isUnlocked

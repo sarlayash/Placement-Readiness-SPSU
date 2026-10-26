@@ -17,6 +17,7 @@ import {
   ChevronLeft,
   ChevronRight,
   ClipboardCheck,
+  Clock,
   Code2,
   Copy,
   Download,
@@ -38,7 +39,8 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { downloadBadgePNG, downloadBadgePDF } from '../utils/exportCredentials';
-import { isDayUnlocked, isDayCompleted, getDaySectionStatus } from '../utils/dayLocking';
+import { isDayUnlocked, isDayCompleted, getDaySectionStatus, formatDayCountdown } from '../utils/dayLocking';
+import { setEvaluatorOverride, isEvaluatorOverrideActive } from '../utils/operatingHours';
 import { MiniProjectWorkspace } from './MiniProjectWorkspace';
 
 interface DayWorkspaceProps {
@@ -306,8 +308,22 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
   const isUnlocked = isDayUnlocked(dayPlan.day, progress);
   const isCurrentCompleted = isDayCompleted(dayPlan.day, progress);
   const prevDay = dayPlan.day - 1;
+  const sectionStatus = getDaySectionStatus(dayPlan.day, progress);
+
+  const [scheduleCountdown, setScheduleCountdown] = useState<number>(sectionStatus.countdownSeconds);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const s = getDaySectionStatus(dayPlan.day, progress);
+      setScheduleCountdown(s.countdownSeconds);
+    }, 1000);
+    return () => clearInterval(timer);
+  }, [dayPlan.day, progress]);
 
   if (!isUnlocked) {
+    const isScheduleLocked = sectionStatus.lockReason === 'SCHEDULE_TIME_LOCKED';
+    const { hours, minutes, seconds } = formatDayCountdown(scheduleCountdown);
+
     return (
       <div className="space-y-6 pb-16">
         {/* Day Selector Ribbon */}
@@ -345,65 +361,176 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
           </div>
         </div>
 
-        {/* Locked Day Warning Screen */}
-        <div className="rounded-3xl border-2 border-amber-300 bg-amber-50/70 p-8 sm:p-12 text-center max-w-2xl mx-auto space-y-6 shadow-lg">
-          <div className="w-16 h-16 rounded-2xl bg-amber-100 border border-amber-300 text-amber-800 flex items-center justify-center mx-auto shadow-inner">
-            <Lock className="w-8 h-8 text-amber-700" />
-          </div>
-
-          <div className="space-y-2">
-            <span className="text-xs font-mono font-bold uppercase text-amber-800 tracking-wider">
-              Sequence Lock Enforced • Day {dayPlan.day} of 10
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-[#0A192F]">
-              Day {dayPlan.day} is Currently Locked
-            </h2>
-            <p className="text-sm text-slate-700 max-w-md mx-auto leading-relaxed">
-              In accordance with Kapil's 10-Day Pedagogical Framework, each day unlocks sequentially once the previous day is marked completed and all sections have been checked.
-            </p>
-          </div>
-
-          <div className="p-4 rounded-2xl bg-white border border-amber-200 text-left space-y-2 text-xs">
-            <div className="font-bold text-[#0A192F] uppercase font-mono">
-              Requirements to Unlock Day {dayPlan.day}:
+        {/* Locked Day Screen: Schedule Locked vs Prerequisite Locked */}
+        {isScheduleLocked ? (
+          <div className="rounded-3xl border-3 border-[#1E3A8A] bg-white p-6 sm:p-10 text-center max-w-2xl mx-auto space-y-6 shadow-2xl">
+            <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#0A192F] to-[#1E3A8A] text-white flex items-center justify-center mx-auto shadow-lg">
+              <Clock className="w-8 h-8 text-amber-400 animate-pulse" />
             </div>
-            <ul className="space-y-1.5 text-slate-700">
-              <li className="flex items-center gap-2">
-                <span className="w-4 h-4 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center text-[10px]">1</span>
-                <span>Complete Day {prevDay} Pre-Assessment</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-4 h-4 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center text-[10px]">2</span>
-                <span>Review Day {prevDay} Conceptual Notes (C, C++, Java, Python)</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-4 h-4 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center text-[10px]">3</span>
-                <span>Solve Day {prevDay} Practical IDE Lab Challenges</span>
-              </li>
-              <li className="flex items-center gap-2">
-                <span className="w-4 h-4 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center text-[10px]">4</span>
-                <span>Pass Day {prevDay} Post-Assessment & Claim Badge</span>
-              </li>
-            </ul>
-          </div>
 
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-            <button
-              type="button"
-              onClick={() => onSelectDay(prevDay)}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-bold text-sm transition-all cursor-pointer shadow-md"
-            >
-              <span>Go to Day {prevDay} to Complete Sections</span>
-            </button>
-            <button
-              type="button"
-              onClick={onBackToPlanner}
-              className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold text-sm transition-all cursor-pointer"
-            >
-              <span>Back to Planner</span>
-            </button>
+            <div className="space-y-2">
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-amber-500/10 border border-amber-400/40 text-amber-800 text-xs font-mono font-bold">
+                <Clock className="w-3.5 h-3.5 text-amber-600" />
+                <span>SCHEDULED UNLOCK: 09:00 AM NEXT DAY</span>
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-black text-[#0A192F]">
+                Day {dayPlan.day} Unlocks Tomorrow at 09:00 AM IST
+              </h2>
+              <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
+                Outstanding progress! You have completed Day {prevDay}. In accordance with <strong>Placement Mentor Kapil's</strong> pedagogy and the SPSU Placement Readiness protocol, each day's deep-dive curriculum unlocks strictly at <strong>09:00 AM IST</strong> on its scheduled training day.
+              </p>
+            </div>
+
+            {/* Countdown Box */}
+            <div className="p-5 rounded-2xl bg-[#0A192F] text-white text-center space-y-3 shadow-inner">
+              <span className="text-xs font-mono font-bold uppercase tracking-wider text-[#93C5FD] block">
+                Countdown to Day {dayPlan.day} Unlock (09:00 AM IST)
+              </span>
+              <div className="flex items-center justify-center gap-3 font-mono">
+                <div className="p-3 sm:p-4 rounded-xl bg-[#112240] border border-[#1E3A8A] min-w-[70px]">
+                  <span className="text-2xl sm:text-3xl font-black text-amber-300 block">{hours}</span>
+                  <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Hours</span>
+                </div>
+                <span className="text-2xl font-black text-amber-400">:</span>
+                <div className="p-3 sm:p-4 rounded-xl bg-[#112240] border border-[#1E3A8A] min-w-[70px]">
+                  <span className="text-2xl sm:text-3xl font-black text-amber-300 block">{minutes}</span>
+                  <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Mins</span>
+                </div>
+                <span className="text-2xl font-black text-amber-400">:</span>
+                <div className="p-3 sm:p-4 rounded-xl bg-[#112240] border border-[#1E3A8A] min-w-[70px]">
+                  <span className="text-2xl sm:text-3xl font-black text-amber-300 block">{seconds}</span>
+                  <span className="text-[10px] text-slate-400 uppercase font-bold tracking-wider">Secs</span>
+                </div>
+              </div>
+              <p className="text-[11px] text-[#BFDBFE]">
+                Scheduled Unlock: <strong className="text-white">{sectionStatus.formattedUnlockDate}</strong>
+              </p>
+            </div>
+
+            {/* Daily Operational Window Note */}
+            <div className="p-4 rounded-2xl bg-blue-50 border border-blue-200 text-left space-y-2 text-xs">
+              <div className="font-bold text-[#0A192F] uppercase font-mono flex items-center gap-1.5">
+                <ShieldCheck className="w-4 h-4 text-[#1E3A8A]" />
+                <span>Operating Window & Cognitive Consolidation Protocol:</span>
+              </div>
+              <ul className="space-y-1.5 text-slate-700">
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0" />
+                  <span><strong>Portal Operating Hours:</strong> 09:00 AM – 09:00 PM IST daily.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0" />
+                  <span><strong>09:00 PM – 09:00 AM Overnight Window:</strong> Dedicated for mental consolidation, sleep hygiene, and review of Day {prevDay} notes.</span>
+                </li>
+                <li className="flex items-start gap-2">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600 mt-0.5 shrink-0" />
+                  <span>Day {dayPlan.day} diagnostic pre-assessment starts promptly at 09:00 AM.</span>
+                </li>
+              </ul>
+            </div>
+
+            {/* Actions: Review Day 1 + Evaluator Preview */}
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => onSelectDay(prevDay)}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-bold text-xs transition-all cursor-pointer shadow-md"
+              >
+                <span>Review Day {prevDay} Notes & Labs</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setEvaluatorOverride(true);
+                  onSelectDay(dayPlan.day);
+                }}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 font-bold text-xs transition-all cursor-pointer"
+                title="Bypasses schedule lock for evaluators and mentors to inspect Day 2 curriculum"
+              >
+                <Unlock className="w-3.5 h-3.5 text-amber-700" />
+                <span>Evaluator / Mentor Override</span>
+              </button>
+              <button
+                type="button"
+                onClick={onBackToPlanner}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold text-xs transition-all cursor-pointer"
+              >
+                <span>Back to Planner</span>
+              </button>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="rounded-3xl border-2 border-amber-300 bg-amber-50/70 p-8 sm:p-12 text-center max-w-2xl mx-auto space-y-6 shadow-lg">
+            <div className="w-16 h-16 rounded-2xl bg-amber-100 border border-amber-300 text-amber-800 flex items-center justify-center mx-auto shadow-inner">
+              <Lock className="w-8 h-8 text-amber-700" />
+            </div>
+
+            <div className="space-y-2">
+              <span className="text-xs font-mono font-bold uppercase text-amber-800 tracking-wider">
+                Sequence Lock Enforced • Day {dayPlan.day} of 10
+              </span>
+              <h2 className="text-2xl sm:text-3xl font-black text-[#0A192F]">
+                Day {dayPlan.day} is Currently Locked
+              </h2>
+              <p className="text-sm text-slate-700 max-w-md mx-auto leading-relaxed">
+                In accordance with Placement Mentor Kapil's 10-Day Pedagogical Framework, each day unlocks sequentially once Day {prevDay} is marked completed and all assessments are passed with &gt;= 80%.
+              </p>
+            </div>
+
+            <div className="p-4 rounded-2xl bg-white border border-amber-200 text-left space-y-2 text-xs">
+              <div className="font-bold text-[#0A192F] uppercase font-mono">
+                Requirements to Unlock Day {dayPlan.day}:
+              </div>
+              <ul className="space-y-1.5 text-slate-700">
+                <li className="flex items-center gap-2">
+                  <span className="w-4 h-4 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center text-[10px]">1</span>
+                  <span>Complete Day {prevDay} Pre-Assessment</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-4 h-4 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center text-[10px]">2</span>
+                  <span>Review Day {prevDay} Conceptual Notes (C, C++, Java, Python)</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-4 h-4 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center text-[10px]">3</span>
+                  <span>Solve Day {prevDay} Practical IDE Lab Challenges</span>
+                </li>
+                <li className="flex items-center gap-2">
+                  <span className="w-4 h-4 rounded-full bg-amber-200 text-amber-900 font-bold flex items-center justify-center text-[10px]">4</span>
+                  <span>Pass Day {prevDay} Post-Assessment (&gt;= 80% passing benchmark)</span>
+                </li>
+              </ul>
+            </div>
+
+            <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
+              <button
+                type="button"
+                onClick={() => onSelectDay(prevDay)}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-bold text-sm transition-all cursor-pointer shadow-md"
+              >
+                <span>Go to Day {prevDay} to Complete Sections</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setEvaluatorOverride(true);
+                  onSelectDay(dayPlan.day);
+                }}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-4 py-3 rounded-xl bg-amber-100 hover:bg-amber-200 border border-amber-300 text-amber-900 font-bold text-sm transition-all cursor-pointer"
+                title="Bypasses lock for evaluators and mentors to inspect Day 2 curriculum"
+              >
+                <Unlock className="w-4 h-4 text-amber-700" />
+                <span>Evaluator Override</span>
+              </button>
+              <button
+                type="button"
+                onClick={onBackToPlanner}
+                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-white hover:bg-slate-100 border border-slate-300 text-slate-700 font-bold text-sm transition-all cursor-pointer"
+              >
+                <span>Back to Planner</span>
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     );
   }

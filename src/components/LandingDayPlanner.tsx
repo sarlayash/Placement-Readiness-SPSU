@@ -8,6 +8,7 @@ import {
   CheckCircle2,
   ChevronRight,
   ClipboardCheck,
+  Clock,
   Code2,
   Download,
   Eye,
@@ -30,7 +31,7 @@ import {
 import mentorKapilImg from '../assets/mentor-kapil.jpg';
 import spsuPortalBannerImg from '../assets/spsu-kapil-portal-banner.png';
 import { downloadBadgePNG, downloadBadgePDF } from '../utils/exportCredentials';
-import { isDayUnlocked, isDayCompleted } from '../utils/dayLocking';
+import { isDayUnlocked, isDayCompleted, getDaySectionStatus } from '../utils/dayLocking';
 
 interface LandingDayPlannerProps {
   days: DayPlan[];
@@ -839,10 +840,24 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
                   {/* Badge & Lock Status Pill */}
                   <div className="shrink-0">
                     {!unlocked ? (
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-400/40 text-amber-300 text-[11px] font-bold">
-                        <Lock className="w-3.5 h-3.5 text-amber-300" />
-                        <span>Locked</span>
-                      </span>
+                      (() => {
+                        const sStatus = getDaySectionStatus(dayPlan.day, progress);
+                        const isTimeLocked = sStatus.lockReason === 'SCHEDULE_TIME_LOCKED';
+                        return (
+                          <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[11px] font-bold ${
+                            isTimeLocked
+                              ? 'bg-amber-400/20 border border-amber-300 text-amber-300'
+                              : 'bg-slate-700/60 border border-slate-600 text-slate-300'
+                          }`}>
+                            {isTimeLocked ? (
+                              <Clock className="w-3.5 h-3.5 text-amber-300 animate-pulse" />
+                            ) : (
+                              <Lock className="w-3.5 h-3.5 text-slate-400" />
+                            )}
+                            <span>{isTimeLocked ? 'Unlocks 09:00 AM' : 'Locked'}</span>
+                          </span>
+                        );
+                      })()
                     ) : isBadgeUnlocked || completed ? (
                       <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-full bg-white text-[#0A192F] text-[11px] font-black">
                         <CheckCircle2 className="w-3.5 h-3.5 text-[#1E3A8A]" />
@@ -932,20 +947,38 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
                   {/* Action Buttons & Direct Badge Download */}
                   <div className="pt-4 border-t border-slate-200 space-y-3">
                     {!unlocked ? (
-                      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 p-3 rounded-xl bg-slate-100 border border-slate-300">
-                        <div className="flex items-center gap-2 text-xs text-slate-700 font-semibold">
-                          <Lock className="w-4 h-4 text-slate-500" />
-                          <span>Requires Completion of Day {dayPlan.day - 1}</span>
-                        </div>
-                        <button
-                          type="button"
-                          onClick={() => onSelectDay(dayPlan.day - 1, 'notes')}
-                          className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#0A192F] hover:bg-[#1E3A8A] text-white text-xs font-bold transition-all cursor-pointer"
-                        >
-                          <span>Complete Day {dayPlan.day - 1}</span>
-                          <ChevronRight className="w-3.5 h-3.5" />
-                        </button>
-                      </div>
+                      (() => {
+                        const sStatus = getDaySectionStatus(dayPlan.day, progress);
+                        const isTimeLocked = sStatus.lockReason === 'SCHEDULE_TIME_LOCKED';
+                        return (
+                          <div className={`flex flex-col sm:flex-row items-center justify-between gap-3 p-3 rounded-xl border ${
+                            isTimeLocked
+                              ? 'bg-amber-50/80 border-amber-300'
+                              : 'bg-slate-100 border-slate-300'
+                          }`}>
+                            <div className="flex items-center gap-2 text-xs text-slate-700 font-semibold">
+                              {isTimeLocked ? (
+                                <Clock className="w-4 h-4 text-amber-700 shrink-0" />
+                              ) : (
+                                <Lock className="w-4 h-4 text-slate-500 shrink-0" />
+                              )}
+                              <span>
+                                {isTimeLocked
+                                  ? `Unlocks ${sStatus.formattedUnlockDate} (Day ${dayPlan.day - 1} Completed)`
+                                  : `Requires Completion of Day ${dayPlan.day - 1} (>=80% Pass)`}
+                              </span>
+                            </div>
+                            <button
+                              type="button"
+                              onClick={() => onSelectDay(isTimeLocked ? dayPlan.day : dayPlan.day - 1, 'notes')}
+                              className="w-full sm:w-auto inline-flex items-center justify-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-[#0A192F] hover:bg-[#1E3A8A] text-white text-xs font-bold transition-all cursor-pointer shrink-0"
+                            >
+                              <span>{isTimeLocked ? 'View Unlock Timer' : `Complete Day ${dayPlan.day - 1}`}</span>
+                              <ChevronRight className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        );
+                      })()
                     ) : (
                       <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                         <button

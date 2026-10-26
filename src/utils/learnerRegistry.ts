@@ -35,6 +35,14 @@ export function saveLocalLearnersRegistry(registry: Record<string, LearnerRecord
   }
 }
 
+function cleanForFirestore(record: LearnerRecord): Record<string, any> {
+  const clean: Record<string, any> = {};
+  for (const [key, val] of Object.entries(record)) {
+    clean[key] = val === undefined ? null : val;
+  }
+  return clean;
+}
+
 /**
  * Record a user's sign in / login attempt with real timestamp.
  * Syncs to both Firebase Firestore and the persistent local registry.
@@ -67,11 +75,11 @@ export async function recordUserSignIn(
     stressQuizScore: currentProgress?.stressQuizScore ?? existing?.stressQuizScore ?? 0,
     stressQuizAnswered: currentProgress?.stressQuizAnswered ?? existing?.stressQuizAnswered ?? 0,
     stressQuizCompleted: currentProgress?.stressQuizCompleted ?? existing?.stressQuizCompleted ?? false,
-    stressQuizAttemptedAt: currentProgress?.stressQuizAttemptedAt || existing?.stressQuizAttemptedAt,
+    stressQuizAttemptedAt: currentProgress?.stressQuizAttemptedAt || existing?.stressQuizAttemptedAt || null,
     aptitudeScore: currentProgress?.aptitudeScore ?? existing?.aptitudeScore ?? 0,
     aptitudeCorrectCount: currentProgress?.aptitudeCorrectCount ?? existing?.aptitudeCorrectCount ?? 0,
     aptitudePassed: currentProgress?.aptitudePassed ?? existing?.aptitudePassed ?? false,
-    aptitudeAttemptedAt: currentProgress?.aptitudeAttemptedAt || existing?.aptitudeAttemptedAt,
+    aptitudeAttemptedAt: currentProgress?.aptitudeAttemptedAt || existing?.aptitudeAttemptedAt || null,
     lorIssuedAt: currentProgress?.lorIssuedAt || existing?.lorIssuedAt || null,
     reportGeneratedAt: currentProgress?.reportGeneratedAt || existing?.reportGeneratedAt || null,
   };
@@ -83,7 +91,7 @@ export async function recordUserSignIn(
   // Sync to Firebase Firestore
   try {
     const learnerDocRef = doc(db, 'learners', user.uid);
-    await setDoc(learnerDocRef, updatedRecord, { merge: true });
+    await setDoc(learnerDocRef, cleanForFirestore(updatedRecord), { merge: true });
     console.log('Learner synced successfully to Firestore:', user.uid);
   } catch (err) {
     console.warn('Firestore learner sync notice (local registry preserved):', err);
@@ -123,11 +131,11 @@ export async function syncLearnerProgress(
     stressQuizScore: progress.stressQuizScore ?? existing?.stressQuizScore ?? 0,
     stressQuizAnswered: progress.stressQuizAnswered ?? existing?.stressQuizAnswered ?? 0,
     stressQuizCompleted: progress.stressQuizCompleted ?? existing?.stressQuizCompleted ?? false,
-    stressQuizAttemptedAt: progress.stressQuizAttemptedAt || existing?.stressQuizAttemptedAt,
+    stressQuizAttemptedAt: progress.stressQuizAttemptedAt || existing?.stressQuizAttemptedAt || null,
     aptitudeScore: progress.aptitudeScore ?? existing?.aptitudeScore ?? 0,
     aptitudeCorrectCount: progress.aptitudeCorrectCount ?? existing?.aptitudeCorrectCount ?? 0,
     aptitudePassed: progress.aptitudePassed ?? existing?.aptitudePassed ?? false,
-    aptitudeAttemptedAt: progress.aptitudeAttemptedAt || existing?.aptitudeAttemptedAt,
+    aptitudeAttemptedAt: progress.aptitudeAttemptedAt || existing?.aptitudeAttemptedAt || null,
     lorIssuedAt: progress.lorIssuedAt || existing?.lorIssuedAt || null,
     reportGeneratedAt: progress.reportGeneratedAt || existing?.reportGeneratedAt || null,
   };
@@ -137,7 +145,7 @@ export async function syncLearnerProgress(
 
   try {
     const learnerDocRef = doc(db, 'learners', user.uid);
-    await setDoc(learnerDocRef, updatedRecord, { merge: true });
+    await setDoc(learnerDocRef, cleanForFirestore(updatedRecord), { merge: true });
   } catch (err) {
     console.warn('Firestore progress sync notice:', err);
   }

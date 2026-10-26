@@ -168,11 +168,11 @@ export interface UserProgress {
   stressQuizScore?: number; // 0..25
   stressQuizAnswered?: number;
   stressQuizCompleted?: boolean;
-  stressQuizAttemptedAt?: string;
+  stressQuizAttemptedAt?: string | null;
   aptitudeScore?: number; // 0..100 percentage
   aptitudeCorrectCount?: number; // 0..50
   aptitudePassed?: boolean; // >= 80%
-  aptitudeAttemptedAt?: string;
+  aptitudeAttemptedAt?: string | null;
   lorIssuedAt?: string | null;
   reportGeneratedAt?: string | null;
 }
@@ -198,11 +198,11 @@ export interface LearnerRecord {
   stressQuizScore?: number;
   stressQuizAnswered?: number;
   stressQuizCompleted?: boolean;
-  stressQuizAttemptedAt?: string;
+  stressQuizAttemptedAt?: string | null;
   aptitudeScore?: number;
   aptitudeCorrectCount?: number;
   aptitudePassed?: boolean;
-  aptitudeAttemptedAt?: string;
+  aptitudeAttemptedAt?: string | null;
   lorIssuedAt?: string | null;
   reportGeneratedAt?: string | null;
 }

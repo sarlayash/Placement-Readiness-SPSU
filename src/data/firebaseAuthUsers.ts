@@ -4,6 +4,86 @@ import { LearnerRecord } from '../types';
 
 export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
   {
+    "uid": "R9qpQCk8FBXsczJzOcnKlKUfuTF3",
+    "name": "Pranav Mathur",
+    "email": "pranav12mathur@gmail.com",
+    "photoURL": "https://lh3.googleusercontent.com/a/ACg8ocJe-fiy4ZAay9RUYT1JpoyONGToV4CAPzSzTZ1_xfXEHfYN3Sn2=s96-c",
+    "firstLogin": "2026-10-26T06:36:20.492Z",
+    "lastLoginAttempt": "2026-10-26T13:40:55.821Z",
+    "preAssessmentScores": {
+      "1": 91
+    },
+    "postAssessmentScores": {
+      "1": 96
+    },
+    "preAssessmentPassed": {
+      "1": true
+    },
+    "postAssessmentPassed": {
+      "1": true
+    },
+    "completedDays": {
+      "1": true
+    },
+    "unlockedBadges": {
+      "1": "2026-10-26T06:36:20.492Z"
+    },
+    "certificateId": "SPSU-KAPIL-10D-PR7F56",
+    "certificateIssuedAt": "2026-10-26T13:40:55.821Z",
+    "patternQuizScore": 92,
+    "patternQuizCompleted": true,
+    "stressQuizScore": 21,
+    "stressQuizAnswered": 25,
+    "stressQuizCompleted": true,
+    "stressQuizAttemptedAt": "2026-10-26T13:40:55.821Z",
+    "aptitudeScore": 93,
+    "aptitudeCorrectCount": 47,
+    "aptitudePassed": true,
+    "aptitudeAttemptedAt": "2026-10-26T13:40:55.821Z",
+    "lorIssuedAt": "2026-10-26T13:40:55.821Z",
+    "reportGeneratedAt": "2026-10-26T13:40:55.821Z"
+  },
+  {
+    "uid": "T29QpkTF3FM1TX6YQU43Q2Zvi6I3",
+    "name": "Umair Shakeel",
+    "email": "md.umair.shakeel@gmail.com",
+    "photoURL": "https://lh3.googleusercontent.com/a/ACg8ocKdm5m0tlsiA-rxMgaESR6PevhTyyzmUr43x-0teesWfXGVMaKu=s96-c",
+    "firstLogin": "2026-10-26T13:12:06.310Z",
+    "lastLoginAttempt": "2026-10-26T13:12:06.310Z",
+    "preAssessmentScores": {
+      "1": 85
+    },
+    "postAssessmentScores": {
+      "1": 88
+    },
+    "preAssessmentPassed": {
+      "1": true
+    },
+    "postAssessmentPassed": {
+      "1": true
+    },
+    "completedDays": {
+      "1": true
+    },
+    "unlockedBadges": {
+      "1": "2026-10-26T13:12:06.310Z"
+    },
+    "certificateId": "SPSU-KAPIL-10D-MD6C68",
+    "certificateIssuedAt": "2026-10-26T13:12:06.310Z",
+    "patternQuizScore": 86,
+    "patternQuizCompleted": true,
+    "stressQuizScore": 23,
+    "stressQuizAnswered": 25,
+    "stressQuizCompleted": true,
+    "stressQuizAttemptedAt": "2026-10-26T13:12:06.310Z",
+    "aptitudeScore": 87,
+    "aptitudeCorrectCount": 44,
+    "aptitudePassed": true,
+    "aptitudeAttemptedAt": "2026-10-26T13:12:06.310Z",
+    "lorIssuedAt": "2026-10-26T13:12:06.310Z",
+    "reportGeneratedAt": "2026-10-26T13:12:06.310Z"
+  },
+  {
     "uid": "7RHD3qQ1Wmh1AcQvte2uGRCdvkJ2",
     "name": "Abhijeet Tiwari",
     "email": "abhijeet00tiwari@gmail.com",
@@ -2042,46 +2122,6 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "aptitudeAttemptedAt": "2026-10-26T06:36:23.055Z",
     "lorIssuedAt": "2026-10-26T06:36:23.055Z",
     "reportGeneratedAt": "2026-10-26T06:36:23.055Z"
-  },
-  {
-    "uid": "R9qpQCk8FBXsczJzOcnKlKUfuTF3",
-    "name": "Pranav Mathur",
-    "email": "pranav12mathur@gmail.com",
-    "photoURL": "https://lh3.googleusercontent.com/a/ACg8ocJe-fiy4ZAay9RUYT1JpoyONGToV4CAPzSzTZ1_xfXEHfYN3Sn2=s96-c",
-    "firstLogin": "2026-10-26T06:36:20.492Z",
-    "lastLoginAttempt": "2026-10-26T06:36:20.492Z",
-    "preAssessmentScores": {
-      "1": 91
-    },
-    "postAssessmentScores": {
-      "1": 96
-    },
-    "preAssessmentPassed": {
-      "1": true
-    },
-    "postAssessmentPassed": {
-      "1": true
-    },
-    "completedDays": {
-      "1": true
-    },
-    "unlockedBadges": {
-      "1": "2026-10-26T06:36:20.492Z"
-    },
-    "certificateId": "SPSU-KAPIL-10D-PR7F56",
-    "certificateIssuedAt": "2026-10-26T06:36:20.492Z",
-    "patternQuizScore": 92,
-    "patternQuizCompleted": true,
-    "stressQuizScore": 21,
-    "stressQuizAnswered": 25,
-    "stressQuizCompleted": true,
-    "stressQuizAttemptedAt": "2026-10-26T06:36:20.492Z",
-    "aptitudeScore": 93,
-    "aptitudeCorrectCount": 47,
-    "aptitudePassed": true,
-    "aptitudeAttemptedAt": "2026-10-26T06:36:20.492Z",
-    "lorIssuedAt": "2026-10-26T06:36:20.492Z",
-    "reportGeneratedAt": "2026-10-26T06:36:20.492Z"
   },
   {
     "uid": "6e8aqKwswfNNfBnI2PDVrYS5Y0R2",

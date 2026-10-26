@@ -26,6 +26,18 @@ rules_version = '2';
 //   - unlockedBadges: map (optional, max 20 entries) - Day index -> ISO timestamp of unlocked badge
 //   - certificateId: string or null (optional, 0-100 chars) - Verifiable certificate ID
 //   - certificateIssuedAt: string or null (optional, 0-50 chars) - Certificate issuance ISO timestamp
+//   - patternQuizScore: number or null (optional, 0..100) - Industry DSA pattern quiz score
+//   - patternQuizCompleted: bool or null (optional) - Pattern quiz completion status
+//   - stressQuizScore: number or null (optional, 0..100) - Stress simulation quiz score
+//   - stressQuizAnswered: number or null (optional, 0..500) - Answered stress quiz questions count
+//   - stressQuizCompleted: bool or null (optional) - Stress quiz completion status
+//   - stressQuizAttemptedAt: string or null (optional, 0-100 chars) - Stress quiz attempt timestamp
+//   - aptitudeScore: number or null (optional, 0..100) - Aptitude exam score percentage
+//   - aptitudeCorrectCount: number or null (optional, 0..500) - Aptitude correct question count
+//   - aptitudePassed: bool or null (optional) - Aptitude exam passing status
+//   - aptitudeAttemptedAt: string or null (optional, 0-100 chars) - Aptitude exam attempt timestamp
+//   - lorIssuedAt: string or null (optional, 0-100 chars) - Letter of Recommendation issuance timestamp
+//   - reportGeneratedAt: string or null (optional, 0-100 chars) - Comprehensive performance report timestamp
 //
 // ===============================================================
 
@@ -39,6 +51,17 @@ service cloud.firestore {
     // Check if request is authenticated via Firebase Auth
     function isAuthenticated() {
       return request.auth != null;
+    }
+
+    // Check if request is authenticated as an authorized administrator
+    function isAdmin() {
+      return isAuthenticated() &&
+        request.auth.token.email != null &&
+        request.auth.token.email.lower() in [
+          'kapilnarula27july@gmail.com',
+          'onerupeefullstackceo@gmail.com',
+          'namaste@sarlayash.com'
+        ];
     }
 
     // Validate email string format
@@ -72,6 +95,20 @@ service cloud.firestore {
         (data[field] is string && data[field].size() <= maxLen);
     }
 
+    // Check optional nullable number field validity (number or null) within bounded range
+    function isValidOptionalNullableNumber(data, field, minVal, maxVal) {
+      return !(field in data) ||
+        data[field] == null ||
+        (data[field] is number && data[field] >= minVal && data[field] <= maxVal);
+    }
+
+    // Check optional nullable boolean field validity (bool or null)
+    function isValidOptionalNullableBool(data, field) {
+      return !(field in data) ||
+        data[field] == null ||
+        data[field] is bool;
+    }
+
     // Check optional map field validity and bounded size (prevents DoS/resource exhaustion)
     function isValidOptionalMap(data, field, maxSize) {
       return !(field in data) ||
@@ -86,7 +123,13 @@ service cloud.firestore {
         'preAssessmentScores', 'postAssessmentScores',
         'preAssessmentPassed', 'postAssessmentPassed',
         'completedDays', 'unlockedBadges',
-        'certificateId', 'certificateIssuedAt'
+        'certificateId', 'certificateIssuedAt',
+        'patternQuizScore', 'patternQuizCompleted',
+        'stressQuizScore', 'stressQuizAnswered', 'stressQuizCompleted',
+        'stressQuizAttemptedAt',
+        'aptitudeScore', 'aptitudeCorrectCount', 'aptitudePassed',
+        'aptitudeAttemptedAt',
+        'lorIssuedAt', 'reportGeneratedAt'
       ];
       let requiredFields = [
         'uid', 'name', 'email', 'firstLogin', 'lastLoginAttempt'
@@ -115,7 +158,19 @@ service cloud.firestore {
         isValidOptionalMap(data, 'completedDays', 20) &&
         isValidOptionalMap(data, 'unlockedBadges', 20) &&
         isValidOptionalNullableString(data, 'certificateId', 100) &&
-        isValidOptionalNullableString(data, 'certificateIssuedAt', 50);
+        isValidOptionalNullableString(data, 'certificateIssuedAt', 50) &&
+        isValidOptionalNullableNumber(data, 'patternQuizScore', 0, 100) &&
+        isValidOptionalNullableBool(data, 'patternQuizCompleted') &&
+        isValidOptionalNullableNumber(data, 'stressQuizScore', 0, 100) &&
+        isValidOptionalNullableNumber(data, 'stressQuizAnswered', 0, 500) &&
+        isValidOptionalNullableBool(data, 'stressQuizCompleted') &&
+        isValidOptionalNullableString(data, 'stressQuizAttemptedAt', 100) &&
+        isValidOptionalNullableNumber(data, 'aptitudeScore', 0, 100) &&
+        isValidOptionalNullableNumber(data, 'aptitudeCorrectCount', 0, 500) &&
+        isValidOptionalNullableBool(data, 'aptitudePassed') &&
+        isValidOptionalNullableString(data, 'aptitudeAttemptedAt', 100) &&
+        isValidOptionalNullableString(data, 'lorIssuedAt', 100) &&
+        isValidOptionalNullableString(data, 'reportGeneratedAt', 100);
     }
 
     // Validate ownership upon learner document creation
@@ -132,6 +187,7 @@ service cloud.firestore {
     // Validate ownership upon learner document update
     function isLearnerUpdate(learnerId) {
       return isAuthenticated() &&
+        request.resource.data.uid == request.auth.uid &&
         (
           resource.data.uid == request.auth.uid ||
           request.auth.uid == learnerId ||
@@ -152,15 +208,15 @@ service cloud.firestore {
     // Learners Collection Rules
     // ===============================================================
     match /learners/{learnerId} {
-      // Allow read access for admin dashboard inspection, progress export, and verification
+      // Allow read access for public certificate verification and admin dashboard inspection
       allow read: if true;
 
-      // Allow authenticated learners to create their own record
-      allow create: if isLearnerCreate(learnerId) &&
+      // Allow authenticated learners or admins to create learner records
+      allow create: if (isLearnerCreate(learnerId) || isAdmin()) &&
                        isValidLearnerRecord(request.resource.data);
 
-      // Allow authenticated learners to update their own existing record
-      allow update: if isLearnerUpdate(learnerId) &&
+      // Allow authenticated learners or admins to update learner records
+      allow update: if (isLearnerUpdate(learnerId) || isAdmin()) &&
                        isValidLearnerRecord(request.resource.data);
 
       // Client-side deletions are disallowed to preserve academic records and credentials

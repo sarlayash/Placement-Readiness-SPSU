@@ -123,14 +123,86 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
 
   useEffect(() => {
     setSelectedChallengeIdx(0);
-    setPreAnswers({});
-    setPreSubmitted(false);
-    setPostAnswers({});
-    setPostSubmitted(false);
     setTestRunResult(null);
     setVisualStepIdx(0);
     setIsAutoPlaying(false);
-  }, [dayPlan.day]);
+
+    const hasPreScore = progress?.preAssessmentScores?.[dayPlan.day] !== undefined;
+    setPreSubmitted(hasPreScore);
+
+    const hasPostScore = progress?.postAssessmentScores?.[dayPlan.day] !== undefined;
+    setPostSubmitted(hasPostScore);
+
+    const userKey = user?.email || 'anon';
+    try {
+      const preDraftRaw = localStorage.getItem(`spsu_pre_ans_d${dayPlan.day}_${userKey}`);
+      if (preDraftRaw) {
+        setPreAnswers(JSON.parse(preDraftRaw));
+      } else {
+        setPreAnswers({});
+      }
+
+      const postDraftRaw = localStorage.getItem(`spsu_post_ans_d${dayPlan.day}_${userKey}`);
+      if (postDraftRaw) {
+        setPostAnswers(JSON.parse(postDraftRaw));
+      } else {
+        setPostAnswers({});
+      }
+    } catch {
+      setPreAnswers({});
+      setPostAnswers({});
+    }
+  }, [dayPlan.day, user?.email]);
+
+  const handleSelectPreAnswer = (questionId: string, optionIdx: number) => {
+    if (preSubmitted) return;
+    setPreAnswers((prev) => {
+      const next = { ...prev, [questionId]: optionIdx };
+      try {
+        const userKey = user?.email || 'anon';
+        localStorage.setItem(`spsu_pre_ans_d${dayPlan.day}_${userKey}`, JSON.stringify(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  };
+
+  const handleSelectPostAnswer = (questionId: string, optionIdx: number) => {
+    if (postSubmitted) return;
+    setPostAnswers((prev) => {
+      const next = { ...prev, [questionId]: optionIdx };
+      try {
+        const userKey = user?.email || 'anon';
+        localStorage.setItem(`spsu_post_ans_d${dayPlan.day}_${userKey}`, JSON.stringify(next));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  };
+
+  const handleRetakePre = () => {
+    setPreSubmitted(false);
+    setPreAnswers({});
+    try {
+      const userKey = user?.email || 'anon';
+      localStorage.removeItem(`spsu_pre_ans_d${dayPlan.day}_${userKey}`);
+    } catch {
+      // ignore
+    }
+  };
+
+  const handleRetakePost = () => {
+    setPostSubmitted(false);
+    setPostAnswers({});
+    try {
+      const userKey = user?.email || 'anon';
+      localStorage.removeItem(`spsu_post_ans_d${dayPlan.day}_${userKey}`);
+    } catch {
+      // ignore
+    }
+  };
 
   const currentChallenge: PracticalChallenge =
     dayPlan.practicalChallenges[selectedChallengeIdx] || dayPlan.practicalChallenges[0];
@@ -818,6 +890,27 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
             </div>
           </div>
 
+          {/* Real-time Pre-Assessment progress tracker */}
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+            <div className="flex items-center justify-between text-xs font-bold text-[#0A192F]">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#1E3A8A]" />
+                <span>Real-time Draft & Progress: {Object.keys(preAnswers).length} / {dayPlan.preAssessment.length} Answered</span>
+              </span>
+              <span className="font-mono text-slate-600">
+                {Math.round((Object.keys(preAnswers).length / Math.max(dayPlan.preAssessment.length, 1)) * 100)}%
+              </span>
+            </div>
+            <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+              <div
+                className="bg-[#0A192F] h-2 rounded-full transition-all duration-300"
+                style={{
+                  width: `${Math.round((Object.keys(preAnswers).length / Math.max(dayPlan.preAssessment.length, 1)) * 100)}%`,
+                }}
+              />
+            </div>
+          </div>
+
           <form onSubmit={handlePreSubmit} className="space-y-5">
             {dayPlan.preAssessment.map((q, qIdx) => (
               <div
@@ -873,7 +966,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
                           checked={isSelected}
                           onChange={() =>
                             !preSubmitted &&
-                            setPreAnswers((prev) => ({ ...prev, [q.id]: oIdx }))
+                            handleSelectPreAnswer(q.id, oIdx)
                           }
                           className="sr-only"
                         />
@@ -921,10 +1014,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
                   <div className="flex items-center gap-2">
                     <button
                       type="button"
-                      onClick={() => {
-                        setPreSubmitted(false);
-                        setPreAnswers({});
-                      }}
+                      onClick={handleRetakePre}
                       className="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-[#0A192F] text-xs font-bold transition-all cursor-pointer"
                     >
                       Retake Pre-Assessment
@@ -1743,6 +1833,27 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
             </div>
           </div>
 
+          {/* Real-time Post-Assessment progress tracker */}
+          <div className="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+            <div className="flex items-center justify-between text-xs font-bold text-[#0A192F]">
+              <span className="flex items-center gap-1.5">
+                <CheckCircle2 className="w-4 h-4 text-[#1E3A8A]" />
+                <span>Real-time Draft & Progress: {Object.keys(postAnswers).length} / {dayPlan.postAssessment.length} Answered</span>
+              </span>
+              <span className="font-mono text-slate-600">
+                {Math.round((Object.keys(postAnswers).length / Math.max(dayPlan.postAssessment.length, 1)) * 100)}%
+              </span>
+            </div>
+            <div className="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
+              <div
+                className="bg-[#0A192F] h-2 rounded-full transition-all duration-300"
+                style={{
+                  width: `${Math.round((Object.keys(postAnswers).length / Math.max(dayPlan.postAssessment.length, 1)) * 100)}%`,
+                }}
+              />
+            </div>
+          </div>
+
           <form onSubmit={handlePostSubmit} className="space-y-5">
             {dayPlan.postAssessment.map((q, qIdx) => (
               <div
@@ -1798,7 +1909,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
                           checked={isSelected}
                           onChange={() =>
                             !postSubmitted &&
-                            setPostAnswers((prev) => ({ ...prev, [q.id]: oIdx }))
+                            handleSelectPostAnswer(q.id, oIdx)
                           }
                           className="sr-only"
                         />
@@ -1837,10 +1948,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
                   <div className="flex flex-wrap items-center gap-3">
                     <button
                       type="button"
-                      onClick={() => {
-                        setPostSubmitted(false);
-                        setPostAnswers({});
-                      }}
+                      onClick={handleRetakePost}
                       className="px-4 py-2.5 rounded-xl border border-slate-300 bg-white hover:bg-slate-100 text-[#0A192F] text-xs font-bold transition-all cursor-pointer"
                     >
                       Retake Post-Assessment
@@ -1873,10 +1981,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
                   </div>
                   <button
                     type="button"
-                    onClick={() => {
-                      setPostSubmitted(false);
-                      setPostAnswers({});
-                    }}
+                    onClick={handleRetakePost}
                     className="px-5 py-2.5 rounded-xl bg-red-700 hover:bg-red-800 text-white font-extrabold text-xs transition-all cursor-pointer shrink-0 shadow-xs"
                   >
                     Retake Post-Assessment Now →

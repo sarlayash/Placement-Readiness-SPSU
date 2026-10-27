@@ -38,7 +38,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedDayFilter, setSelectedDayFilter] = useState<number>(1);
-  const [statusFilter, setStatusFilter] = useState<'all' | 'day1_pre' | 'day1_post' | 'day1_complete' | 'certified'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'day1_pre' | 'day1_post' | 'day1_complete' | 'day2_pre' | 'day2_post' | 'day2_complete' | 'both_days_complete' | 'certified'>('all');
   const [inspectedLearner, setInspectedLearner] = useState<LearnerRecord | null>(null);
 
   const loadData = async () => {
@@ -82,6 +82,20 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     if (statusFilter === 'day1_complete') {
       return Boolean(l.completedDays?.[1] || (l.preAssessmentPassed?.[1] && l.postAssessmentPassed?.[1]));
     }
+    if (statusFilter === 'day2_pre') {
+      return Boolean(l.preAssessmentPassed?.[2]);
+    }
+    if (statusFilter === 'day2_post') {
+      return Boolean(l.postAssessmentPassed?.[2]);
+    }
+    if (statusFilter === 'day2_complete') {
+      return Boolean(l.completedDays?.[2] || (l.preAssessmentPassed?.[2] && l.postAssessmentPassed?.[2]));
+    }
+    if (statusFilter === 'both_days_complete') {
+      const d1 = Boolean(l.completedDays?.[1] || (l.preAssessmentPassed?.[1] && l.postAssessmentPassed?.[1]));
+      const d2 = Boolean(l.completedDays?.[2] || (l.preAssessmentPassed?.[2] && l.postAssessmentPassed?.[2]));
+      return d1 && d2;
+    }
     if (statusFilter === 'certified') {
       return Boolean(l.certificateId);
     }
@@ -93,6 +107,13 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const totalLearners = learners.length;
   const day1PreCompletedCount = learners.filter((l) => l.preAssessmentPassed?.[1]).length;
   const day1PostCompletedCount = learners.filter((l) => l.postAssessmentPassed?.[1]).length;
+  const day2PreCompletedCount = learners.filter((l) => l.preAssessmentPassed?.[2]).length;
+  const day2PostCompletedCount = learners.filter((l) => l.postAssessmentPassed?.[2]).length;
+  const bothDaysCompletedCount = learners.filter((l) => {
+    const d1 = Boolean(l.completedDays?.[1] || (l.preAssessmentPassed?.[1] && l.postAssessmentPassed?.[1]));
+    const d2 = Boolean(l.completedDays?.[2] || (l.preAssessmentPassed?.[2] && l.postAssessmentPassed?.[2]));
+    return d1 && d2;
+  }).length;
   const certifiedCount = learners.filter((l) => l.certificateId).length;
   const totalBadgesEarned = learners.reduce(
     (acc, l) => acc + Object.keys(l.unlockedBadges || {}).length,
@@ -214,24 +235,24 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
         <div className="p-4 rounded-2xl bg-white border-2 border-[#0A192F] shadow-sm space-y-1">
           <div className="flex items-center justify-between text-xs font-mono text-[#1E3A8A] font-bold uppercase">
-            <span>Day 1 Pre-Tests</span>
+            <span>Day 1 Completed</span>
             <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-          </div>
-          <div className="text-2xl sm:text-3xl font-black text-[#0A192F]">
-            {isLoading ? '...' : day1PreCompletedCount}
-          </div>
-          <div className="text-[11px] text-slate-500">50-MCQ Pre Completed</div>
-        </div>
-
-        <div className="p-4 rounded-2xl bg-white border-2 border-[#0A192F] shadow-sm space-y-1">
-          <div className="flex items-center justify-between text-xs font-mono text-[#1E3A8A] font-bold uppercase">
-            <span>Day 1 Post-Tests</span>
-            <Award className="w-4 h-4 text-[#1E3A8A]" />
           </div>
           <div className="text-2xl sm:text-3xl font-black text-[#0A192F]">
             {isLoading ? '...' : day1PostCompletedCount}
           </div>
-          <div className="text-[11px] text-slate-500">50-MCQ Post Completed</div>
+          <div className="text-[11px] text-slate-500">Pre: {day1PreCompletedCount} | Post: {day1PostCompletedCount}</div>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-white border-2 border-[#0A192F] shadow-sm space-y-1">
+          <div className="flex items-center justify-between text-xs font-mono text-[#1E3A8A] font-bold uppercase">
+            <span>Day 2 Completed</span>
+            <Award className="w-4 h-4 text-[#1E3A8A]" />
+          </div>
+          <div className="text-2xl sm:text-3xl font-black text-[#0A192F]">
+            {isLoading ? '...' : day2PostCompletedCount}
+          </div>
+          <div className="text-[11px] text-slate-500">Pre: {day2PreCompletedCount} | Post: {day2PostCompletedCount}</div>
         </div>
 
         <div className="p-4 rounded-2xl bg-white border-2 border-[#0A192F] shadow-sm space-y-1">
@@ -386,8 +407,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               className="w-full px-3 py-2.5 rounded-xl border border-slate-300 bg-white text-xs font-semibold text-[#0A192F] focus:outline-none focus:border-[#1E3A8A]"
             >
               <option value="all">All Learners ({learners.length})</option>
-              <option value="day1_pre">Day 1 Pre-Test Attempted ({day1PreCompletedCount})</option>
-              <option value="day1_post">Day 1 Post-Test Attempted ({day1PostCompletedCount})</option>
+              <option value="day1_complete">Day 1 Completed ({day1PostCompletedCount})</option>
+              <option value="day2_complete">Day 2 Completed ({day2PostCompletedCount})</option>
+              <option value="both_days_complete">Both Days 1 & 2 Completed ({bothDaysCompletedCount})</option>
+              <option value="day1_pre">Day 1 Pre-Test Passed ({day1PreCompletedCount})</option>
+              <option value="day2_pre">Day 2 Pre-Test Passed ({day2PreCompletedCount})</option>
               <option value="certified">Certificate Awarded ({certifiedCount})</option>
             </select>
           </div>
@@ -398,23 +422,25 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse text-xs">
               <thead>
-                <tr className="bg-[#0A192F] text-white font-mono uppercase text-[11px]">
-                  <th className="py-3 px-4 border-r border-[#1E3A8A]">Learner Profile</th>
-                  <th className="py-3 px-4 border-r border-[#1E3A8A]">Email & UID</th>
-                  <th className="py-3 px-4 border-r border-[#1E3A8A]">Last Login Attempt</th>
-                  <th className="py-3 px-4 text-center border-r border-[#1E3A8A]">Day 1 Pre (50 Q)</th>
-                  <th className="py-3 px-4 text-center border-r border-[#1E3A8A]">Day 1 Post (50 Q)</th>
-                  <th className="py-3 px-4 text-center border-r border-[#1E3A8A]">Aptitude (50 Qs)</th>
-                  <th className="py-3 px-4 text-center border-r border-[#1E3A8A]">Stress Quiz (25 Qs)</th>
-                  <th className="py-3 px-4 text-center border-r border-[#1E3A8A]">Days Done</th>
-                  <th className="py-3 px-4 text-center border-r border-[#1E3A8A]">Badges</th>
-                  <th className="py-3 px-4 text-center">Actions</th>
+                <tr className="bg-[#0A192F] text-white font-mono uppercase text-[10px] sm:text-[11px]">
+                  <th className="py-3 px-3.5 border-r border-[#1E3A8A]">Learner Profile</th>
+                  <th className="py-3 px-3.5 border-r border-[#1E3A8A]">Email & UID</th>
+                  <th className="py-3 px-3 border-r border-[#1E3A8A]">Last Login</th>
+                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 1 Pre (50 Q)</th>
+                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 1 Post (50 Q)</th>
+                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 2 Pre (50 Q)</th>
+                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 2 Post (50 Q)</th>
+                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Aptitude (50 Qs)</th>
+                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Stress (25 Qs)</th>
+                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Days Done</th>
+                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Badges</th>
+                  <th className="py-3 px-3.5 text-center">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200">
                 {filteredLearners.length === 0 ? (
                   <tr>
-                    <td colSpan={10} className="py-12 text-center text-slate-500">
+                    <td colSpan={12} className="py-12 text-center text-slate-500">
                       <div className="space-y-2">
                         <Users className="w-8 h-8 text-slate-400 mx-auto" />
                         <div className="font-bold text-slate-700">No learners found matching criteria.</div>
@@ -430,15 +456,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   filteredLearners.map((learner) => {
                     const pre1 = learner.preAssessmentScores?.[1];
                     const post1 = learner.postAssessmentScores?.[1];
-                    const prePassed = Boolean(learner.preAssessmentPassed?.[1]);
-                    const postPassed = Boolean(learner.postAssessmentPassed?.[1]);
+                    const pre2 = learner.preAssessmentScores?.[2];
+                    const post2 = learner.postAssessmentScores?.[2];
                     const completedDaysCount = Object.keys(learner.completedDays || {}).length;
                     const badgesCount = Object.keys(learner.unlockedBadges || {}).length;
 
                     return (
                       <tr key={learner.email || learner.uid} className="hover:bg-slate-50 transition-colors">
                         {/* Learner Profile */}
-                        <td className="py-3 px-4 border-r border-slate-200">
+                        <td className="py-3 px-3.5 border-r border-slate-200">
                           <div className="flex items-center gap-2.5">
                             <img
                               src={learner.photoURL || `https://ui-avatars.com/api/?name=${encodeURIComponent(learner.name || 'User')}&background=0A192F&color=fff`}
@@ -457,7 +483,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         </td>
 
                         {/* Email & UID */}
-                        <td className="py-3 px-4 border-r border-slate-200 font-mono text-[11px]">
+                        <td className="py-3 px-3.5 border-r border-slate-200 font-mono text-[11px]">
                           <div className="text-[#1E3A8A] font-semibold truncate max-w-xs" title={learner.email}>
                             {learner.email}
                           </div>
@@ -467,7 +493,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         </td>
 
                         {/* Last Login Attempt */}
-                        <td className="py-3 px-4 border-r border-slate-200">
+                        <td className="py-3 px-3 border-r border-slate-200">
                           <div className="flex items-center gap-1.5 text-xs text-[#0A192F] font-medium">
                             <Clock className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                             <span>{formatTimestamp(learner.lastLoginAttempt)}</span>
@@ -475,73 +501,113 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         </td>
 
                         {/* Day 1 Pre Score */}
-                        <td className="py-3 px-4 text-center border-r border-slate-200">
+                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
                           {pre1 !== undefined ? (
                             <span
-                              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-mono font-bold text-[11px] border ${
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
                                 pre1 >= 80
                                   ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                                   : 'bg-rose-50 text-rose-800 border-rose-300'
                               }`}
                             >
                               <span>{pre1}%</span>
-                              <span className="text-[9px] uppercase tracking-wider">
+                              <span className="text-[8px] uppercase tracking-wider">
                                 {pre1 >= 80 ? 'PASS' : 'RETAKE'}
                               </span>
                             </span>
                           ) : (
-                            <span className="text-slate-400 font-mono text-[11px]">Not attempted</span>
+                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
                           )}
                         </td>
 
                         {/* Day 1 Post Score */}
-                        <td className="py-3 px-4 text-center border-r border-slate-200">
+                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
                           {post1 !== undefined ? (
                             <span
-                              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-mono font-bold text-[11px] border ${
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
                                 post1 >= 80
                                   ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                                   : 'bg-rose-50 text-rose-800 border-rose-300'
                               }`}
                             >
                               <span>{post1}%</span>
-                              <span className="text-[9px] uppercase tracking-wider">
+                              <span className="text-[8px] uppercase tracking-wider">
                                 {post1 >= 80 ? 'PASS' : 'RETAKE'}
                               </span>
                             </span>
                           ) : (
-                            <span className="text-slate-400 font-mono text-[11px]">Not attempted</span>
+                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
+                          )}
+                        </td>
+
+                        {/* Day 2 Pre Score */}
+                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
+                          {pre2 !== undefined ? (
+                            <span
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
+                                pre2 >= 80
+                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                  : 'bg-rose-50 text-rose-800 border-rose-300'
+                              }`}
+                            >
+                              <span>{pre2}%</span>
+                              <span className="text-[8px] uppercase tracking-wider">
+                                {pre2 >= 80 ? 'PASS' : 'RETAKE'}
+                              </span>
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
+                          )}
+                        </td>
+
+                        {/* Day 2 Post Score */}
+                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
+                          {post2 !== undefined ? (
+                            <span
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
+                                post2 >= 80
+                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                  : 'bg-rose-50 text-rose-800 border-rose-300'
+                              }`}
+                            >
+                              <span>{post2}%</span>
+                              <span className="text-[8px] uppercase tracking-wider">
+                                {post2 >= 80 ? 'PASS' : 'RETAKE'}
+                              </span>
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
                           )}
                         </td>
 
                         {/* Aptitude Score */}
-                        <td className="py-3 px-4 text-center border-r border-slate-200">
+                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
                           {learner.aptitudeScore !== undefined ? (
                             <span
-                              className={`inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full font-mono font-bold text-[11px] border ${
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
                                 learner.aptitudePassed
                                   ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
                                   : 'bg-rose-50 text-rose-800 border-rose-300'
                               }`}
                             >
                               <span>{learner.aptitudeScore}%</span>
-                              <span className="text-[9px] uppercase tracking-wider">
+                              <span className="text-[8px] uppercase tracking-wider">
                                 {learner.aptitudePassed ? 'PASS' : 'RETAKE'}
                               </span>
                             </span>
                           ) : (
-                            <span className="text-slate-400 font-mono text-[11px]">Not attempted</span>
+                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
                           )}
                         </td>
 
                         {/* Stress Quiz */}
-                        <td className="py-3 px-4 text-center border-r border-slate-200">
+                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
                           {learner.stressQuizScore !== undefined ? (
-                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-50 text-purple-800 border border-purple-300 font-mono font-bold text-[11px]">
+                            <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-purple-50 text-purple-800 border border-purple-300 font-mono font-bold text-[10px]">
                               <span>{learner.stressQuizScore}/25</span>
                             </span>
                           ) : (
-                            <span className="text-slate-400 font-mono text-[11px]">Not attempted</span>
+                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
                           )}
                         </td>
 

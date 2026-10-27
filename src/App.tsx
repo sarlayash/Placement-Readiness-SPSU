@@ -207,28 +207,42 @@ export function App() {
 
   const handleSavePreScore = (day: number, scorePercent: number) => {
     const isPassed = scorePercent >= 80;
-    setProgress((prev) => ({
-      ...prev,
-      preAssessmentScores: { ...prev.preAssessmentScores, [day]: scorePercent },
-      preAssessmentPassed: { ...prev.preAssessmentPassed, [day]: isPassed },
-    }));
+    setProgress((prev) => {
+      const isPostPassed = Boolean(prev.postAssessmentPassed?.[day]);
+      const bothPassed = isPassed && isPostPassed;
+      const nextCompleted = { ...(prev.completedDays || {}) };
+      if (bothPassed) nextCompleted[day] = true;
+
+      return {
+        ...prev,
+        preAssessmentScores: { ...prev.preAssessmentScores, [day]: scorePercent },
+        preAssessmentPassed: { ...prev.preAssessmentPassed, [day]: isPassed },
+        completedDays: nextCompleted,
+      };
+    });
   };
 
   const handleSavePostScore = (day: number, scorePercent: number) => {
     const isPassed = scorePercent >= 80;
     setProgress((prev) => {
+      const isPrePassed = Boolean(prev.preAssessmentPassed?.[day]);
+      const bothPassed = isPassed && isPrePassed;
       const nextBadges = { ...prev.unlockedBadges };
       if (isPassed && !nextBadges[day]) {
         nextBadges[day] = new Date().toISOString();
       }
+      const nextCompleted = { ...(prev.completedDays || {}) };
+      if (bothPassed) nextCompleted[day] = true;
+
       return {
         ...prev,
         postAssessmentScores: { ...prev.postAssessmentScores, [day]: scorePercent },
         postAssessmentPassed: { ...prev.postAssessmentPassed, [day]: isPassed },
+        completedDays: nextCompleted,
         unlockedBadges: nextBadges,
         certificateId:
-          prev.certificateId || (user && isPassed ? generateOfficialCertificateId(user.email) : prev.certificateId),
-        certificateIssuedAt: prev.certificateIssuedAt || (isPassed ? new Date().toISOString() : prev.certificateIssuedAt),
+          prev.certificateId || (user && bothPassed ? generateOfficialCertificateId(user.email) : prev.certificateId),
+        certificateIssuedAt: prev.certificateIssuedAt || (bothPassed ? new Date().toISOString() : prev.certificateIssuedAt),
       };
     });
   };

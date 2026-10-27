@@ -12,27 +12,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T13:40:55.821Z",
     "preAssessmentScores": {
       "1": 91,
-      "2": 94
+      "2": 94,
+      "3": 89
     },
     "postAssessmentScores": {
       "1": 96,
-      "2": 93
+      "2": 93,
+      "3": 96
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T06:36:20.492Z",
-      "2": "2026-10-26T13:40:55.821Z"
+      "2": "2026-10-26T13:40:55.821Z",
+      "3": "2026-10-26T13:40:55.821Z"
     },
     "certificateId": "SPSU-KAPIL-10D-PR7F56",
     "certificateIssuedAt": "2026-10-26T13:40:55.821Z",
@@ -58,27 +64,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T13:12:06.310Z",
     "preAssessmentScores": {
       "1": 85,
-      "2": 81
+      "2": 81,
+      "3": 90
     },
     "postAssessmentScores": {
       "1": 88,
-      "2": 87
+      "2": 87,
+      "3": 85
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T13:12:06.310Z",
-      "2": "2026-10-26T13:12:06.310Z"
+      "2": "2026-10-26T13:12:06.310Z",
+      "3": "2026-10-26T13:12:06.310Z"
     },
     "certificateId": "SPSU-KAPIL-10D-MD6C68",
     "certificateIssuedAt": "2026-10-26T13:12:06.310Z",
@@ -104,27 +116,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T12:21:15.022Z",
     "preAssessmentScores": {
       "1": 93,
-      "2": 92
+      "2": 92,
+      "3": 94
     },
     "postAssessmentScores": {
       "1": 96,
-      "2": 85
+      "2": 85,
+      "3": 84
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:34:06.018Z",
-      "2": "2026-10-26T12:21:15.022Z"
+      "2": "2026-10-26T12:21:15.022Z",
+      "3": "2026-10-26T12:21:15.022Z"
     },
     "certificateId": "SPSU-KAPIL-10D-AB1412",
     "certificateIssuedAt": "2026-10-26T12:21:15.022Z",
@@ -150,27 +168,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T12:10:14.885Z",
     "preAssessmentScores": {
       "1": 87,
-      "2": 93
+      "2": 93,
+      "3": 90
     },
     "postAssessmentScores": {
       "1": 92,
-      "2": 85
+      "2": 85,
+      "3": 84
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T06:41:37.707Z",
-      "2": "2026-10-26T12:10:14.885Z"
+      "2": "2026-10-26T12:10:14.885Z",
+      "3": "2026-10-26T12:10:14.885Z"
     },
     "certificateId": "SPSU-KAPIL-10D-BU439A",
     "certificateIssuedAt": "2026-10-26T12:10:14.885Z",
@@ -196,27 +220,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T11:06:50.523Z",
     "preAssessmentScores": {
       "1": 89,
-      "2": 80
+      "2": 80,
+      "3": 95
     },
     "postAssessmentScores": {
       "1": 92,
-      "2": 84
+      "2": 84,
+      "3": 91
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T11:06:50.523Z",
-      "2": "2026-10-26T11:06:50.523Z"
+      "2": "2026-10-26T11:06:50.523Z",
+      "3": "2026-10-26T11:06:50.523Z"
     },
     "certificateId": "SPSU-KAPIL-10D-UR2DF0",
     "certificateIssuedAt": "2026-10-26T11:06:50.523Z",
@@ -242,27 +272,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T11:02:44.437Z",
     "preAssessmentScores": {
       "1": 87,
-      "2": 91
+      "2": 91,
+      "3": 90
     },
     "postAssessmentScores": {
       "1": 92,
-      "2": 93
+      "2": 93,
+      "3": 88
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T11:02:44.437Z",
-      "2": "2026-10-26T11:02:44.437Z"
+      "2": "2026-10-26T11:02:44.437Z",
+      "3": "2026-10-26T11:02:44.437Z"
     },
     "certificateId": "SPSU-KAPIL-10D-RH7880",
     "certificateIssuedAt": "2026-10-26T11:02:44.437Z",
@@ -288,27 +324,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T10:58:21.728Z",
     "preAssessmentScores": {
       "1": 89,
-      "2": 89
+      "2": 89,
+      "3": 95
     },
     "postAssessmentScores": {
       "1": 92,
-      "2": 89
+      "2": 89,
+      "3": 86
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T10:58:21.727Z",
-      "2": "2026-10-26T10:58:21.728Z"
+      "2": "2026-10-26T10:58:21.728Z",
+      "3": "2026-10-26T10:58:21.728Z"
     },
     "certificateId": "SPSU-KAPIL-10D-MA1E68",
     "certificateIssuedAt": "2026-10-26T10:58:21.728Z",
@@ -334,27 +376,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T10:55:49.850Z",
     "preAssessmentScores": {
       "1": 89,
-      "2": 81
+      "2": 81,
+      "3": 95
     },
     "postAssessmentScores": {
       "1": 92,
-      "2": 96
+      "2": 96,
+      "3": 97
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T10:55:49.850Z",
-      "2": "2026-10-26T10:55:49.850Z"
+      "2": "2026-10-26T10:55:49.850Z",
+      "3": "2026-10-26T10:55:49.850Z"
     },
     "certificateId": "SPSU-KAPIL-10D-AN3A77",
     "certificateIssuedAt": "2026-10-26T10:55:49.850Z",
@@ -380,27 +428,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T10:54:57.826Z",
     "preAssessmentScores": {
       "1": 86,
-      "2": 88
+      "2": 88,
+      "3": 88
     },
     "postAssessmentScores": {
       "1": 90,
-      "2": 97
+      "2": 97,
+      "3": 98
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T10:54:57.825Z",
-      "2": "2026-10-26T10:54:57.826Z"
+      "2": "2026-10-26T10:54:57.826Z",
+      "3": "2026-10-26T10:54:57.826Z"
     },
     "certificateId": "SPSU-KAPIL-10D-JO1210",
     "certificateIssuedAt": "2026-10-26T10:54:57.826Z",
@@ -426,27 +480,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T10:53:42.490Z",
     "preAssessmentScores": {
       "1": 86,
-      "2": 96
+      "2": 96,
+      "3": 86
     },
     "postAssessmentScores": {
       "1": 90,
-      "2": 90
+      "2": 90,
+      "3": 94
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T10:53:42.489Z",
-      "2": "2026-10-26T10:53:42.490Z"
+      "2": "2026-10-26T10:53:42.490Z",
+      "3": "2026-10-26T10:53:42.490Z"
     },
     "certificateId": "SPSU-KAPIL-10D-RI34AC",
     "certificateIssuedAt": "2026-10-26T10:53:42.490Z",
@@ -472,27 +532,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T10:51:54.075Z",
     "preAssessmentScores": {
       "1": 96,
-      "2": 85
+      "2": 85,
+      "3": 93
     },
     "postAssessmentScores": {
       "1": 98,
-      "2": 95
+      "2": 95,
+      "3": 97
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-24T04:34:11.361Z",
-      "2": "2026-10-26T10:51:54.075Z"
+      "2": "2026-10-26T10:51:54.075Z",
+      "3": "2026-10-26T10:51:54.075Z"
     },
     "certificateId": "SPSU-KAPIL-10D-KN727A",
     "certificateIssuedAt": "2026-10-26T10:51:54.075Z",
@@ -518,27 +584,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T10:37:09.340Z",
     "preAssessmentScores": {
       "1": 87,
-      "2": 89
+      "2": 89,
+      "3": 85
     },
     "postAssessmentScores": {
       "1": 92,
-      "2": 89
+      "2": 89,
+      "3": 94
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T10:37:09.340Z",
-      "2": "2026-10-26T10:37:09.340Z"
+      "2": "2026-10-26T10:37:09.340Z",
+      "3": "2026-10-26T10:37:09.340Z"
     },
     "certificateId": "SPSU-KAPIL-10D-AR5FFE",
     "certificateIssuedAt": "2026-10-26T10:37:09.340Z",
@@ -564,27 +636,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:37:31.505Z",
     "preAssessmentScores": {
       "1": 81,
-      "2": 88
+      "2": 88,
+      "3": 91
     },
     "postAssessmentScores": {
       "1": 84,
-      "2": 96
+      "2": 96,
+      "3": 97
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:37:31.505Z",
-      "2": "2026-10-26T09:37:31.505Z"
+      "2": "2026-10-26T09:37:31.505Z",
+      "3": "2026-10-26T09:37:31.505Z"
     },
     "certificateId": "SPSU-KAPIL-10D-PR34AA",
     "certificateIssuedAt": "2026-10-26T09:37:31.505Z",
@@ -610,27 +688,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:26:15.193Z",
     "preAssessmentScores": {
       "1": 87,
-      "2": 94
+      "2": 94,
+      "3": 89
     },
     "postAssessmentScores": {
       "1": 92,
-      "2": 98
+      "2": 98,
+      "3": 91
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:26:15.193Z",
-      "2": "2026-10-26T09:26:15.193Z"
+      "2": "2026-10-26T09:26:15.193Z",
+      "3": "2026-10-26T09:26:15.193Z"
     },
     "certificateId": "SPSU-KAPIL-10D-MA24E9",
     "certificateIssuedAt": "2026-10-26T09:26:15.193Z",
@@ -656,27 +740,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:22:52.205Z",
     "preAssessmentScores": {
       "1": 81,
-      "2": 95
+      "2": 95,
+      "3": 86
     },
     "postAssessmentScores": {
       "1": 84,
-      "2": 94
+      "2": 94,
+      "3": 96
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:22:52.205Z",
-      "2": "2026-10-26T09:22:52.205Z"
+      "2": "2026-10-26T09:22:52.205Z",
+      "3": "2026-10-26T09:22:52.205Z"
     },
     "certificateId": "SPSU-KAPIL-10D-MA85BA",
     "certificateIssuedAt": "2026-10-26T09:22:52.205Z",
@@ -702,27 +792,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:22:04.123Z",
     "preAssessmentScores": {
       "1": 80,
-      "2": 96
+      "2": 96,
+      "3": 92
     },
     "postAssessmentScores": {
       "1": 82,
-      "2": 86
+      "2": 86,
+      "3": 85
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:22:04.122Z",
-      "2": "2026-10-26T09:22:04.123Z"
+      "2": "2026-10-26T09:22:04.123Z",
+      "3": "2026-10-26T09:22:04.123Z"
     },
     "certificateId": "SPSU-KAPIL-10D-RE5FBD",
     "certificateIssuedAt": "2026-10-26T09:22:04.123Z",
@@ -748,27 +844,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:16:00.789Z",
     "preAssessmentScores": {
       "1": 80,
-      "2": 94
+      "2": 94,
+      "3": 83
     },
     "postAssessmentScores": {
       "1": 82,
-      "2": 93
+      "2": 93,
+      "3": 88
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:16:00.789Z",
-      "2": "2026-10-26T09:16:00.789Z"
+      "2": "2026-10-26T09:16:00.789Z",
+      "3": "2026-10-26T09:16:00.789Z"
     },
     "certificateId": "SPSU-KAPIL-10D-JS4A6F",
     "certificateIssuedAt": "2026-10-26T09:16:00.789Z",
@@ -794,27 +896,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:14:40.479Z",
     "preAssessmentScores": {
       "1": 80,
-      "2": 92
+      "2": 92,
+      "3": 89
     },
     "postAssessmentScores": {
       "1": 82,
-      "2": 91
+      "2": 91,
+      "3": 95
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:14:40.478Z",
-      "2": "2026-10-26T09:14:40.479Z"
+      "2": "2026-10-26T09:14:40.479Z",
+      "3": "2026-10-26T09:14:40.479Z"
     },
     "certificateId": "SPSU-KAPIL-10D-DI2689",
     "certificateIssuedAt": "2026-10-26T09:14:40.479Z",
@@ -840,27 +948,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:14:19.535Z",
     "preAssessmentScores": {
       "1": 94,
-      "2": 89
+      "2": 89,
+      "3": 86
     },
     "postAssessmentScores": {
       "1": 98,
-      "2": 93
+      "2": 93,
+      "3": 88
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:14:19.535Z",
-      "2": "2026-10-26T09:14:19.535Z"
+      "2": "2026-10-26T09:14:19.535Z",
+      "3": "2026-10-26T09:14:19.535Z"
     },
     "certificateId": "SPSU-KAPIL-10D-LA4B4A",
     "certificateIssuedAt": "2026-10-26T09:14:19.535Z",
@@ -886,27 +1000,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:13:18.804Z",
     "preAssessmentScores": {
       "1": 94,
-      "2": 87
+      "2": 87,
+      "3": 83
     },
     "postAssessmentScores": {
       "1": 98,
-      "2": 89
+      "2": 89,
+      "3": 86
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:13:18.804Z",
-      "2": "2026-10-26T09:13:18.804Z"
+      "2": "2026-10-26T09:13:18.804Z",
+      "3": "2026-10-26T09:13:18.804Z"
     },
     "certificateId": "SPSU-KAPIL-10D-KH30C9",
     "certificateIssuedAt": "2026-10-26T09:13:18.804Z",
@@ -932,27 +1052,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:12:25.175Z",
     "preAssessmentScores": {
       "1": 92,
-      "2": 81
+      "2": 81,
+      "3": 86
     },
     "postAssessmentScores": {
       "1": 94,
-      "2": 94
+      "2": 94,
+      "3": 96
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:12:25.175Z",
-      "2": "2026-10-26T09:12:25.175Z"
+      "2": "2026-10-26T09:12:25.175Z",
+      "3": "2026-10-26T09:12:25.175Z"
     },
     "certificateId": "SPSU-KAPIL-10D-SH1438",
     "certificateIssuedAt": "2026-10-26T09:12:25.175Z",
@@ -978,27 +1104,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:11:31.693Z",
     "preAssessmentScores": {
       "1": 89,
-      "2": 92
+      "2": 92,
+      "3": 84
     },
     "postAssessmentScores": {
       "1": 92,
-      "2": 88
+      "2": 88,
+      "3": 86
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:11:31.692Z",
-      "2": "2026-10-26T09:11:31.693Z"
+      "2": "2026-10-26T09:11:31.693Z",
+      "3": "2026-10-26T09:11:31.693Z"
     },
     "certificateId": "SPSU-KAPIL-10D-SR211F",
     "certificateIssuedAt": "2026-10-26T09:11:31.693Z",
@@ -1024,27 +1156,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:10:05.176Z",
     "preAssessmentScores": {
       "1": 90,
-      "2": 92
+      "2": 92,
+      "3": 89
     },
     "postAssessmentScores": {
       "1": 94,
-      "2": 95
+      "2": 95,
+      "3": 97
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:10:05.176Z",
-      "2": "2026-10-26T09:10:05.176Z"
+      "2": "2026-10-26T09:10:05.176Z",
+      "3": "2026-10-26T09:10:05.176Z"
     },
     "certificateId": "SPSU-KAPIL-10D-RI2848",
     "certificateIssuedAt": "2026-10-26T09:10:05.176Z",
@@ -1070,27 +1208,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:09:08.976Z",
     "preAssessmentScores": {
       "1": 80,
-      "2": 90
+      "2": 90,
+      "3": 88
     },
     "postAssessmentScores": {
       "1": 82,
-      "2": 96
+      "2": 96,
+      "3": 90
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:09:08.976Z",
-      "2": "2026-10-26T09:09:08.976Z"
+      "2": "2026-10-26T09:09:08.976Z",
+      "3": "2026-10-26T09:09:08.976Z"
     },
     "certificateId": "SPSU-KAPIL-10D-RK3815",
     "certificateIssuedAt": "2026-10-26T09:09:08.976Z",
@@ -1116,27 +1260,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:08:41.240Z",
     "preAssessmentScores": {
       "1": 88,
-      "2": 91
+      "2": 91,
+      "3": 80
     },
     "postAssessmentScores": {
       "1": 90,
-      "2": 91
+      "2": 91,
+      "3": 95
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:08:41.240Z",
-      "2": "2026-10-26T09:08:41.240Z"
+      "2": "2026-10-26T09:08:41.240Z",
+      "3": "2026-10-26T09:08:41.240Z"
     },
     "certificateId": "SPSU-KAPIL-10D-POD2F2",
     "certificateIssuedAt": "2026-10-26T09:08:41.240Z",
@@ -1162,27 +1312,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:06:06.374Z",
     "preAssessmentScores": {
       "1": 91,
-      "2": 81
+      "2": 81,
+      "3": 87
     },
     "postAssessmentScores": {
       "1": 96,
-      "2": 91
+      "2": 91,
+      "3": 87
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:06:06.373Z",
-      "2": "2026-10-26T09:06:06.374Z"
+      "2": "2026-10-26T09:06:06.374Z",
+      "3": "2026-10-26T09:06:06.374Z"
     },
     "certificateId": "SPSU-KAPIL-10D-AV39FB",
     "certificateIssuedAt": "2026-10-26T09:06:06.374Z",
@@ -1208,27 +1364,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:04:03.068Z",
     "preAssessmentScores": {
       "1": 85,
-      "2": 84
+      "2": 84,
+      "3": 86
     },
     "postAssessmentScores": {
       "1": 88,
-      "2": 90
+      "2": 90,
+      "3": 94
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:04:03.068Z",
-      "2": "2026-10-26T09:04:03.068Z"
+      "2": "2026-10-26T09:04:03.068Z",
+      "3": "2026-10-26T09:04:03.068Z"
     },
     "certificateId": "SPSU-KAPIL-10D-CH40BE",
     "certificateIssuedAt": "2026-10-26T09:04:03.068Z",
@@ -1254,27 +1416,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:03:44.767Z",
     "preAssessmentScores": {
       "1": 83,
-      "2": 84
+      "2": 84,
+      "3": 89
     },
     "postAssessmentScores": {
       "1": 88,
-      "2": 96
+      "2": 96,
+      "3": 90
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:03:44.767Z",
-      "2": "2026-10-26T09:03:44.767Z"
+      "2": "2026-10-26T09:03:44.767Z",
+      "3": "2026-10-26T09:03:44.767Z"
     },
     "certificateId": "SPSU-KAPIL-10D-K4E4B",
     "certificateIssuedAt": "2026-10-26T09:03:44.767Z",
@@ -1300,27 +1468,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:00:26.683Z",
     "preAssessmentScores": {
       "1": 87,
-      "2": 93
+      "2": 93,
+      "3": 93
     },
     "postAssessmentScores": {
       "1": 92,
-      "2": 93
+      "2": 93,
+      "3": 96
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:00:26.683Z",
-      "2": "2026-10-26T09:00:26.683Z"
+      "2": "2026-10-26T09:00:26.683Z",
+      "3": "2026-10-26T09:00:26.683Z"
     },
     "certificateId": "SPSU-KAPIL-10D-RA243F",
     "certificateIssuedAt": "2026-10-26T09:00:26.683Z",
@@ -1346,27 +1520,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T09:00:25.095Z",
     "preAssessmentScores": {
       "1": 93,
-      "2": 95
+      "2": 95,
+      "3": 86
     },
     "postAssessmentScores": {
       "1": 96,
-      "2": 90
+      "2": 90,
+      "3": 94
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T09:00:25.094Z",
-      "2": "2026-10-26T09:00:25.095Z"
+      "2": "2026-10-26T09:00:25.095Z",
+      "3": "2026-10-26T09:00:25.095Z"
     },
     "certificateId": "SPSU-KAPIL-10D-KR6AFC",
     "certificateIssuedAt": "2026-10-26T09:00:25.095Z",
@@ -1392,27 +1572,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:56:57.074Z",
     "preAssessmentScores": {
       "1": 85,
-      "2": 87
+      "2": 87,
+      "3": 88
     },
     "postAssessmentScores": {
       "1": 88,
-      "2": 95
+      "2": 95,
+      "3": 97
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:56:57.074Z",
-      "2": "2026-10-26T08:56:57.074Z"
+      "2": "2026-10-26T08:56:57.074Z",
+      "3": "2026-10-26T08:56:57.074Z"
     },
     "certificateId": "SPSU-KAPIL-10D-DI3B9C",
     "certificateIssuedAt": "2026-10-26T08:56:57.074Z",
@@ -1438,27 +1624,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:56:50.531Z",
     "preAssessmentScores": {
       "1": 89,
-      "2": 81
+      "2": 81,
+      "3": 95
     },
     "postAssessmentScores": {
       "1": 92,
-      "2": 85
+      "2": 85,
+      "3": 84
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:56:50.531Z",
-      "2": "2026-10-26T08:56:50.531Z"
+      "2": "2026-10-26T08:56:50.531Z",
+      "3": "2026-10-26T08:56:50.531Z"
     },
     "certificateId": "SPSU-KAPIL-10D-DI3866",
     "certificateIssuedAt": "2026-10-26T08:56:50.531Z",
@@ -1484,27 +1676,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:53:55.414Z",
     "preAssessmentScores": {
       "1": 94,
-      "2": 81
+      "2": 81,
+      "3": 92
     },
     "postAssessmentScores": {
       "1": 98,
-      "2": 84
+      "2": 84,
+      "3": 84
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:53:55.414Z",
-      "2": "2026-10-26T08:53:55.414Z"
+      "2": "2026-10-26T08:53:55.414Z",
+      "3": "2026-10-26T08:53:55.414Z"
     },
     "certificateId": "SPSU-KAPIL-10D-AR3CF4",
     "certificateIssuedAt": "2026-10-26T08:53:55.414Z",
@@ -1530,27 +1728,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:50:41.133Z",
     "preAssessmentScores": {
       "1": 87,
-      "2": 84
+      "2": 84,
+      "3": 83
     },
     "postAssessmentScores": {
       "1": 92,
-      "2": 86
+      "2": 86,
+      "3": 92
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:50:41.133Z",
-      "2": "2026-10-26T08:50:41.133Z"
+      "2": "2026-10-26T08:50:41.133Z",
+      "3": "2026-10-26T08:50:41.133Z"
     },
     "certificateId": "SPSU-KAPIL-10D-JE7339",
     "certificateIssuedAt": "2026-10-26T08:50:41.133Z",
@@ -1576,27 +1780,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:49:36.315Z",
     "preAssessmentScores": {
       "1": 88,
-      "2": 96
+      "2": 96,
+      "3": 91
     },
     "postAssessmentScores": {
       "1": 90,
-      "2": 84
+      "2": 84,
+      "3": 91
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:49:36.314Z",
-      "2": "2026-10-26T08:49:36.315Z"
+      "2": "2026-10-26T08:49:36.315Z",
+      "3": "2026-10-26T08:49:36.315Z"
     },
     "certificateId": "SPSU-KAPIL-10D-AN4743",
     "certificateIssuedAt": "2026-10-26T08:49:36.315Z",
@@ -1622,27 +1832,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:48:42.020Z",
     "preAssessmentScores": {
       "1": 87,
-      "2": 96
+      "2": 96,
+      "3": 83
     },
     "postAssessmentScores": {
       "1": 92,
-      "2": 89
+      "2": 89,
+      "3": 86
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:48:42.019Z",
-      "2": "2026-10-26T08:48:42.020Z"
+      "2": "2026-10-26T08:48:42.020Z",
+      "3": "2026-10-26T08:48:42.020Z"
     },
     "certificateId": "SPSU-KAPIL-10D-RU5A99",
     "certificateIssuedAt": "2026-10-26T08:48:42.020Z",
@@ -1668,27 +1884,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:46:13.063Z",
     "preAssessmentScores": {
       "1": 93,
-      "2": 89
+      "2": 89,
+      "3": 84
     },
     "postAssessmentScores": {
       "1": 96,
-      "2": 96
+      "2": 96,
+      "3": 90
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:46:13.063Z",
-      "2": "2026-10-26T08:46:13.063Z"
+      "2": "2026-10-26T08:46:13.063Z",
+      "3": "2026-10-26T08:46:13.063Z"
     },
     "certificateId": "SPSU-KAPIL-10D-KH5796",
     "certificateIssuedAt": "2026-10-26T08:46:13.063Z",
@@ -1714,27 +1936,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:46:10.523Z",
     "preAssessmentScores": {
       "1": 87,
-      "2": 89
+      "2": 89,
+      "3": 91
     },
     "postAssessmentScores": {
       "1": 92,
-      "2": 96
+      "2": 96,
+      "3": 97
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:46:10.522Z",
-      "2": "2026-10-26T08:46:10.523Z"
+      "2": "2026-10-26T08:46:10.523Z",
+      "3": "2026-10-26T08:46:10.523Z"
     },
     "certificateId": "SPSU-KAPIL-10D-AK5571",
     "certificateIssuedAt": "2026-10-26T08:46:10.523Z",
@@ -1760,27 +1988,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:44:08.489Z",
     "preAssessmentScores": {
       "1": 91,
-      "2": 84
+      "2": 84,
+      "3": 86
     },
     "postAssessmentScores": {
       "1": 96,
-      "2": 84
+      "2": 84,
+      "3": 91
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:44:08.489Z",
-      "2": "2026-10-26T08:44:08.489Z"
+      "2": "2026-10-26T08:44:08.489Z",
+      "3": "2026-10-26T08:44:08.489Z"
     },
     "certificateId": "SPSU-KAPIL-10D-DI58EA",
     "certificateIssuedAt": "2026-10-26T08:44:08.489Z",
@@ -1806,27 +2040,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:43:48.882Z",
     "preAssessmentScores": {
       "1": 88,
-      "2": 86
+      "2": 86,
+      "3": 80
     },
     "postAssessmentScores": {
       "1": 90,
-      "2": 86
+      "2": 86,
+      "3": 85
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:43:48.881Z",
-      "2": "2026-10-26T08:43:48.882Z"
+      "2": "2026-10-26T08:43:48.882Z",
+      "3": "2026-10-26T08:43:48.882Z"
     },
     "certificateId": "SPSU-KAPIL-10D-KA7DBB",
     "certificateIssuedAt": "2026-10-26T08:43:48.882Z",
@@ -1852,27 +2092,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:43:45.639Z",
     "preAssessmentScores": {
       "1": 91,
-      "2": 85
+      "2": 85,
+      "3": 84
     },
     "postAssessmentScores": {
       "1": 96,
-      "2": 86
+      "2": 86,
+      "3": 85
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:43:45.638Z",
-      "2": "2026-10-26T08:43:45.639Z"
+      "2": "2026-10-26T08:43:45.639Z",
+      "3": "2026-10-26T08:43:45.639Z"
     },
     "certificateId": "SPSU-KAPIL-10D-MP4B58",
     "certificateIssuedAt": "2026-10-26T08:43:45.639Z",
@@ -1898,27 +2144,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:43:33.041Z",
     "preAssessmentScores": {
       "1": 84,
-      "2": 93
+      "2": 93,
+      "3": 88
     },
     "postAssessmentScores": {
       "1": 86,
-      "2": 96
+      "2": 96,
+      "3": 90
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:43:33.041Z",
-      "2": "2026-10-26T08:43:33.041Z"
+      "2": "2026-10-26T08:43:33.041Z",
+      "3": "2026-10-26T08:43:33.041Z"
     },
     "certificateId": "SPSU-KAPIL-10D-TA7F30",
     "certificateIssuedAt": "2026-10-26T08:43:33.041Z",
@@ -1944,27 +2196,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:42:49.615Z",
     "preAssessmentScores": {
       "1": 92,
-      "2": 92
+      "2": 92,
+      "3": 88
     },
     "postAssessmentScores": {
       "1": 94,
-      "2": 84
+      "2": 84,
+      "3": 84
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:42:49.615Z",
-      "2": "2026-10-26T08:42:49.615Z"
+      "2": "2026-10-26T08:42:49.615Z",
+      "3": "2026-10-26T08:42:49.615Z"
     },
     "certificateId": "SPSU-KAPIL-10D-MR3B9D",
     "certificateIssuedAt": "2026-10-26T08:42:49.615Z",
@@ -1990,27 +2248,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:42:27.266Z",
     "preAssessmentScores": {
       "1": 84,
-      "2": 84
+      "2": 84,
+      "3": 90
     },
     "postAssessmentScores": {
       "1": 86,
-      "2": 95
+      "2": 95,
+      "3": 89
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:42:27.265Z",
-      "2": "2026-10-26T08:42:27.266Z"
+      "2": "2026-10-26T08:42:27.266Z",
+      "3": "2026-10-26T08:42:27.266Z"
     },
     "certificateId": "SPSU-KAPIL-10D-TA6086",
     "certificateIssuedAt": "2026-10-26T08:42:27.266Z",
@@ -2036,27 +2300,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:42:10.498Z",
     "preAssessmentScores": {
       "1": 87,
-      "2": 88
+      "2": 88,
+      "3": 95
     },
     "postAssessmentScores": {
       "1": 92,
-      "2": 88
+      "2": 88,
+      "3": 93
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:42:10.498Z",
-      "2": "2026-10-26T08:42:10.498Z"
+      "2": "2026-10-26T08:42:10.498Z",
+      "3": "2026-10-26T08:42:10.498Z"
     },
     "certificateId": "SPSU-KAPIL-10D-VA1C33",
     "certificateIssuedAt": "2026-10-26T08:42:10.498Z",
@@ -2082,27 +2352,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:42:07.233Z",
     "preAssessmentScores": {
       "1": 91,
-      "2": 84
+      "2": 84,
+      "3": 82
     },
     "postAssessmentScores": {
       "1": 96,
-      "2": 94
+      "2": 94,
+      "3": 96
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:42:07.232Z",
-      "2": "2026-10-26T08:42:07.233Z"
+      "2": "2026-10-26T08:42:07.233Z",
+      "3": "2026-10-26T08:42:07.233Z"
     },
     "certificateId": "SPSU-KAPIL-10D-LA3A13",
     "certificateIssuedAt": "2026-10-26T08:42:07.233Z",
@@ -2128,27 +2404,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:41:47.471Z",
     "preAssessmentScores": {
       "1": 80,
-      "2": 95
+      "2": 95,
+      "3": 83
     },
     "postAssessmentScores": {
       "1": 82,
-      "2": 91
+      "2": 91,
+      "3": 87
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:41:47.470Z",
-      "2": "2026-10-26T08:41:47.471Z"
+      "2": "2026-10-26T08:41:47.471Z",
+      "3": "2026-10-26T08:41:47.471Z"
     },
     "certificateId": "SPSU-KAPIL-10D-DH29F6",
     "certificateIssuedAt": "2026-10-26T08:41:47.471Z",
@@ -2174,27 +2456,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:36:56.744Z",
     "preAssessmentScores": {
       "1": 91,
-      "2": 92
+      "2": 92,
+      "3": 81
     },
     "postAssessmentScores": {
       "1": 96,
-      "2": 96
+      "2": 96,
+      "3": 90
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:36:56.744Z",
-      "2": "2026-10-26T08:36:56.744Z"
+      "2": "2026-10-26T08:36:56.744Z",
+      "3": "2026-10-26T08:36:56.744Z"
     },
     "certificateId": "SPSU-KAPIL-10D-DH39CE",
     "certificateIssuedAt": "2026-10-26T08:36:56.744Z",
@@ -2220,27 +2508,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:33:32.314Z",
     "preAssessmentScores": {
       "1": 84,
-      "2": 95
+      "2": 95,
+      "3": 82
     },
     "postAssessmentScores": {
       "1": 86,
-      "2": 90
+      "2": 90,
+      "3": 94
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:33:32.313Z",
-      "2": "2026-10-26T08:33:32.314Z"
+      "2": "2026-10-26T08:33:32.314Z",
+      "3": "2026-10-26T08:33:32.314Z"
     },
     "certificateId": "SPSU-KAPIL-10D-BU7ECB",
     "certificateIssuedAt": "2026-10-26T08:33:32.314Z",
@@ -2266,27 +2560,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:33:11.224Z",
     "preAssessmentScores": {
       "1": 80,
-      "2": 93
+      "2": 93,
+      "3": 87
     },
     "postAssessmentScores": {
       "1": 82,
-      "2": 95
+      "2": 95,
+      "3": 89
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:33:11.224Z",
-      "2": "2026-10-26T08:33:11.224Z"
+      "2": "2026-10-26T08:33:11.224Z",
+      "3": "2026-10-26T08:33:11.224Z"
     },
     "certificateId": "SPSU-KAPIL-10D-VA2FA6",
     "certificateIssuedAt": "2026-10-26T08:33:11.224Z",
@@ -2312,27 +2612,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T08:32:34.943Z",
     "preAssessmentScores": {
       "1": 86,
-      "2": 88
+      "2": 88,
+      "3": 84
     },
     "postAssessmentScores": {
       "1": 90,
-      "2": 93
+      "2": 93,
+      "3": 96
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T08:32:34.942Z",
-      "2": "2026-10-26T08:32:34.943Z"
+      "2": "2026-10-26T08:32:34.943Z",
+      "3": "2026-10-26T08:32:34.943Z"
     },
     "certificateId": "SPSU-KAPIL-10D-BA117E",
     "certificateIssuedAt": "2026-10-26T08:32:34.943Z",
@@ -2358,27 +2664,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T06:39:39.891Z",
     "preAssessmentScores": {
       "1": 95,
-      "2": 93
+      "2": 93,
+      "3": 92
     },
     "postAssessmentScores": {
       "1": 99,
-      "2": 93
+      "2": 93,
+      "3": 96
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T06:39:39.891Z",
-      "2": "2026-10-26T06:39:39.891Z"
+      "2": "2026-10-26T06:39:39.891Z",
+      "3": "2026-10-26T06:39:39.891Z"
     },
     "certificateId": "SPSU-KAPIL-10D-AL1673",
     "certificateIssuedAt": "2026-10-26T06:39:39.891Z",
@@ -2404,27 +2716,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T06:36:23.055Z",
     "preAssessmentScores": {
       "1": 83,
-      "2": 85
+      "2": 85,
+      "3": 87
     },
     "postAssessmentScores": {
       "1": 88,
-      "2": 85
+      "2": 85,
+      "3": 84
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T06:36:23.054Z",
-      "2": "2026-10-26T06:36:23.055Z"
+      "2": "2026-10-26T06:36:23.055Z",
+      "3": "2026-10-26T06:36:23.055Z"
     },
     "certificateId": "SPSU-KAPIL-10D-SU6CA6",
     "certificateIssuedAt": "2026-10-26T06:36:23.055Z",
@@ -2450,27 +2768,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-26T06:30:07.048Z",
     "preAssessmentScores": {
       "1": 80,
-      "2": 87
+      "2": 87,
+      "3": 82
     },
     "postAssessmentScores": {
       "1": 82,
-      "2": 94
+      "2": 94,
+      "3": 96
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-26T06:30:07.047Z",
-      "2": "2026-10-26T06:30:07.048Z"
+      "2": "2026-10-26T06:30:07.048Z",
+      "3": "2026-10-26T06:30:07.048Z"
     },
     "certificateId": "SPSU-KAPIL-10D-SH3BE9",
     "certificateIssuedAt": "2026-10-26T06:30:07.048Z",
@@ -2496,27 +2820,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-24T06:44:03.701Z",
     "preAssessmentScores": {
       "1": 94,
-      "2": 93
+      "2": 93,
+      "3": 86
     },
     "postAssessmentScores": {
       "1": 96,
-      "2": 95
+      "2": 95,
+      "3": 89
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-24T06:44:03.701Z",
-      "2": "2026-10-24T06:44:03.701Z"
+      "2": "2026-10-24T06:44:03.701Z",
+      "3": "2026-10-24T06:44:03.701Z"
     },
     "certificateId": "SPSU-KAPIL-10D-SY001",
     "certificateIssuedAt": "2026-10-24T06:44:03.701Z",
@@ -2542,27 +2872,33 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "lastLoginAttempt": "2026-10-24T04:34:46.224Z",
     "preAssessmentScores": {
       "1": 92,
-      "2": 81
+      "2": 81,
+      "3": 84
     },
     "postAssessmentScores": {
       "1": 94,
-      "2": 86
+      "2": 86,
+      "3": 85
     },
     "preAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "postAssessmentPassed": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "completedDays": {
       "1": true,
-      "2": true
+      "2": true,
+      "3": true
     },
     "unlockedBadges": {
       "1": "2026-10-24T04:34:46.224Z",
-      "2": "2026-10-24T04:34:46.224Z"
+      "2": "2026-10-24T04:34:46.224Z",
+      "3": "2026-10-24T04:34:46.224Z"
     },
     "certificateId": "SPSU-KAPIL-10D-CE01F1",
     "certificateIssuedAt": "2026-10-24T04:34:46.224Z",

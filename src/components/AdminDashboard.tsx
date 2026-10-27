@@ -38,7 +38,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedDayFilter, setSelectedDayFilter] = useState<number>(1);
-  const [statusFilter, setStatusFilter] = useState<'all' | 'day1_pre' | 'day1_post' | 'day1_complete' | 'day2_pre' | 'day2_post' | 'day2_complete' | 'both_days_complete' | 'certified'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'day1_pre' | 'day1_post' | 'day1_complete' | 'day2_pre' | 'day2_post' | 'day2_complete' | 'both_days_complete' | 'day3_pre' | 'day3_post' | 'day3_complete' | 'all_3_days_complete' | 'certified'>('all');
   const [inspectedLearner, setInspectedLearner] = useState<LearnerRecord | null>(null);
 
   const loadData = async () => {
@@ -96,6 +96,21 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       const d2 = Boolean(l.completedDays?.[2] || (l.preAssessmentPassed?.[2] && l.postAssessmentPassed?.[2]));
       return d1 && d2;
     }
+    if (statusFilter === 'day3_pre') {
+      return Boolean(l.preAssessmentPassed?.[3]);
+    }
+    if (statusFilter === 'day3_post') {
+      return Boolean(l.postAssessmentPassed?.[3]);
+    }
+    if (statusFilter === 'day3_complete') {
+      return Boolean(l.completedDays?.[3] || (l.preAssessmentPassed?.[3] && l.postAssessmentPassed?.[3]));
+    }
+    if (statusFilter === 'all_3_days_complete') {
+      const d1 = Boolean(l.completedDays?.[1] || (l.preAssessmentPassed?.[1] && l.postAssessmentPassed?.[1]));
+      const d2 = Boolean(l.completedDays?.[2] || (l.preAssessmentPassed?.[2] && l.postAssessmentPassed?.[2]));
+      const d3 = Boolean(l.completedDays?.[3] || (l.preAssessmentPassed?.[3] && l.postAssessmentPassed?.[3]));
+      return d1 && d2 && d3;
+    }
     if (statusFilter === 'certified') {
       return Boolean(l.certificateId);
     }
@@ -109,10 +124,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const day1PostCompletedCount = learners.filter((l) => l.postAssessmentPassed?.[1]).length;
   const day2PreCompletedCount = learners.filter((l) => l.preAssessmentPassed?.[2]).length;
   const day2PostCompletedCount = learners.filter((l) => l.postAssessmentPassed?.[2]).length;
+  const day3PreCompletedCount = learners.filter((l) => l.preAssessmentPassed?.[3]).length;
+  const day3PostCompletedCount = learners.filter((l) => l.postAssessmentPassed?.[3]).length;
   const bothDaysCompletedCount = learners.filter((l) => {
     const d1 = Boolean(l.completedDays?.[1] || (l.preAssessmentPassed?.[1] && l.postAssessmentPassed?.[1]));
     const d2 = Boolean(l.completedDays?.[2] || (l.preAssessmentPassed?.[2] && l.postAssessmentPassed?.[2]));
     return d1 && d2;
+  }).length;
+  const all3DaysCompletedCount = learners.filter((l) => {
+    const d1 = Boolean(l.completedDays?.[1] || (l.preAssessmentPassed?.[1] && l.postAssessmentPassed?.[1]));
+    const d2 = Boolean(l.completedDays?.[2] || (l.preAssessmentPassed?.[2] && l.postAssessmentPassed?.[2]));
+    const d3 = Boolean(l.completedDays?.[3] || (l.preAssessmentPassed?.[3] && l.postAssessmentPassed?.[3]));
+    return d1 && d2 && d3;
   }).length;
   const certifiedCount = learners.filter((l) => l.certificateId).length;
   const totalBadgesEarned = learners.reduce(
@@ -221,7 +244,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       </section>
 
       {/* KPI Cards */}
-      <section className="grid grid-cols-2 lg:grid-cols-5 gap-3.5">
+      <section className="grid grid-cols-2 lg:grid-cols-6 gap-3.5">
         <div className="p-4 rounded-2xl bg-white border-2 border-[#0A192F] shadow-sm space-y-1">
           <div className="flex items-center justify-between text-xs font-mono text-[#1E3A8A] font-bold uppercase">
             <span>Registered Users</span>
@@ -257,6 +280,17 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
         <div className="p-4 rounded-2xl bg-white border-2 border-[#0A192F] shadow-sm space-y-1">
           <div className="flex items-center justify-between text-xs font-mono text-[#1E3A8A] font-bold uppercase">
+            <span>Day 3 Completed</span>
+            <Award className="w-4 h-4 text-purple-600" />
+          </div>
+          <div className="text-2xl sm:text-3xl font-black text-[#0A192F]">
+            {isLoading ? '...' : day3PostCompletedCount}
+          </div>
+          <div className="text-[11px] text-slate-500">Pre: {day3PreCompletedCount} | Post: {day3PostCompletedCount}</div>
+        </div>
+
+        <div className="p-4 rounded-2xl bg-white border-2 border-[#0A192F] shadow-sm space-y-1">
+          <div className="flex items-center justify-between text-xs font-mono text-[#1E3A8A] font-bold uppercase">
             <span>Badges Unlocked</span>
             <Award className="w-4 h-4 text-amber-500" />
           </div>
@@ -266,7 +300,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <div className="text-[11px] text-slate-500">Cumulative Badges Claimed</div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-white border-2 border-[#0A192F] shadow-sm space-y-1 col-span-2 lg:col-span-1">
+        <div className="p-4 rounded-2xl bg-white border-2 border-[#0A192F] shadow-sm space-y-1">
           <div className="flex items-center justify-between text-xs font-mono text-[#1E3A8A] font-bold uppercase">
             <span>Certificates</span>
             <GraduationCap className="w-4 h-4 text-[#0A192F]" />
@@ -409,9 +443,12 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <option value="all">All Learners ({learners.length})</option>
               <option value="day1_complete">Day 1 Completed ({day1PostCompletedCount})</option>
               <option value="day2_complete">Day 2 Completed ({day2PostCompletedCount})</option>
-              <option value="both_days_complete">Both Days 1 & 2 Completed ({bothDaysCompletedCount})</option>
+              <option value="day3_complete">Day 3 Completed ({day3PostCompletedCount})</option>
+              <option value="both_days_complete">Days 1 & 2 Completed ({bothDaysCompletedCount})</option>
+              <option value="all_3_days_complete">All 3 Days (1, 2, 3) Completed ({all3DaysCompletedCount})</option>
               <option value="day1_pre">Day 1 Pre-Test Passed ({day1PreCompletedCount})</option>
               <option value="day2_pre">Day 2 Pre-Test Passed ({day2PreCompletedCount})</option>
+              <option value="day3_pre">Day 3 Pre-Test Passed ({day3PreCompletedCount})</option>
               <option value="certified">Certificate Awarded ({certifiedCount})</option>
             </select>
           </div>
@@ -430,6 +467,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 1 Post (50 Q)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 2 Pre (50 Q)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 2 Post (50 Q)</th>
+                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 3 Pre (50 Q)</th>
+                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 3 Post (50 Q)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Aptitude (50 Qs)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Stress (25 Qs)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Days Done</th>
@@ -440,7 +479,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <tbody className="divide-y divide-slate-200">
                 {filteredLearners.length === 0 ? (
                   <tr>
-                    <td colSpan={12} className="py-12 text-center text-slate-500">
+                    <td colSpan={14} className="py-12 text-center text-slate-500">
                       <div className="space-y-2">
                         <Users className="w-8 h-8 text-slate-400 mx-auto" />
                         <div className="font-bold text-slate-700">No learners found matching criteria.</div>
@@ -458,6 +497,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     const post1 = learner.postAssessmentScores?.[1];
                     const pre2 = learner.preAssessmentScores?.[2];
                     const post2 = learner.postAssessmentScores?.[2];
+                    const pre3 = learner.preAssessmentScores?.[3];
+                    const post3 = learner.postAssessmentScores?.[3];
                     const completedDaysCount = Object.keys(learner.completedDays || {}).length;
                     const badgesCount = Object.keys(learner.unlockedBadges || {}).length;
 
@@ -573,6 +614,46 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               <span>{post2}%</span>
                               <span className="text-[8px] uppercase tracking-wider">
                                 {post2 >= 80 ? 'PASS' : 'RETAKE'}
+                              </span>
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
+                          )}
+                        </td>
+
+                        {/* Day 3 Pre Score */}
+                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
+                          {pre3 !== undefined ? (
+                            <span
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
+                                pre3 >= 80
+                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                  : 'bg-rose-50 text-rose-800 border-rose-300'
+                              }`}
+                            >
+                              <span>{pre3}%</span>
+                              <span className="text-[8px] uppercase tracking-wider">
+                                {pre3 >= 80 ? 'PASS' : 'RETAKE'}
+                              </span>
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
+                          )}
+                        </td>
+
+                        {/* Day 3 Post Score */}
+                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
+                          {post3 !== undefined ? (
+                            <span
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
+                                post3 >= 80
+                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                  : 'bg-rose-50 text-rose-800 border-rose-300'
+                              }`}
+                            >
+                              <span>{post3}%</span>
+                              <span className="text-[8px] uppercase tracking-wider">
+                                {post3 >= 80 ? 'PASS' : 'RETAKE'}
                               </span>
                             </span>
                           ) : (

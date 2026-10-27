@@ -9,6 +9,7 @@ import { DAY_2_PRACTICAL_CHALLENGES_10 } from './day2Challenges10';
 import { DAY_3_PROGRAMMING_NOTES } from './day3ProgrammingNotes';
 import { DAY_3_PRACTICAL_CHALLENGES_10 } from './day3Challenges10';
 import { DAY_3_PRE_ASSESSMENT_50, DAY_3_POST_ASSESSMENT_50 } from './day3Assessments50';
+import { DAY_3_MINI_PROJECT } from './day3MiniProject';
 
 export const DAYS_1_TO_5: DayPlan[] = [
   {
@@ -153,6 +154,7 @@ export const DAYS_1_TO_5: DayPlan[] = [
     ],
     programmingNotes: DAY_3_PROGRAMMING_NOTES,
     practicalChallenges: DAY_3_PRACTICAL_CHALLENGES_10,
+    miniProject: DAY_3_MINI_PROJECT,
     preAssessment: DAY_3_PRE_ASSESSMENT_50,
     postAssessment: DAY_3_POST_ASSESSMENT_50,
     badge: {

@@ -217,6 +217,38 @@ export function App() {
     return () => unsub();
   }, [user?.uid]);
 
+  // Synchronize immediately when mobile tab returns from background or device reconnects online
+  useEffect(() => {
+    const syncLatestFromFirestore = () => {
+      if (user && user.uid) {
+        const p = loadStoredProgress(user.email);
+        hydrateUserProgress(user, p).then((hydrated) => {
+          saveStoredProgress(hydrated, user.email);
+          setProgress(hydrated);
+          isHydratedRef.current = true;
+        });
+      }
+    };
+
+    const handleVisibility = () => {
+      if (document.visibilityState === 'visible') {
+        syncLatestFromFirestore();
+      }
+    };
+
+    const handleOnline = () => {
+      syncLatestFromFirestore();
+    };
+
+    document.addEventListener('visibilitychange', handleVisibility);
+    window.addEventListener('online', handleOnline);
+
+    return () => {
+      document.removeEventListener('visibilitychange', handleVisibility);
+      window.removeEventListener('online', handleOnline);
+    };
+  }, [user?.uid, user?.email]);
+
   // Sync Firebase Google Auth state if popup completes or redirect returns
   useEffect(() => {
     try {
@@ -328,23 +360,30 @@ export function App() {
 
   const handleSavePreScore = (day: number, scorePercent: number) => {
     const isPassed = scorePercent >= 80;
+    isHydratedRef.current = true;
     setProgress((prev) => {
       const isPostPassed = Boolean(prev.postAssessmentPassed?.[day]);
       const bothPassed = isPassed && isPostPassed;
       const nextCompleted = { ...(prev.completedDays || {}) };
       if (bothPassed) nextCompleted[day] = true;
 
-      return {
+      const nextState: UserProgress = {
         ...prev,
         preAssessmentScores: { ...prev.preAssessmentScores, [day]: scorePercent },
         preAssessmentPassed: { ...prev.preAssessmentPassed, [day]: isPassed },
         completedDays: nextCompleted,
       };
+      if (user) {
+        saveStoredProgress(nextState, user.email);
+        syncLearnerProgress(user, nextState);
+      }
+      return nextState;
     });
   };
 
   const handleSavePostScore = (day: number, scorePercent: number) => {
     const isPassed = scorePercent >= 80;
+    isHydratedRef.current = true;
     setProgress((prev) => {
       const isPrePassed = Boolean(prev.preAssessmentPassed?.[day]);
       const bothPassed = isPassed && isPrePassed;
@@ -355,16 +394,25 @@ export function App() {
       const nextCompleted = { ...(prev.completedDays || {}) };
       if (bothPassed) nextCompleted[day] = true;
 
-      return {
+      const nextCertId =
+        prev.certificateId || (user && bothPassed ? generateOfficialCertificateId(user.email) : prev.certificateId);
+      const nextCertIssued =
+        prev.certificateIssuedAt || (bothPassed ? new Date().toISOString() : prev.certificateIssuedAt);
+
+      const nextState: UserProgress = {
         ...prev,
         postAssessmentScores: { ...prev.postAssessmentScores, [day]: scorePercent },
         postAssessmentPassed: { ...prev.postAssessmentPassed, [day]: isPassed },
         completedDays: nextCompleted,
         unlockedBadges: nextBadges,
-        certificateId:
-          prev.certificateId || (user && bothPassed ? generateOfficialCertificateId(user.email) : prev.certificateId),
-        certificateIssuedAt: prev.certificateIssuedAt || (bothPassed ? new Date().toISOString() : prev.certificateIssuedAt),
+        certificateId: nextCertId,
+        certificateIssuedAt: nextCertIssued,
       };
+      if (user) {
+        saveStoredProgress(nextState, user.email);
+        syncLearnerProgress(user, nextState);
+      }
+      return nextState;
     });
   };
 

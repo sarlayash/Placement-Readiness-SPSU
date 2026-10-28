@@ -57,8 +57,12 @@ export async function signInWithGooglePopup(): Promise<GoogleUser> {
     const code = (err as { code?: string })?.code || '';
     // Only fall back to a full-page redirect when the browser blocked the popup.
     // If the user closed the popup themselves, respect that and surface the error.
-    if (code === 'auth/popup-blocked') {
-      console.warn('Popup blocked/closed. Initiating redirect fallback...');
+    if (
+      code === 'auth/popup-blocked' ||
+      code === 'auth/operation-not-supported-in-this-environment' ||
+      /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent) && code === 'auth/popup-closed-by-user'
+    ) {
+      console.warn('Mobile/popup restriction detected. Initiating redirect fallback...');
       await signInWithRedirect(auth, googleProvider);
       // Returns a pending promise until redirect completes
       return new Promise(() => {});

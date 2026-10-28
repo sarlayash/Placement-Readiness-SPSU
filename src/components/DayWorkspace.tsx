@@ -116,6 +116,8 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
   const [preSubmitted, setPreSubmitted] = useState<boolean>(false);
   const [postAnswers, setPostAnswers] = useState<Record<string, number>>({});
   const [postSubmitted, setPostSubmitted] = useState<boolean>(false);
+  const [isRetakingPre, setIsRetakingPre] = useState<boolean>(false);
+  const [isRetakingPost, setIsRetakingPost] = useState<boolean>(false);
 
   useEffect(() => {
     setActiveTab(initialTab);
@@ -126,6 +128,8 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
     setTestRunResult(null);
     setVisualStepIdx(0);
     setIsAutoPlaying(false);
+    setIsRetakingPre(false);
+    setIsRetakingPost(false);
 
     const hasPreScore = progress?.preAssessmentScores?.[dayPlan.day] !== undefined;
     setPreSubmitted(hasPreScore);
@@ -135,14 +139,29 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
 
     const userKey = user?.email || 'anon';
     try {
-      const preDraftRaw = localStorage.getItem(`spsu_pre_ans_d${dayPlan.day}_${userKey}`);
+      let preDraftRaw = localStorage.getItem(`spsu_pre_ans_d${dayPlan.day}_${userKey}`);
+      // Migration: If user signed in while answering as anon, preserve and migrate draft
+      if (!preDraftRaw && userKey !== 'anon') {
+        const anonPre = localStorage.getItem(`spsu_pre_ans_d${dayPlan.day}_anon`);
+        if (anonPre) {
+          preDraftRaw = anonPre;
+          localStorage.setItem(`spsu_pre_ans_d${dayPlan.day}_${userKey}`, anonPre);
+        }
+      }
       if (preDraftRaw) {
         setPreAnswers(JSON.parse(preDraftRaw));
       } else {
         setPreAnswers({});
       }
 
-      const postDraftRaw = localStorage.getItem(`spsu_post_ans_d${dayPlan.day}_${userKey}`);
+      let postDraftRaw = localStorage.getItem(`spsu_post_ans_d${dayPlan.day}_${userKey}`);
+      if (!postDraftRaw && userKey !== 'anon') {
+        const anonPost = localStorage.getItem(`spsu_post_ans_d${dayPlan.day}_anon`);
+        if (anonPost) {
+          postDraftRaw = anonPost;
+          localStorage.setItem(`spsu_post_ans_d${dayPlan.day}_${userKey}`, anonPost);
+        }
+      }
       if (postDraftRaw) {
         setPostAnswers(JSON.parse(postDraftRaw));
       } else {
@@ -156,16 +175,16 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
 
   // Dynamically synchronize submission state whenever progress scores hydrate from Firestore
   useEffect(() => {
-    if (progress?.preAssessmentScores?.[dayPlan.day] !== undefined) {
+    if (progress?.preAssessmentScores?.[dayPlan.day] !== undefined && !isRetakingPre) {
       setPreSubmitted(true);
     }
-  }, [dayPlan.day, progress?.preAssessmentScores?.[dayPlan.day]]);
+  }, [dayPlan.day, progress?.preAssessmentScores?.[dayPlan.day], isRetakingPre]);
 
   useEffect(() => {
-    if (progress?.postAssessmentScores?.[dayPlan.day] !== undefined) {
+    if (progress?.postAssessmentScores?.[dayPlan.day] !== undefined && !isRetakingPost) {
       setPostSubmitted(true);
     }
-  }, [dayPlan.day, progress?.postAssessmentScores?.[dayPlan.day]]);
+  }, [dayPlan.day, progress?.postAssessmentScores?.[dayPlan.day], isRetakingPost]);
 
   const handleSelectPreAnswer = (questionId: string, optionIdx: number) => {
     if (preSubmitted) return;
@@ -196,22 +215,26 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
   };
 
   const handleRetakePre = () => {
+    setIsRetakingPre(true);
     setPreSubmitted(false);
     setPreAnswers({});
     try {
       const userKey = user?.email || 'anon';
       localStorage.removeItem(`spsu_pre_ans_d${dayPlan.day}_${userKey}`);
+      localStorage.removeItem(`spsu_pre_ans_d${dayPlan.day}_anon`);
     } catch {
       // ignore
     }
   };
 
   const handleRetakePost = () => {
+    setIsRetakingPost(true);
     setPostSubmitted(false);
     setPostAnswers({});
     try {
       const userKey = user?.email || 'anon';
       localStorage.removeItem(`spsu_post_ans_d${dayPlan.day}_${userKey}`);
+      localStorage.removeItem(`spsu_post_ans_d${dayPlan.day}_anon`);
     } catch {
       // ignore
     }
@@ -346,6 +369,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
       onRequireAuth();
       return;
     }
+    setIsRetakingPre(false);
     let correct = 0;
     const totalPre = dayPlan.preAssessment?.length || 0;
     dayPlan.preAssessment?.forEach((q) => {
@@ -370,6 +394,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
       onRequireAuth();
       return;
     }
+    setIsRetakingPost(false);
     let correct = 0;
     const totalPost = dayPlan.postAssessment?.length || 0;
     dayPlan.postAssessment?.forEach((q) => {

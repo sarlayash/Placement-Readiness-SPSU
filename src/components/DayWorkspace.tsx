@@ -154,6 +154,19 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
     }
   }, [dayPlan.day, user?.email]);
 
+  // Dynamically synchronize submission state whenever progress scores hydrate from Firestore
+  useEffect(() => {
+    if (progress?.preAssessmentScores?.[dayPlan.day] !== undefined) {
+      setPreSubmitted(true);
+    }
+  }, [dayPlan.day, progress?.preAssessmentScores?.[dayPlan.day]]);
+
+  useEffect(() => {
+    if (progress?.postAssessmentScores?.[dayPlan.day] !== undefined) {
+      setPostSubmitted(true);
+    }
+  }, [dayPlan.day, progress?.postAssessmentScores?.[dayPlan.day]]);
+
   const handleSelectPreAnswer = (questionId: string, optionIdx: number) => {
     if (preSubmitted) return;
     setPreAnswers((prev) => {

@@ -1,9 +1,23 @@
-import { collection, doc, getDocs, setDoc, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getDocs, getDoc, setDoc, onSnapshot } from 'firebase/firestore';
 import { db } from './firebase';
 import { GoogleUser, UserProgress, LearnerRecord } from '../types';
 import { INITIAL_FIREBASE_AUTH_USERS } from '../data/firebaseAuthUsers';
 
 const LOCAL_REGISTRY_KEY = 'spsu_kapil_all_learners_registry_v1';
+
+// In-memory canonical firstLogin cache to preserve immutable registration timestamps
+const canonicalFirstLoginCache = new Map<string, string>();
+
+export function cacheCanonicalFirstLogin(userIdentifier: string, firstLogin: string): void {
+  if (userIdentifier && firstLogin) {
+    canonicalFirstLoginCache.set(userIdentifier.toLowerCase(), firstLogin);
+  }
+}
+
+export function getCachedCanonicalFirstLogin(userIdentifier: string): string | undefined {
+  if (!userIdentifier) return undefined;
+  return canonicalFirstLoginCache.get(userIdentifier.toLowerCase());
+}
 
 /**
  * Reads local learners registry from localStorage as a fallback or hybrid store.
@@ -12,12 +26,23 @@ export function getLocalLearnersRegistry(): Record<string, LearnerRecord> {
   const seed: Record<string, LearnerRecord> = {};
   for (const u of INITIAL_FIREBASE_AUTH_USERS) {
     seed[u.email.toLowerCase()] = { ...u };
+    if (u.firstLogin) {
+      cacheCanonicalFirstLogin(u.uid, u.firstLogin);
+      cacheCanonicalFirstLogin(u.email, u.firstLogin);
+    }
   }
 
   try {
     const raw = localStorage.getItem(LOCAL_REGISTRY_KEY);
     if (!raw) return seed;
     const parsed = JSON.parse(raw) as Record<string, LearnerRecord>;
+    for (const [key, item] of Object.entries(parsed)) {
+      if (item.firstLogin) {
+        if (item.uid) cacheCanonicalFirstLogin(item.uid, item.firstLogin);
+        if (item.email) cacheCanonicalFirstLogin(item.email, item.firstLogin);
+        cacheCanonicalFirstLogin(key, item.firstLogin);
+      }
+    }
     return { ...seed, ...parsed };
   } catch {
     return seed;
@@ -35,11 +60,32 @@ export function saveLocalLearnersRegistry(registry: Record<string, LearnerRecord
   }
 }
 
+const MAP_FIELDS = new Set([
+  'preAssessmentScores',
+  'postAssessmentScores',
+  'preAssessmentPassed',
+  'postAssessmentPassed',
+  'completedDays',
+  'unlockedBadges',
+]);
+
 function cleanForFirestore(record: LearnerRecord): Record<string, any> {
   const clean: Record<string, any> = {};
   for (const [key, val] of Object.entries(record)) {
-    clean[key] = val === undefined ? null : val;
+    if (MAP_FIELDS.has(key)) {
+      clean[key] = val && typeof val === 'object' ? val : {};
+    } else {
+      clean[key] = val === undefined ? null : val;
+    }
   }
+  // Guarantee mandatory immutable/string constraints
+  clean.uid = String(record.uid || '');
+  clean.name = String(record.name || 'SPSU Learner').slice(0, 150);
+  clean.email = String(record.email || '').toLowerCase().slice(0, 150);
+  clean.photoURL = record.photoURL ? String(record.photoURL).slice(0, 1000) : '';
+  clean.firstLogin = String(record.firstLogin || new Date().toISOString()).slice(0, 50);
+  clean.lastLoginAttempt = String(record.lastLoginAttempt || new Date().toISOString()).slice(0, 50);
+
   return clean;
 }
 
@@ -63,6 +109,56 @@ export function mergeMaps<T>(base?: Record<string | number, T>, incoming?: Recor
 }
 
 /**
+ * Merges assessment score maps, always preserving existing attempted scores
+ * and taking the highest score (Math.max) for each day.
+ */
+export function mergeScoreMaps(
+  base?: Record<string | number, number>,
+  incoming?: Record<string | number, number>
+): Record<number, number> {
+  const result: Record<number, number> = {};
+  if (base) {
+    for (const [k, v] of Object.entries(base)) {
+      const dayNum = Number(k);
+      if (typeof v === 'number' && !isNaN(v)) {
+        result[dayNum] = v;
+      }
+    }
+  }
+  if (incoming) {
+    for (const [k, v] of Object.entries(incoming)) {
+      const dayNum = Number(k);
+      if (typeof v === 'number' && !isNaN(v)) {
+        result[dayNum] = result[dayNum] !== undefined ? Math.max(result[dayNum], v) : v;
+      }
+    }
+  }
+  return result;
+}
+
+/**
+ * Merges boolean completion maps, ensuring once passed or completed (true),
+ * it is permanently retained across sessions and devices.
+ */
+export function mergeBooleanMaps(
+  base?: Record<string | number, boolean>,
+  incoming?: Record<string | number, boolean>
+): Record<number, boolean> {
+  const result: Record<number, boolean> = {};
+  if (base) {
+    for (const [k, v] of Object.entries(base)) {
+      result[Number(k)] = Boolean(v);
+    }
+  }
+  if (incoming) {
+    for (const [k, v] of Object.entries(incoming)) {
+      result[Number(k)] = Boolean(result[Number(k)] || v);
+    }
+  }
+  return result;
+}
+
+/**
  * Record a user's sign in / login attempt with real timestamp.
  * Syncs to both Firebase Firestore and the persistent local registry.
  */
@@ -74,18 +170,43 @@ export async function recordUserSignIn(
   const localRegistry = getLocalLearnersRegistry();
   const existing = localRegistry[user.email.toLowerCase()] || localRegistry[user.uid];
 
+  let firstLoginToUse =
+    getCachedCanonicalFirstLogin(user.uid) ||
+    getCachedCanonicalFirstLogin(user.email) ||
+    existing?.firstLogin;
+
+  if (!firstLoginToUse) {
+    try {
+      const learnerDocRef = doc(db, 'learners', user.uid);
+      const snap = await getDoc(learnerDocRef);
+      if (snap.exists() && snap.data()?.firstLogin) {
+        firstLoginToUse = snap.data().firstLogin;
+        cacheCanonicalFirstLogin(user.uid, firstLoginToUse);
+        cacheCanonicalFirstLogin(user.email, firstLoginToUse);
+      }
+    } catch {
+      // Offline fallback
+    }
+  }
+
+  if (!firstLoginToUse) {
+    firstLoginToUse = user.signedInAt || now;
+  }
+  cacheCanonicalFirstLogin(user.uid, firstLoginToUse);
+  cacheCanonicalFirstLogin(user.email, firstLoginToUse);
+
   const updatedRecord: LearnerRecord = {
     uid: user.uid,
     name: (user.name || 'SPSU Learner').slice(0, 150),
     email: user.email.toLowerCase().slice(0, 150),
     photoURL: user.photoURL ? user.photoURL.slice(0, 1000) : '',
-    firstLogin: existing?.firstLogin || user.signedInAt || now,
+    firstLogin: firstLoginToUse,
     lastLoginAttempt: now,
-    preAssessmentScores: mergeMaps(existing?.preAssessmentScores, currentProgress?.preAssessmentScores),
-    postAssessmentScores: mergeMaps(existing?.postAssessmentScores, currentProgress?.postAssessmentScores),
-    preAssessmentPassed: mergeMaps(existing?.preAssessmentPassed, currentProgress?.preAssessmentPassed),
-    postAssessmentPassed: mergeMaps(existing?.postAssessmentPassed, currentProgress?.postAssessmentPassed),
-    completedDays: mergeMaps(existing?.completedDays, currentProgress?.completedDays),
+    preAssessmentScores: mergeScoreMaps(existing?.preAssessmentScores, currentProgress?.preAssessmentScores),
+    postAssessmentScores: mergeScoreMaps(existing?.postAssessmentScores, currentProgress?.postAssessmentScores),
+    preAssessmentPassed: mergeBooleanMaps(existing?.preAssessmentPassed, currentProgress?.preAssessmentPassed),
+    postAssessmentPassed: mergeBooleanMaps(existing?.postAssessmentPassed, currentProgress?.postAssessmentPassed),
+    completedDays: mergeBooleanMaps(existing?.completedDays, currentProgress?.completedDays),
     unlockedBadges: mergeMaps(existing?.unlockedBadges, currentProgress?.unlockedBadges),
     certificateId: currentProgress?.certificateId || existing?.certificateId || null,
     certificateIssuedAt: currentProgress?.certificateIssuedAt || existing?.certificateIssuedAt || null,
@@ -126,22 +247,49 @@ export async function syncLearnerProgress(
   user: GoogleUser,
   progress: UserProgress
 ): Promise<void> {
+  if (!user || !user.uid) return;
+
   const localRegistry = getLocalLearnersRegistry();
   const existing = localRegistry[user.email.toLowerCase()] || localRegistry[user.uid];
   const now = new Date().toISOString();
+
+  let firstLoginToUse =
+    getCachedCanonicalFirstLogin(user.uid) ||
+    getCachedCanonicalFirstLogin(user.email) ||
+    existing?.firstLogin;
+
+  if (!firstLoginToUse) {
+    try {
+      const learnerDocRef = doc(db, 'learners', user.uid);
+      const snap = await getDoc(learnerDocRef);
+      if (snap.exists() && snap.data()?.firstLogin) {
+        firstLoginToUse = snap.data().firstLogin;
+        cacheCanonicalFirstLogin(user.uid, firstLoginToUse);
+        cacheCanonicalFirstLogin(user.email, firstLoginToUse);
+      }
+    } catch {
+      // Offline fallback
+    }
+  }
+
+  if (!firstLoginToUse) {
+    firstLoginToUse = user.signedInAt || now;
+  }
+  cacheCanonicalFirstLogin(user.uid, firstLoginToUse);
+  cacheCanonicalFirstLogin(user.email, firstLoginToUse);
 
   const updatedRecord: LearnerRecord = {
     uid: user.uid,
     name: (user.name || existing?.name || 'SPSU Learner').slice(0, 150),
     email: user.email.toLowerCase().slice(0, 150),
     photoURL: (user.photoURL || existing?.photoURL || '').slice(0, 1000),
-    firstLogin: existing?.firstLogin || user.signedInAt || now,
+    firstLogin: firstLoginToUse,
     lastLoginAttempt: now,
-    preAssessmentScores: mergeMaps(existing?.preAssessmentScores, progress.preAssessmentScores),
-    postAssessmentScores: mergeMaps(existing?.postAssessmentScores, progress.postAssessmentScores),
-    preAssessmentPassed: mergeMaps(existing?.preAssessmentPassed, progress.preAssessmentPassed),
-    postAssessmentPassed: mergeMaps(existing?.postAssessmentPassed, progress.postAssessmentPassed),
-    completedDays: mergeMaps(existing?.completedDays, progress.completedDays),
+    preAssessmentScores: mergeScoreMaps(existing?.preAssessmentScores, progress.preAssessmentScores),
+    postAssessmentScores: mergeScoreMaps(existing?.postAssessmentScores, progress.postAssessmentScores),
+    preAssessmentPassed: mergeBooleanMaps(existing?.preAssessmentPassed, progress.preAssessmentPassed),
+    postAssessmentPassed: mergeBooleanMaps(existing?.postAssessmentPassed, progress.postAssessmentPassed),
+    completedDays: mergeBooleanMaps(existing?.completedDays, progress.completedDays),
     unlockedBadges: mergeMaps(existing?.unlockedBadges, progress.unlockedBadges),
     certificateId: progress.certificateId || existing?.certificateId || null,
     certificateIssuedAt: progress.certificateIssuedAt || existing?.certificateIssuedAt || null,
@@ -198,16 +346,20 @@ export async function fetchAllLearners(): Promise<LearnerRecord[]> {
       if (docSnap.exists()) {
         const data = docSnap.data() as LearnerRecord;
         if (data && (data.email || data.uid)) {
+          if (data.firstLogin) {
+            if (data.uid) cacheCanonicalFirstLogin(data.uid, data.firstLogin);
+            if (data.email) cacheCanonicalFirstLogin(data.email, data.firstLogin);
+          }
           const key = (data.email || data.uid).toLowerCase();
           const prev = mergedMap[key] || {};
           mergedMap[key] = {
             ...prev,
             ...data,
-            preAssessmentScores: mergeMaps(prev.preAssessmentScores, data.preAssessmentScores),
-            postAssessmentScores: mergeMaps(prev.postAssessmentScores, data.postAssessmentScores),
-            preAssessmentPassed: mergeMaps(prev.preAssessmentPassed, data.preAssessmentPassed),
-            postAssessmentPassed: mergeMaps(prev.postAssessmentPassed, data.postAssessmentPassed),
-            completedDays: mergeMaps(prev.completedDays, data.completedDays),
+            preAssessmentScores: mergeScoreMaps(prev.preAssessmentScores, data.preAssessmentScores),
+            postAssessmentScores: mergeScoreMaps(prev.postAssessmentScores, data.postAssessmentScores),
+            preAssessmentPassed: mergeBooleanMaps(prev.preAssessmentPassed, data.preAssessmentPassed),
+            postAssessmentPassed: mergeBooleanMaps(prev.postAssessmentPassed, data.postAssessmentPassed),
+            completedDays: mergeBooleanMaps(prev.completedDays, data.completedDays),
             unlockedBadges: mergeMaps(prev.unlockedBadges, data.unlockedBadges),
           };
         }
@@ -254,16 +406,20 @@ export function subscribeToLearners(callback: (learners: LearnerRecord[]) => voi
           if (docSnap.exists()) {
             const data = docSnap.data() as LearnerRecord;
             if (data && (data.email || data.uid)) {
+              if (data.firstLogin) {
+                if (data.uid) cacheCanonicalFirstLogin(data.uid, data.firstLogin);
+                if (data.email) cacheCanonicalFirstLogin(data.email, data.firstLogin);
+              }
               const key = (data.email || data.uid).toLowerCase();
               const prev = mergedMap[key] || {};
               mergedMap[key] = {
                 ...prev,
                 ...data,
-                preAssessmentScores: mergeMaps(prev.preAssessmentScores, data.preAssessmentScores),
-                postAssessmentScores: mergeMaps(prev.postAssessmentScores, data.postAssessmentScores),
-                preAssessmentPassed: mergeMaps(prev.preAssessmentPassed, data.preAssessmentPassed),
-                postAssessmentPassed: mergeMaps(prev.postAssessmentPassed, data.postAssessmentPassed),
-                completedDays: mergeMaps(prev.completedDays, data.completedDays),
+                preAssessmentScores: mergeScoreMaps(prev.preAssessmentScores, data.preAssessmentScores),
+                postAssessmentScores: mergeScoreMaps(prev.postAssessmentScores, data.postAssessmentScores),
+                preAssessmentPassed: mergeBooleanMaps(prev.preAssessmentPassed, data.preAssessmentPassed),
+                postAssessmentPassed: mergeBooleanMaps(prev.postAssessmentPassed, data.postAssessmentPassed),
+                completedDays: mergeBooleanMaps(prev.completedDays, data.completedDays),
                 unlockedBadges: mergeMaps(prev.unlockedBadges, data.unlockedBadges),
               };
             }

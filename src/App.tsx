@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { GoogleUser, SupportedLanguage, UserProgress } from './types';
 import {
   COMPLETE_10_DAY_PLAN,
@@ -14,7 +14,7 @@ import {
 } from './utils/storage';
 import { auth, signOutGoogle, checkRedirectAuth, db } from './utils/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, onSnapshot } from 'firebase/firestore';
 import { Navbar } from './components/Navbar';
 import { LeftSidebar } from './components/LeftSidebar';
 import { Footer } from './components/Footer';
@@ -32,7 +32,14 @@ import { IndustryPatternQuizModal } from './components/IndustryPatternQuizModal'
 import { SpinningWheelQuizModal } from './components/SpinningWheelQuizModal';
 import { AptitudeAssessmentModal } from './components/AptitudeAssessmentModal';
 import { SelfServiceCredentialsModal } from './components/SelfServiceCredentialsModal';
-import { recordUserSignIn, syncLearnerProgress, mergeMaps } from './utils/learnerRegistry';
+import {
+  recordUserSignIn,
+  syncLearnerProgress,
+  mergeMaps,
+  mergeScoreMaps,
+  mergeBooleanMaps,
+  cacheCanonicalFirstLogin,
+} from './utils/learnerRegistry';
 import { checkAndTriggerAutomaticReminders, loadInAppReminders } from './utils/pushNotifications';
 
 export function App() {
@@ -40,6 +47,7 @@ export function App() {
   const [progress, setProgress] = useState<UserProgress>(() =>
     loadStoredProgress(loadStoredGoogleUser()?.email)
   );
+  const isHydratedRef = useRef<boolean>(false);
 
   // Landing page defaults to Complete Day Planner ('planner'), can be 'day-workspace' or 'admin'
   const [activeView, setActiveView] = useState<'planner' | 'day-workspace' | 'admin'>('planner');
@@ -112,24 +120,28 @@ export function App() {
       const snap = await getDoc(docRef);
       if (snap.exists()) {
         const data = snap.data();
+        if (data?.firstLogin) {
+          cacheCanonicalFirstLogin(u.uid, data.firstLogin);
+          cacheCanonicalFirstLogin(u.email, data.firstLogin);
+        }
         merged = {
           ...localProgress,
-          preAssessmentScores: mergeMaps(data?.preAssessmentScores, localProgress.preAssessmentScores),
-          postAssessmentScores: mergeMaps(data?.postAssessmentScores, localProgress.postAssessmentScores),
-          preAssessmentPassed: mergeMaps(data?.preAssessmentPassed, localProgress.preAssessmentPassed),
-          postAssessmentPassed: mergeMaps(data?.postAssessmentPassed, localProgress.postAssessmentPassed),
-          completedDays: mergeMaps(data?.completedDays, localProgress.completedDays),
+          preAssessmentScores: mergeScoreMaps(data?.preAssessmentScores, localProgress.preAssessmentScores),
+          postAssessmentScores: mergeScoreMaps(data?.postAssessmentScores, localProgress.postAssessmentScores),
+          preAssessmentPassed: mergeBooleanMaps(data?.preAssessmentPassed, localProgress.preAssessmentPassed),
+          postAssessmentPassed: mergeBooleanMaps(data?.postAssessmentPassed, localProgress.postAssessmentPassed),
+          completedDays: mergeBooleanMaps(data?.completedDays, localProgress.completedDays),
           unlockedBadges: mergeMaps(data?.unlockedBadges, localProgress.unlockedBadges),
           certificateId: data?.certificateId || localProgress.certificateId || generateOfficialCertificateId(u.email),
           certificateIssuedAt: data?.certificateIssuedAt || localProgress.certificateIssuedAt,
-          patternQuizScore: data?.patternQuizScore ?? localProgress.patternQuizScore ?? 0,
+          patternQuizScore: Math.max(data?.patternQuizScore ?? 0, localProgress.patternQuizScore ?? 0),
           patternQuizCompleted: Boolean(data?.patternQuizCompleted ?? localProgress.patternQuizCompleted),
-          stressQuizScore: data?.stressQuizScore ?? localProgress.stressQuizScore ?? 0,
-          stressQuizAnswered: data?.stressQuizAnswered ?? localProgress.stressQuizAnswered ?? 0,
+          stressQuizScore: Math.max(data?.stressQuizScore ?? 0, localProgress.stressQuizScore ?? 0),
+          stressQuizAnswered: Math.max(data?.stressQuizAnswered ?? 0, localProgress.stressQuizAnswered ?? 0),
           stressQuizCompleted: Boolean(data?.stressQuizCompleted ?? localProgress.stressQuizCompleted),
           stressQuizAttemptedAt: data?.stressQuizAttemptedAt || localProgress.stressQuizAttemptedAt || null,
-          aptitudeScore: data?.aptitudeScore ?? localProgress.aptitudeScore ?? 0,
-          aptitudeCorrectCount: data?.aptitudeCorrectCount ?? localProgress.aptitudeCorrectCount ?? 0,
+          aptitudeScore: Math.max(data?.aptitudeScore ?? 0, localProgress.aptitudeScore ?? 0),
+          aptitudeCorrectCount: Math.max(data?.aptitudeCorrectCount ?? 0, localProgress.aptitudeCorrectCount ?? 0),
           aptitudePassed: Boolean(data?.aptitudePassed ?? localProgress.aptitudePassed),
           aptitudeAttemptedAt: data?.aptitudeAttemptedAt || localProgress.aptitudeAttemptedAt || null,
           lorIssuedAt: data?.lorIssuedAt || localProgress.lorIssuedAt || null,
@@ -141,6 +153,69 @@ export function App() {
     }
     return merged;
   };
+
+  // Real-time bi-directional sync with Firestore for active learner across phone, laptop, and tabs
+  useEffect(() => {
+    if (!user || !user.uid) {
+      isHydratedRef.current = false;
+      return;
+    }
+
+    // Rapid initial hydration from Firestore
+    const localProg = loadStoredProgress(user.email);
+    hydrateUserProgress(user, localProg).then((hydrated) => {
+      saveStoredProgress(hydrated, user.email);
+      setProgress(hydrated);
+      isHydratedRef.current = true;
+    });
+
+    // Real-time listener for live score updates across multiple devices/tabs
+    const unsub = onSnapshot(
+      doc(db, 'learners', user.uid),
+      (snap) => {
+        if (snap.exists()) {
+          const data = snap.data();
+          if (data?.firstLogin) {
+            cacheCanonicalFirstLogin(user.uid, data.firstLogin);
+            cacheCanonicalFirstLogin(user.email, data.firstLogin);
+          }
+          setProgress((prev) => {
+            const next: UserProgress = {
+              ...prev,
+              preAssessmentScores: mergeScoreMaps(data?.preAssessmentScores, prev.preAssessmentScores),
+              postAssessmentScores: mergeScoreMaps(data?.postAssessmentScores, prev.postAssessmentScores),
+              preAssessmentPassed: mergeBooleanMaps(data?.preAssessmentPassed, prev.preAssessmentPassed),
+              postAssessmentPassed: mergeBooleanMaps(data?.postAssessmentPassed, prev.postAssessmentPassed),
+              completedDays: mergeBooleanMaps(data?.completedDays, prev.completedDays),
+              unlockedBadges: mergeMaps(data?.unlockedBadges, prev.unlockedBadges),
+              certificateId: data?.certificateId || prev.certificateId,
+              certificateIssuedAt: data?.certificateIssuedAt || prev.certificateIssuedAt,
+              patternQuizScore: Math.max(data?.patternQuizScore ?? 0, prev.patternQuizScore ?? 0),
+              patternQuizCompleted: Boolean(data?.patternQuizCompleted ?? prev.patternQuizCompleted),
+              stressQuizScore: Math.max(data?.stressQuizScore ?? 0, prev.stressQuizScore ?? 0),
+              stressQuizAnswered: Math.max(data?.stressQuizAnswered ?? 0, prev.stressQuizAnswered ?? 0),
+              stressQuizCompleted: Boolean(data?.stressQuizCompleted ?? prev.stressQuizCompleted),
+              stressQuizAttemptedAt: data?.stressQuizAttemptedAt || prev.stressQuizAttemptedAt || null,
+              aptitudeScore: Math.max(data?.aptitudeScore ?? 0, prev.aptitudeScore ?? 0),
+              aptitudeCorrectCount: Math.max(data?.aptitudeCorrectCount ?? 0, prev.aptitudeCorrectCount ?? 0),
+              aptitudePassed: Boolean(data?.aptitudePassed ?? prev.aptitudePassed),
+              aptitudeAttemptedAt: data?.aptitudeAttemptedAt || prev.aptitudeAttemptedAt || null,
+              lorIssuedAt: data?.lorIssuedAt || prev.lorIssuedAt || null,
+              reportGeneratedAt: data?.reportGeneratedAt || prev.reportGeneratedAt || null,
+            };
+            saveStoredProgress(next, user.email);
+            return next;
+          });
+          isHydratedRef.current = true;
+        }
+      },
+      (err) => {
+        console.warn('Real-time Firestore learner onSnapshot notice:', err);
+      }
+    );
+
+    return () => unsub();
+  }, [user?.uid]);
 
   // Sync Firebase Google Auth state if popup completes or redirect returns
   useEffect(() => {
@@ -164,12 +239,13 @@ export function App() {
               )}&background=0A192F&color=ffffff&bold=true`,
             signedInAt: new Date().toISOString(),
           };
-          setUser(mapped);
           saveStoredGoogleUser(mapped);
           const p = loadStoredProgress(mapped.email);
           const hydrated = await hydrateUserProgress(mapped, p);
           saveStoredProgress(hydrated, mapped.email);
           setProgress(hydrated);
+          setUser(mapped);
+          isHydratedRef.current = true;
           // Record real login attempt in centralized registry & Firestore
           recordUserSignIn(mapped, hydrated);
         }
@@ -180,16 +256,14 @@ export function App() {
     }
   }, []);
 
-  // Persist user progress whenever it changes
+  // Persist user progress whenever it changes (guarded against unhydrated overwrite)
   useEffect(() => {
-    saveStoredProgress(progress, user?.email);
-    if (user) {
-      syncLearnerProgress(user, progress);
-    }
+    if (!isHydratedRef.current || !user) return;
+    saveStoredProgress(progress, user.email);
+    syncLearnerProgress(user, progress);
   }, [progress, user]);
 
   const handleAuthSuccess = async (authenticatedUser: GoogleUser) => {
-    setUser(authenticatedUser);
     saveStoredGoogleUser(authenticatedUser);
     const loaded = loadStoredProgress(authenticatedUser.email);
     if (!loaded.certificateId) {
@@ -199,15 +273,19 @@ export function App() {
     const hydrated = await hydrateUserProgress(authenticatedUser, loaded);
     saveStoredProgress(hydrated, authenticatedUser.email);
     setProgress(hydrated);
+    setUser(authenticatedUser);
+    isHydratedRef.current = true;
     setShowAuthModal(false);
     // Record login attempt in centralized registry & Firestore
     recordUserSignIn(authenticatedUser, hydrated);
   };
 
   const handleSignOut = async () => {
+    isHydratedRef.current = false;
     await signOutGoogle();
     setUser(null);
     saveStoredGoogleUser(null);
+    setProgress(loadStoredProgress('anonymous'));
   };
 
   const handleOpenAdmin = () => {

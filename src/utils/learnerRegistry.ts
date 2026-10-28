@@ -43,6 +43,25 @@ function cleanForFirestore(record: LearnerRecord): Record<string, any> {
   return clean;
 }
 
+export function mergeMaps<T>(base?: Record<string | number, T>, incoming?: Record<string | number, T>): Record<number, T> {
+  const result: Record<number, T> = {};
+  if (base) {
+    for (const [k, v] of Object.entries(base)) {
+      if (v !== undefined && v !== null) {
+        result[Number(k)] = v;
+      }
+    }
+  }
+  if (incoming) {
+    for (const [k, v] of Object.entries(incoming)) {
+      if (v !== undefined && v !== null) {
+        result[Number(k)] = v;
+      }
+    }
+  }
+  return result;
+}
+
 /**
  * Record a user's sign in / login attempt with real timestamp.
  * Syncs to both Firebase Firestore and the persistent local registry.
@@ -62,12 +81,12 @@ export async function recordUserSignIn(
     photoURL: user.photoURL ? user.photoURL.slice(0, 1000) : '',
     firstLogin: existing?.firstLogin || user.signedInAt || now,
     lastLoginAttempt: now,
-    preAssessmentScores: currentProgress?.preAssessmentScores || existing?.preAssessmentScores || {},
-    postAssessmentScores: currentProgress?.postAssessmentScores || existing?.postAssessmentScores || {},
-    preAssessmentPassed: currentProgress?.preAssessmentPassed || existing?.preAssessmentPassed || {},
-    postAssessmentPassed: currentProgress?.postAssessmentPassed || existing?.postAssessmentPassed || {},
-    completedDays: currentProgress?.completedDays || existing?.completedDays || {},
-    unlockedBadges: currentProgress?.unlockedBadges || existing?.unlockedBadges || {},
+    preAssessmentScores: mergeMaps(existing?.preAssessmentScores, currentProgress?.preAssessmentScores),
+    postAssessmentScores: mergeMaps(existing?.postAssessmentScores, currentProgress?.postAssessmentScores),
+    preAssessmentPassed: mergeMaps(existing?.preAssessmentPassed, currentProgress?.preAssessmentPassed),
+    postAssessmentPassed: mergeMaps(existing?.postAssessmentPassed, currentProgress?.postAssessmentPassed),
+    completedDays: mergeMaps(existing?.completedDays, currentProgress?.completedDays),
+    unlockedBadges: mergeMaps(existing?.unlockedBadges, currentProgress?.unlockedBadges),
     certificateId: currentProgress?.certificateId || existing?.certificateId || null,
     certificateIssuedAt: currentProgress?.certificateIssuedAt || existing?.certificateIssuedAt || null,
     patternQuizScore: currentProgress?.patternQuizScore ?? existing?.patternQuizScore ?? 0,
@@ -118,12 +137,12 @@ export async function syncLearnerProgress(
     photoURL: (user.photoURL || existing?.photoURL || '').slice(0, 1000),
     firstLogin: existing?.firstLogin || user.signedInAt || now,
     lastLoginAttempt: now,
-    preAssessmentScores: { ...(existing?.preAssessmentScores || {}), ...progress.preAssessmentScores },
-    postAssessmentScores: { ...(existing?.postAssessmentScores || {}), ...progress.postAssessmentScores },
-    preAssessmentPassed: { ...(existing?.preAssessmentPassed || {}), ...progress.preAssessmentPassed },
-    postAssessmentPassed: { ...(existing?.postAssessmentPassed || {}), ...progress.postAssessmentPassed },
-    completedDays: { ...(existing?.completedDays || {}), ...(progress.completedDays || {}) },
-    unlockedBadges: { ...(existing?.unlockedBadges || {}), ...progress.unlockedBadges },
+    preAssessmentScores: mergeMaps(existing?.preAssessmentScores, progress.preAssessmentScores),
+    postAssessmentScores: mergeMaps(existing?.postAssessmentScores, progress.postAssessmentScores),
+    preAssessmentPassed: mergeMaps(existing?.preAssessmentPassed, progress.preAssessmentPassed),
+    postAssessmentPassed: mergeMaps(existing?.postAssessmentPassed, progress.postAssessmentPassed),
+    completedDays: mergeMaps(existing?.completedDays, progress.completedDays),
+    unlockedBadges: mergeMaps(existing?.unlockedBadges, progress.unlockedBadges),
     certificateId: progress.certificateId || existing?.certificateId || null,
     certificateIssuedAt: progress.certificateIssuedAt || existing?.certificateIssuedAt || null,
     patternQuizScore: progress.patternQuizScore ?? existing?.patternQuizScore ?? 0,
@@ -180,9 +199,16 @@ export async function fetchAllLearners(): Promise<LearnerRecord[]> {
         const data = docSnap.data() as LearnerRecord;
         if (data && (data.email || data.uid)) {
           const key = (data.email || data.uid).toLowerCase();
+          const prev = mergedMap[key] || {};
           mergedMap[key] = {
-            ...(mergedMap[key] || {}),
+            ...prev,
             ...data,
+            preAssessmentScores: mergeMaps(prev.preAssessmentScores, data.preAssessmentScores),
+            postAssessmentScores: mergeMaps(prev.postAssessmentScores, data.postAssessmentScores),
+            preAssessmentPassed: mergeMaps(prev.preAssessmentPassed, data.preAssessmentPassed),
+            postAssessmentPassed: mergeMaps(prev.postAssessmentPassed, data.postAssessmentPassed),
+            completedDays: mergeMaps(prev.completedDays, data.completedDays),
+            unlockedBadges: mergeMaps(prev.unlockedBadges, data.unlockedBadges),
           };
         }
       }
@@ -229,7 +255,17 @@ export function subscribeToLearners(callback: (learners: LearnerRecord[]) => voi
             const data = docSnap.data() as LearnerRecord;
             if (data && (data.email || data.uid)) {
               const key = (data.email || data.uid).toLowerCase();
-              mergedMap[key] = { ...(mergedMap[key] || {}), ...data };
+              const prev = mergedMap[key] || {};
+              mergedMap[key] = {
+                ...prev,
+                ...data,
+                preAssessmentScores: mergeMaps(prev.preAssessmentScores, data.preAssessmentScores),
+                postAssessmentScores: mergeMaps(prev.postAssessmentScores, data.postAssessmentScores),
+                preAssessmentPassed: mergeMaps(prev.preAssessmentPassed, data.preAssessmentPassed),
+                postAssessmentPassed: mergeMaps(prev.postAssessmentPassed, data.postAssessmentPassed),
+                completedDays: mergeMaps(prev.completedDays, data.completedDays),
+                unlockedBadges: mergeMaps(prev.unlockedBadges, data.unlockedBadges),
+              };
             }
           }
         });

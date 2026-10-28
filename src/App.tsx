@@ -12,8 +12,9 @@ import {
   saveStoredProgress,
   generateOfficialCertificateId,
 } from './utils/storage';
-import { auth, signOutGoogle, checkRedirectAuth } from './utils/firebase';
+import { auth, signOutGoogle, checkRedirectAuth, db } from './utils/firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
 import { Navbar } from './components/Navbar';
 import { LeftSidebar } from './components/LeftSidebar';
 import { Footer } from './components/Footer';
@@ -31,7 +32,7 @@ import { IndustryPatternQuizModal } from './components/IndustryPatternQuizModal'
 import { SpinningWheelQuizModal } from './components/SpinningWheelQuizModal';
 import { AptitudeAssessmentModal } from './components/AptitudeAssessmentModal';
 import { SelfServiceCredentialsModal } from './components/SelfServiceCredentialsModal';
-import { recordUserSignIn, syncLearnerProgress } from './utils/learnerRegistry';
+import { recordUserSignIn, syncLearnerProgress, mergeMaps } from './utils/learnerRegistry';
 import { checkAndTriggerAutomaticReminders, loadInAppReminders } from './utils/pushNotifications';
 
 export function App() {
@@ -103,16 +104,54 @@ export function App() {
     return () => clearInterval(interval);
   }, [selectedDay, progress]);
 
+  // Helper to fetch live real scores from Firestore and merge with local progress
+  const hydrateUserProgress = async (u: GoogleUser, localProgress: UserProgress): Promise<UserProgress> => {
+    let merged: UserProgress = { ...localProgress };
+    try {
+      const docRef = doc(db, 'learners', u.uid);
+      const snap = await getDoc(docRef);
+      if (snap.exists()) {
+        const data = snap.data();
+        merged = {
+          ...localProgress,
+          preAssessmentScores: mergeMaps(data?.preAssessmentScores, localProgress.preAssessmentScores),
+          postAssessmentScores: mergeMaps(data?.postAssessmentScores, localProgress.postAssessmentScores),
+          preAssessmentPassed: mergeMaps(data?.preAssessmentPassed, localProgress.preAssessmentPassed),
+          postAssessmentPassed: mergeMaps(data?.postAssessmentPassed, localProgress.postAssessmentPassed),
+          completedDays: mergeMaps(data?.completedDays, localProgress.completedDays),
+          unlockedBadges: mergeMaps(data?.unlockedBadges, localProgress.unlockedBadges),
+          certificateId: data?.certificateId || localProgress.certificateId || generateOfficialCertificateId(u.email),
+          certificateIssuedAt: data?.certificateIssuedAt || localProgress.certificateIssuedAt,
+          patternQuizScore: data?.patternQuizScore ?? localProgress.patternQuizScore ?? 0,
+          patternQuizCompleted: Boolean(data?.patternQuizCompleted ?? localProgress.patternQuizCompleted),
+          stressQuizScore: data?.stressQuizScore ?? localProgress.stressQuizScore ?? 0,
+          stressQuizAnswered: data?.stressQuizAnswered ?? localProgress.stressQuizAnswered ?? 0,
+          stressQuizCompleted: Boolean(data?.stressQuizCompleted ?? localProgress.stressQuizCompleted),
+          stressQuizAttemptedAt: data?.stressQuizAttemptedAt || localProgress.stressQuizAttemptedAt || null,
+          aptitudeScore: data?.aptitudeScore ?? localProgress.aptitudeScore ?? 0,
+          aptitudeCorrectCount: data?.aptitudeCorrectCount ?? localProgress.aptitudeCorrectCount ?? 0,
+          aptitudePassed: Boolean(data?.aptitudePassed ?? localProgress.aptitudePassed),
+          aptitudeAttemptedAt: data?.aptitudeAttemptedAt || localProgress.aptitudeAttemptedAt || null,
+          lorIssuedAt: data?.lorIssuedAt || localProgress.lorIssuedAt || null,
+          reportGeneratedAt: data?.reportGeneratedAt || localProgress.reportGeneratedAt || null,
+        };
+      }
+    } catch (err) {
+      console.warn('Could not hydrate progress from Firestore:', err);
+    }
+    return merged;
+  };
+
   // Sync Firebase Google Auth state if popup completes or redirect returns
   useEffect(() => {
     try {
-      checkRedirectAuth().then((redirectUser) => {
+      checkRedirectAuth().then(async (redirectUser) => {
         if (redirectUser && redirectUser.email) {
-          handleAuthSuccess(redirectUser);
+          await handleAuthSuccess(redirectUser);
         }
       });
 
-      const unsub = onAuthStateChanged(auth, (fbUser) => {
+      const unsub = onAuthStateChanged(auth, async (fbUser) => {
         if (fbUser && fbUser.email) {
           const mapped: GoogleUser = {
             uid: fbUser.uid,
@@ -128,9 +167,11 @@ export function App() {
           setUser(mapped);
           saveStoredGoogleUser(mapped);
           const p = loadStoredProgress(mapped.email);
-          setProgress(p);
+          const hydrated = await hydrateUserProgress(mapped, p);
+          saveStoredProgress(hydrated, mapped.email);
+          setProgress(hydrated);
           // Record real login attempt in centralized registry & Firestore
-          recordUserSignIn(mapped, p);
+          recordUserSignIn(mapped, hydrated);
         }
       });
       return () => unsub();
@@ -147,7 +188,7 @@ export function App() {
     }
   }, [progress, user]);
 
-  const handleAuthSuccess = (authenticatedUser: GoogleUser) => {
+  const handleAuthSuccess = async (authenticatedUser: GoogleUser) => {
     setUser(authenticatedUser);
     saveStoredGoogleUser(authenticatedUser);
     const loaded = loadStoredProgress(authenticatedUser.email);
@@ -155,10 +196,12 @@ export function App() {
       loaded.certificateId = generateOfficialCertificateId(authenticatedUser.email);
       loaded.certificateIssuedAt = new Date().toISOString();
     }
-    setProgress(loaded);
+    const hydrated = await hydrateUserProgress(authenticatedUser, loaded);
+    saveStoredProgress(hydrated, authenticatedUser.email);
+    setProgress(hydrated);
     setShowAuthModal(false);
     // Record login attempt in centralized registry & Firestore
-    recordUserSignIn(authenticatedUser, loaded);
+    recordUserSignIn(authenticatedUser, hydrated);
   };
 
   const handleSignOut = async () => {

@@ -38,7 +38,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedDayFilter, setSelectedDayFilter] = useState<number>(1);
-  const [statusFilter, setStatusFilter] = useState<'all' | 'day1_pre' | 'day1_post' | 'day1_complete' | 'day2_pre' | 'day2_post' | 'day2_complete' | 'both_days_complete' | 'day3_pre' | 'day3_post' | 'day3_complete' | 'day4_pre' | 'day4_post' | 'day4_complete' | 'all_3_days_complete' | 'all_4_days_complete' | 'certified'>('all');
+  const [statusFilter, setStatusFilter] = useState<'all' | 'day1_pre' | 'day1_post' | 'day1_complete' | 'day2_pre' | 'day2_post' | 'day2_complete' | 'both_days_complete' | 'day3_pre' | 'day3_post' | 'day3_complete' | 'day4_pre' | 'day4_post' | 'day4_complete' | 'day5_pre' | 'day5_post' | 'day5_complete' | 'all_3_days_complete' | 'all_4_days_complete' | 'all_5_days_complete' | 'certified'>('all');
   const [inspectedLearner, setInspectedLearner] = useState<LearnerRecord | null>(null);
 
   const loadData = async () => {
@@ -114,6 +114,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     if (statusFilter === 'day4_complete') {
       return Boolean(l.completedDays?.[4] || (l.preAssessmentPassed?.[4] && l.postAssessmentPassed?.[4]));
     }
+    if (statusFilter === 'day5_pre') {
+      return Boolean(l.preAssessmentPassed?.[5]);
+    }
+    if (statusFilter === 'day5_post') {
+      return Boolean(l.postAssessmentPassed?.[5]);
+    }
+    if (statusFilter === 'day5_complete') {
+      return Boolean(l.completedDays?.[5] || (l.preAssessmentPassed?.[5] && l.postAssessmentPassed?.[5]));
+    }
     if (statusFilter === 'all_3_days_complete') {
       const d1 = Boolean(l.completedDays?.[1] || (l.preAssessmentPassed?.[1] && l.postAssessmentPassed?.[1]));
       const d2 = Boolean(l.completedDays?.[2] || (l.preAssessmentPassed?.[2] && l.postAssessmentPassed?.[2]));
@@ -126,6 +135,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       const d3 = Boolean(l.completedDays?.[3] || (l.preAssessmentPassed?.[3] && l.postAssessmentPassed?.[3]));
       const d4 = Boolean(l.completedDays?.[4] || (l.preAssessmentPassed?.[4] && l.postAssessmentPassed?.[4]));
       return d1 && d2 && d3 && d4;
+    }
+    if (statusFilter === 'all_5_days_complete') {
+      const d1 = Boolean(l.completedDays?.[1] || (l.preAssessmentPassed?.[1] && l.postAssessmentPassed?.[1]));
+      const d2 = Boolean(l.completedDays?.[2] || (l.preAssessmentPassed?.[2] && l.postAssessmentPassed?.[2]));
+      const d3 = Boolean(l.completedDays?.[3] || (l.preAssessmentPassed?.[3] && l.postAssessmentPassed?.[3]));
+      const d4 = Boolean(l.completedDays?.[4] || (l.preAssessmentPassed?.[4] && l.postAssessmentPassed?.[4]));
+      const d5 = Boolean(l.completedDays?.[5] || (l.preAssessmentPassed?.[5] && l.postAssessmentPassed?.[5]));
+      return d1 && d2 && d3 && d4 && d5;
     }
     if (statusFilter === 'certified') {
       return Boolean(l.certificateId);
@@ -144,6 +161,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const day3PostCompletedCount = learners.filter((l) => l.postAssessmentPassed?.[3]).length;
   const day4PreCompletedCount = learners.filter((l) => l.preAssessmentPassed?.[4]).length;
   const day4PostCompletedCount = learners.filter((l) => l.postAssessmentPassed?.[4]).length;
+  const day5PreCompletedCount = learners.filter((l) => l.preAssessmentPassed?.[5]).length;
+  const day5PostCompletedCount = learners.filter((l) => l.postAssessmentPassed?.[5]).length;
   const bothDaysCompletedCount = learners.filter((l) => {
     const d1 = Boolean(l.completedDays?.[1] || (l.preAssessmentPassed?.[1] && l.postAssessmentPassed?.[1]));
     const d2 = Boolean(l.completedDays?.[2] || (l.preAssessmentPassed?.[2] && l.postAssessmentPassed?.[2]));
@@ -161,6 +180,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     const d3 = Boolean(l.completedDays?.[3] || (l.preAssessmentPassed?.[3] && l.postAssessmentPassed?.[3]));
     const d4 = Boolean(l.completedDays?.[4] || (l.preAssessmentPassed?.[4] && l.postAssessmentPassed?.[4]));
     return d1 && d2 && d3 && d4;
+  }).length;
+  const all5DaysCompletedCount = learners.filter((l) => {
+    const d1 = Boolean(l.completedDays?.[1] || (l.preAssessmentPassed?.[1] && l.postAssessmentPassed?.[1]));
+    const d2 = Boolean(l.completedDays?.[2] || (l.preAssessmentPassed?.[2] && l.postAssessmentPassed?.[2]));
+    const d3 = Boolean(l.completedDays?.[3] || (l.preAssessmentPassed?.[3] && l.postAssessmentPassed?.[3]));
+    const d4 = Boolean(l.completedDays?.[4] || (l.preAssessmentPassed?.[4] && l.postAssessmentPassed?.[4]));
+    const d5 = Boolean(l.completedDays?.[5] || (l.preAssessmentPassed?.[5] && l.postAssessmentPassed?.[5]));
+    return d1 && d2 && d3 && d4 && d5;
   }).length;
   const certifiedCount = learners.filter((l) => l.certificateId).length;
   const totalBadgesEarned = learners.reduce(
@@ -470,13 +497,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <option value="day2_complete">Day 2 Completed ({day2PostCompletedCount})</option>
               <option value="day3_complete">Day 3 Completed ({day3PostCompletedCount})</option>
               <option value="day4_complete">Day 4 Completed ({day4PostCompletedCount})</option>
+              <option value="day5_complete">Day 5 Completed ({day5PostCompletedCount})</option>
               <option value="both_days_complete">Days 1 & 2 Completed ({bothDaysCompletedCount})</option>
               <option value="all_3_days_complete">All 3 Days (1-3) Completed ({all3DaysCompletedCount})</option>
               <option value="all_4_days_complete">All 4 Days (1-4) Completed ({all4DaysCompletedCount})</option>
+              <option value="all_5_days_complete">All 5 Days (1-5) Completed ({all5DaysCompletedCount})</option>
               <option value="day1_pre">Day 1 Pre-Test Passed ({day1PreCompletedCount})</option>
               <option value="day2_pre">Day 2 Pre-Test Passed ({day2PreCompletedCount})</option>
               <option value="day3_pre">Day 3 Pre-Test Passed ({day3PreCompletedCount})</option>
               <option value="day4_pre">Day 4 Pre-Test Passed ({day4PreCompletedCount})</option>
+              <option value="day5_pre">Day 5 Pre-Test Passed ({day5PreCompletedCount})</option>
               <option value="certified">Certificate Awarded ({certifiedCount})</option>
             </select>
           </div>
@@ -499,6 +529,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 3 Post (50 Q)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 4 Pre (50 Q)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 4 Post (50 Q)</th>
+                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 5 Pre (50 Q)</th>
+                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 5 Post (50 Q)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Aptitude (50 Qs)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Stress (25 Qs)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Days Done</th>
@@ -509,7 +541,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <tbody className="divide-y divide-slate-200">
                 {filteredLearners.length === 0 ? (
                   <tr>
-                    <td colSpan={16} className="py-12 text-center text-slate-500">
+                    <td colSpan={18} className="py-12 text-center text-slate-500">
                       <div className="space-y-2">
                         <Users className="w-8 h-8 text-slate-400 mx-auto" />
                         <div className="font-bold text-slate-700">No learners found matching criteria.</div>
@@ -531,6 +563,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     const post3 = learner.postAssessmentScores?.[3];
                     const pre4 = learner.preAssessmentScores?.[4];
                     const post4 = learner.postAssessmentScores?.[4];
+                    const pre5 = learner.preAssessmentScores?.[5];
+                    const post5 = learner.postAssessmentScores?.[5];
                     const completedDaysCount = Object.keys(learner.completedDays || {}).length;
                     const badgesCount = Object.keys(learner.unlockedBadges || {}).length;
 
@@ -726,6 +760,46 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               <span>{post4}%</span>
                               <span className="text-[8px] uppercase tracking-wider">
                                 {post4 >= 80 ? 'PASS' : 'RETAKE'}
+                              </span>
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
+                          )}
+                        </td>
+
+                        {/* Day 5 Pre Score */}
+                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
+                          {pre5 !== undefined ? (
+                            <span
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
+                                pre5 >= 80
+                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                  : 'bg-rose-50 text-rose-800 border-rose-300'
+                              }`}
+                            >
+                              <span>{pre5}%</span>
+                              <span className="text-[8px] uppercase tracking-wider">
+                                {pre5 >= 80 ? 'PASS' : 'RETAKE'}
+                              </span>
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
+                          )}
+                        </td>
+
+                        {/* Day 5 Post Score */}
+                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
+                          {post5 !== undefined ? (
+                            <span
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
+                                post5 >= 80
+                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                                  : 'bg-rose-50 text-rose-800 border-rose-300'
+                              }`}
+                            >
+                              <span>{post5}%</span>
+                              <span className="text-[8px] uppercase tracking-wider">
+                                {post5 >= 80 ? 'PASS' : 'RETAKE'}
                               </span>
                             </span>
                           ) : (

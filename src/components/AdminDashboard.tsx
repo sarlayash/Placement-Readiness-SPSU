@@ -38,6 +38,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedDayFilter, setSelectedDayFilter] = useState<number>(1);
+  const [tableScope, setTableScope] = useState<'days1_5' | 'days6_10' | 'day_focus'>('days1_5');
   const [statusFilter, setStatusFilter] = useState<'all' | 'day1_pre' | 'day1_post' | 'day1_complete' | 'day2_pre' | 'day2_post' | 'day2_complete' | 'both_days_complete' | 'day3_pre' | 'day3_post' | 'day3_complete' | 'day4_pre' | 'day4_post' | 'day4_complete' | 'day5_pre' | 'day5_post' | 'day5_complete' | 'all_3_days_complete' | 'all_4_days_complete' | 'all_5_days_complete' | 'certified'>('all');
   const [inspectedLearner, setInspectedLearner] = useState<LearnerRecord | null>(null);
 
@@ -218,6 +219,10 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-400/20 border border-amber-300/40 text-amber-300 text-xs font-mono font-bold">
                 <Lock className="w-3.5 h-3.5" />
                 <span>ADMIN PORTAL • AUTHENTICATED</span>
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/20 border border-emerald-400 text-emerald-300 text-xs font-mono font-bold shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+                <span>REAL-TIME FIRESTORE STREAM ACTIVE</span>
               </span>
               <span className="text-xs font-mono text-[#93C5FD]">
                 SPSU Udaipur Placement Readiness System
@@ -512,6 +517,65 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </div>
         </div>
 
+        {/* Table Scope Selector & Real-Time Sync Bar */}
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#F8FAFC] p-3 rounded-2xl border border-slate-200">
+          <div className="flex items-center gap-2 flex-wrap">
+            <span className="text-xs font-mono font-bold uppercase text-[#0A192F] mr-1">
+              Live Scores View:
+            </span>
+            <button
+              type="button"
+              onClick={() => setTableScope('days1_5')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                tableScope === 'days1_5'
+                  ? 'bg-[#0A192F] text-white shadow-xs'
+                  : 'bg-white hover:bg-slate-100 text-[#0A192F] border border-slate-300'
+              }`}
+            >
+              Days 1–5 Matrix
+            </button>
+            <button
+              type="button"
+              onClick={() => setTableScope('days6_10')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                tableScope === 'days6_10'
+                  ? 'bg-[#0A192F] text-white shadow-xs'
+                  : 'bg-white hover:bg-slate-100 text-[#0A192F] border border-slate-300'
+              }`}
+            >
+              Days 6–10 Matrix
+            </button>
+            <button
+              type="button"
+              onClick={() => setTableScope('day_focus')}
+              className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all cursor-pointer ${
+                tableScope === 'day_focus'
+                  ? 'bg-[#0A192F] text-white shadow-xs'
+                  : 'bg-white hover:bg-slate-100 text-[#0A192F] border border-slate-300'
+              }`}
+            >
+              Day Focus (Single Day Deep Dive)
+            </button>
+          </div>
+
+          {tableScope === 'day_focus' && (
+            <div className="flex items-center gap-2">
+              <span className="text-xs font-mono font-bold text-[#1E3A8A]">Active Day:</span>
+              <select
+                value={selectedDayFilter}
+                onChange={(e) => setSelectedDayFilter(Number(e.target.value))}
+                className="px-3 py-1.5 rounded-xl border border-slate-300 bg-white text-xs font-mono font-bold text-[#0A192F] focus:outline-none focus:border-[#1E3A8A]"
+              >
+                {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((d) => (
+                  <option key={d} value={d}>
+                    Day {d} Focus
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+        </div>
+
         {/* Learners Table */}
         <div className="rounded-2xl border-2 border-[#0A192F] bg-white overflow-hidden shadow-sm">
           <div className="overflow-x-auto">
@@ -521,16 +585,41 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   <th className="py-3 px-3.5 border-r border-[#1E3A8A]">Learner Profile</th>
                   <th className="py-3 px-3.5 border-r border-[#1E3A8A]">Email & UID</th>
                   <th className="py-3 px-3 border-r border-[#1E3A8A]">Last Login</th>
-                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 1 Pre (50 Q)</th>
-                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 1 Post (50 Q)</th>
-                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 2 Pre (50 Q)</th>
-                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 2 Post (50 Q)</th>
-                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 3 Pre (50 Q)</th>
-                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 3 Post (50 Q)</th>
-                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 4 Pre (50 Q)</th>
-                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 4 Post (50 Q)</th>
-                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 5 Pre (50 Q)</th>
-                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 5 Post (50 Q)</th>
+
+                  {tableScope === 'days1_5' ? (
+                    <>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 1 Pre</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 1 Post</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 2 Pre</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 2 Post</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 3 Pre</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 3 Post</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 4 Pre</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 4 Post</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 5 Pre</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 5 Post</th>
+                    </>
+                  ) : tableScope === 'days6_10' ? (
+                    <>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 6 Pre</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 6 Post</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 7 Pre</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 7 Post</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 8 Pre</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 8 Post</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 9 Pre</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 9 Post</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 10 Pre</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day 10 Post</th>
+                    </>
+                  ) : (
+                    <>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day {selectedDayFilter} Pre (50 Q)</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day {selectedDayFilter} Post (50 Q)</th>
+                      <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Day {selectedDayFilter} Status</th>
+                    </>
+                  )}
+
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Aptitude (50 Qs)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Stress (25 Qs)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Days Done</th>
@@ -541,7 +630,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <tbody className="divide-y divide-slate-200">
                 {filteredLearners.length === 0 ? (
                   <tr>
-                    <td colSpan={18} className="py-12 text-center text-slate-500">
+                    <td colSpan={tableScope === 'day_focus' ? 11 : 18} className="py-12 text-center text-slate-500">
                       <div className="space-y-2">
                         <Users className="w-8 h-8 text-slate-400 mx-auto" />
                         <div className="font-bold text-slate-700">No learners found matching criteria.</div>
@@ -555,18 +644,29 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   </tr>
                 ) : (
                   filteredLearners.map((learner) => {
-                    const pre1 = learner.preAssessmentScores?.[1];
-                    const post1 = learner.postAssessmentScores?.[1];
-                    const pre2 = learner.preAssessmentScores?.[2];
-                    const post2 = learner.postAssessmentScores?.[2];
-                    const pre3 = learner.preAssessmentScores?.[3];
-                    const post3 = learner.postAssessmentScores?.[3];
-                    const pre4 = learner.preAssessmentScores?.[4];
-                    const post4 = learner.postAssessmentScores?.[4];
-                    const pre5 = learner.preAssessmentScores?.[5];
-                    const post5 = learner.postAssessmentScores?.[5];
                     const completedDaysCount = Object.keys(learner.completedDays || {}).length;
                     const badgesCount = Object.keys(learner.unlockedBadges || {}).length;
+
+                    const renderScorePill = (score?: number) => {
+                      if (score === undefined) {
+                        return <span className="text-slate-400 font-mono text-[10px]">Pending</span>;
+                      }
+                      const passed = score >= 80;
+                      return (
+                        <span
+                          className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
+                            passed
+                              ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                              : 'bg-rose-50 text-rose-800 border-rose-300'
+                          }`}
+                        >
+                          <span>{score}%</span>
+                          <span className="text-[8px] uppercase tracking-wider">
+                            {passed ? 'PASS' : 'RETAKE'}
+                          </span>
+                        </span>
+                      );
+                    };
 
                     return (
                       <tr key={learner.email || learner.uid} className="hover:bg-slate-50 transition-colors">
@@ -607,205 +707,57 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           </div>
                         </td>
 
-                        {/* Day 1 Pre Score */}
-                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
-                          {pre1 !== undefined ? (
-                            <span
-                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
-                                pre1 >= 80
-                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                                  : 'bg-rose-50 text-rose-800 border-rose-300'
-                              }`}
-                            >
-                              <span>{pre1}%</span>
-                              <span className="text-[8px] uppercase tracking-wider">
-                                {pre1 >= 80 ? 'PASS' : 'RETAKE'}
-                              </span>
-                            </span>
-                          ) : (
-                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
-                          )}
-                        </td>
-
-                        {/* Day 1 Post Score */}
-                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
-                          {post1 !== undefined ? (
-                            <span
-                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
-                                post1 >= 80
-                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                                  : 'bg-rose-50 text-rose-800 border-rose-300'
-                              }`}
-                            >
-                              <span>{post1}%</span>
-                              <span className="text-[8px] uppercase tracking-wider">
-                                {post1 >= 80 ? 'PASS' : 'RETAKE'}
-                              </span>
-                            </span>
-                          ) : (
-                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
-                          )}
-                        </td>
-
-                        {/* Day 2 Pre Score */}
-                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
-                          {pre2 !== undefined ? (
-                            <span
-                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
-                                pre2 >= 80
-                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                                  : 'bg-rose-50 text-rose-800 border-rose-300'
-                              }`}
-                            >
-                              <span>{pre2}%</span>
-                              <span className="text-[8px] uppercase tracking-wider">
-                                {pre2 >= 80 ? 'PASS' : 'RETAKE'}
-                              </span>
-                            </span>
-                          ) : (
-                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
-                          )}
-                        </td>
-
-                        {/* Day 2 Post Score */}
-                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
-                          {post2 !== undefined ? (
-                            <span
-                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
-                                post2 >= 80
-                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                                  : 'bg-rose-50 text-rose-800 border-rose-300'
-                              }`}
-                            >
-                              <span>{post2}%</span>
-                              <span className="text-[8px] uppercase tracking-wider">
-                                {post2 >= 80 ? 'PASS' : 'RETAKE'}
-                              </span>
-                            </span>
-                          ) : (
-                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
-                          )}
-                        </td>
-
-                        {/* Day 3 Pre Score */}
-                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
-                          {pre3 !== undefined ? (
-                            <span
-                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
-                                pre3 >= 80
-                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                                  : 'bg-rose-50 text-rose-800 border-rose-300'
-                              }`}
-                            >
-                              <span>{pre3}%</span>
-                              <span className="text-[8px] uppercase tracking-wider">
-                                {pre3 >= 80 ? 'PASS' : 'RETAKE'}
-                              </span>
-                            </span>
-                          ) : (
-                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
-                          )}
-                        </td>
-
-                        {/* Day 3 Post Score */}
-                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
-                          {post3 !== undefined ? (
-                            <span
-                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
-                                post3 >= 80
-                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                                  : 'bg-rose-50 text-rose-800 border-rose-300'
-                              }`}
-                            >
-                              <span>{post3}%</span>
-                              <span className="text-[8px] uppercase tracking-wider">
-                                {post3 >= 80 ? 'PASS' : 'RETAKE'}
-                              </span>
-                            </span>
-                          ) : (
-                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
-                          )}
-                        </td>
-
-                        {/* Day 4 Pre Score */}
-                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
-                          {pre4 !== undefined ? (
-                            <span
-                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
-                                pre4 >= 80
-                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                                  : 'bg-rose-50 text-rose-800 border-rose-300'
-                              }`}
-                            >
-                              <span>{pre4}%</span>
-                              <span className="text-[8px] uppercase tracking-wider">
-                                {pre4 >= 80 ? 'PASS' : 'RETAKE'}
-                              </span>
-                            </span>
-                          ) : (
-                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
-                          )}
-                        </td>
-
-                        {/* Day 4 Post Score */}
-                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
-                          {post4 !== undefined ? (
-                            <span
-                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
-                                post4 >= 80
-                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                                  : 'bg-rose-50 text-rose-800 border-rose-300'
-                              }`}
-                            >
-                              <span>{post4}%</span>
-                              <span className="text-[8px] uppercase tracking-wider">
-                                {post4 >= 80 ? 'PASS' : 'RETAKE'}
-                              </span>
-                            </span>
-                          ) : (
-                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
-                          )}
-                        </td>
-
-                        {/* Day 5 Pre Score */}
-                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
-                          {pre5 !== undefined ? (
-                            <span
-                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
-                                pre5 >= 80
-                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                                  : 'bg-rose-50 text-rose-800 border-rose-300'
-                              }`}
-                            >
-                              <span>{pre5}%</span>
-                              <span className="text-[8px] uppercase tracking-wider">
-                                {pre5 >= 80 ? 'PASS' : 'RETAKE'}
-                              </span>
-                            </span>
-                          ) : (
-                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
-                          )}
-                        </td>
-
-                        {/* Day 5 Post Score */}
-                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
-                          {post5 !== undefined ? (
-                            <span
-                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
-                                post5 >= 80
-                                  ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                                  : 'bg-rose-50 text-rose-800 border-rose-300'
-                              }`}
-                            >
-                              <span>{post5}%</span>
-                              <span className="text-[8px] uppercase tracking-wider">
-                                {post5 >= 80 ? 'PASS' : 'RETAKE'}
-                              </span>
-                            </span>
-                          ) : (
-                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
-                          )}
-                        </td>
+                        {/* Dynamic Days Matrix Cells */}
+                        {tableScope === 'days1_5' ? (
+                          <>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.preAssessmentScores?.[1])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.postAssessmentScores?.[1])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.preAssessmentScores?.[2])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.postAssessmentScores?.[2])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.preAssessmentScores?.[3])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.postAssessmentScores?.[3])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.preAssessmentScores?.[4])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.postAssessmentScores?.[4])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.preAssessmentScores?.[5])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.postAssessmentScores?.[5])}</td>
+                          </>
+                        ) : tableScope === 'days6_10' ? (
+                          <>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.preAssessmentScores?.[6])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.postAssessmentScores?.[6])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.preAssessmentScores?.[7])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.postAssessmentScores?.[7])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.preAssessmentScores?.[8])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.postAssessmentScores?.[8])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.preAssessmentScores?.[9])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.postAssessmentScores?.[9])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.preAssessmentScores?.[10])}</td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">{renderScorePill(learner.postAssessmentScores?.[10])}</td>
+                          </>
+                        ) : (
+                          <>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">
+                              {renderScorePill(learner.preAssessmentScores?.[selectedDayFilter])}
+                            </td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">
+                              {renderScorePill(learner.postAssessmentScores?.[selectedDayFilter])}
+                            </td>
+                            <td className="py-3 px-2.5 text-center border-r border-slate-200">
+                              {(learner.preAssessmentScores?.[selectedDayFilter] !== undefined && learner.preAssessmentScores?.[selectedDayFilter] >= 80 && learner.postAssessmentScores?.[selectedDayFilter] !== undefined && learner.postAssessmentScores?.[selectedDayFilter] >= 80) ? (
+                                <span className="inline-flex items-center gap-1 text-emerald-700 font-bold text-[10px]">
+                                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-600" />
+                                  <span>PASSED</span>
+                                </span>
+                              ) : (learner.preAssessmentScores?.[selectedDayFilter] !== undefined || learner.postAssessmentScores?.[selectedDayFilter] !== undefined) ? (
+                                <span className="inline-flex items-center gap-1 text-amber-700 font-bold text-[10px]">
+                                  <span>IN PROGRESS</span>
+                                </span>
+                              ) : (
+                                <span className="text-slate-400 font-mono text-[10px]">-</span>
+                              )}
+                            </td>
+                          </>
+                        )}
 
                         {/* Aptitude Score */}
                         <td className="py-3 px-2.5 text-center border-r border-slate-200">
@@ -856,7 +808,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                           <button
                             type="button"
                             onClick={() => setInspectedLearner(learner)}
-                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0A192F] hover:bg-[#1E3A8A] text-white text-[11px] font-bold transition-all cursor-pointer"
+                            className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-[#0A192F] hover:bg-[#1E3A8A] text-white text-[11px] font-bold transition-all cursor-pointer shadow-xs"
                           >
                             <span>Inspect</span>
                           </button>

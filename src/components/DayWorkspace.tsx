@@ -907,21 +907,27 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
                 Passing Cutoff: 80%
               </div>
               {progress.preAssessmentScores[dayPlan.day] !== undefined && (
-                <div
-                  className={`px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 border ${
-                    progress.preAssessmentScores[dayPlan.day] >= 80
-                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                      : 'bg-red-50 text-red-800 border-red-300'
-                  }`}
-                >
-                  {progress.preAssessmentScores[dayPlan.day] >= 80 ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  ) : (
-                    <XCircle className="w-4 h-4 text-red-600" />
-                  )}
-                  <span>
-                    Score: {progress.preAssessmentScores[dayPlan.day]}%{' '}
-                    {progress.preAssessmentScores[dayPlan.day] >= 80 ? '(PASSED)' : '(NEEDS RETAKE)'}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <div
+                    className={`px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 border ${
+                      progress.preAssessmentScores[dayPlan.day] >= 80
+                        ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                        : 'bg-red-50 text-red-800 border-red-300'
+                    }`}
+                  >
+                    {progress.preAssessmentScores[dayPlan.day] >= 80 ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    ) : (
+                      <XCircle className="w-4 h-4 text-red-600" />
+                    )}
+                    <span>
+                      Score: {progress.preAssessmentScores[dayPlan.day]}% ({Math.round((progress.preAssessmentScores[dayPlan.day] / 100) * (dayPlan.preAssessment?.length || 50))}/{dayPlan.preAssessment?.length || 50} Correct){' '}
+                      {progress.preAssessmentScores[dayPlan.day] >= 80 ? '(PASSED ≥80%)' : '(NEEDS RETAKE <80%)'}
+                    </span>
+                  </div>
+                  <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#EFF6FF] border border-[#BFDBFE] text-[#1E3A8A] font-mono text-[11px] font-bold">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Real-Time Cloud Synced</span>
                   </span>
                 </div>
               )}
@@ -1850,21 +1856,27 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
                 Passing Cutoff: 80%
               </div>
               {progress.postAssessmentScores[dayPlan.day] !== undefined && (
-                <div
-                  className={`px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 border ${
-                    progress.postAssessmentScores[dayPlan.day] >= 80
-                      ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
-                      : 'bg-red-50 text-red-800 border-red-300'
-                  }`}
-                >
-                  {progress.postAssessmentScores[dayPlan.day] >= 80 ? (
-                    <CheckCircle2 className="w-4 h-4 text-emerald-600" />
-                  ) : (
-                    <XCircle className="w-4 h-4 text-red-600" />
-                  )}
-                  <span>
-                    Verified Score: {progress.postAssessmentScores[dayPlan.day]}%{' '}
-                    {progress.postAssessmentScores[dayPlan.day] >= 80 ? '(PASSED)' : '(NEEDS RETAKE)'}
+                <div className="flex items-center gap-2 flex-wrap">
+                  <div
+                    className={`px-4 py-2 rounded-xl text-xs font-extrabold flex items-center gap-1.5 border ${
+                      progress.postAssessmentScores[dayPlan.day] >= 80
+                        ? 'bg-emerald-50 text-emerald-800 border-emerald-300'
+                        : 'bg-red-50 text-red-800 border-red-300'
+                    }`}
+                  >
+                    {progress.postAssessmentScores[dayPlan.day] >= 80 ? (
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" />
+                    ) : (
+                      <XCircle className="w-4 h-4 text-red-600" />
+                    )}
+                    <span>
+                      Verified Score: {progress.postAssessmentScores[dayPlan.day]}% ({Math.round((progress.postAssessmentScores[dayPlan.day] / 100) * (dayPlan.postAssessment?.length || 50))}/{dayPlan.postAssessment?.length || 50} Correct){' '}
+                      {progress.postAssessmentScores[dayPlan.day] >= 80 ? '(PASSED ≥80%)' : '(NEEDS RETAKE <80%)'}
+                    </span>
+                  </div>
+                  <span className="inline-flex items-center gap-1 px-3 py-1.5 rounded-xl bg-[#EFF6FF] border border-[#BFDBFE] text-[#1E3A8A] font-mono text-[11px] font-bold">
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                    <span>Real-Time Cloud Synced</span>
                   </span>
                 </div>
               )}

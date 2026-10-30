@@ -69,22 +69,104 @@ const MAP_FIELDS = new Set([
   'unlockedBadges',
 ]);
 
-function cleanForFirestore(record: LearnerRecord): Record<string, any> {
+export function cleanForFirestore(record: LearnerRecord): Record<string, any> {
   const clean: Record<string, any> = {};
-  for (const [key, val] of Object.entries(record)) {
-    if (MAP_FIELDS.has(key)) {
-      clean[key] = val && typeof val === 'object' ? val : {};
-    } else {
-      clean[key] = val === undefined ? null : val;
-    }
-  }
-  // Guarantee mandatory immutable/string constraints
-  clean.uid = String(record.uid || '');
+
+  clean.uid = String(record.uid || '').slice(0, 128);
   clean.name = String(record.name || 'SPSU Learner').slice(0, 150);
   clean.email = String(record.email || '').toLowerCase().slice(0, 150);
   clean.photoURL = record.photoURL ? String(record.photoURL).slice(0, 1000) : '';
   clean.firstLogin = String(record.firstLogin || new Date().toISOString()).slice(0, 50);
   clean.lastLoginAttempt = String(record.lastLoginAttempt || new Date().toISOString()).slice(0, 50);
+
+  // Maps with bounded entries and valid types
+  const preScores: Record<string, number> = {};
+  if (record.preAssessmentScores && typeof record.preAssessmentScores === 'object') {
+    for (const [k, v] of Object.entries(record.preAssessmentScores)) {
+      if (typeof v === 'number' && !isNaN(v)) {
+        preScores[String(k)] = Math.min(100, Math.max(0, Math.round(v)));
+      }
+    }
+  }
+  clean.preAssessmentScores = preScores;
+
+  const postScores: Record<string, number> = {};
+  if (record.postAssessmentScores && typeof record.postAssessmentScores === 'object') {
+    for (const [k, v] of Object.entries(record.postAssessmentScores)) {
+      if (typeof v === 'number' && !isNaN(v)) {
+        postScores[String(k)] = Math.min(100, Math.max(0, Math.round(v)));
+      }
+    }
+  }
+  clean.postAssessmentScores = postScores;
+
+  const prePassed: Record<string, boolean> = {};
+  if (record.preAssessmentPassed && typeof record.preAssessmentPassed === 'object') {
+    for (const [k, v] of Object.entries(record.preAssessmentPassed)) {
+      prePassed[String(k)] = Boolean(v);
+    }
+  }
+  clean.preAssessmentPassed = prePassed;
+
+  const postPassed: Record<string, boolean> = {};
+  if (record.postAssessmentPassed && typeof record.postAssessmentPassed === 'object') {
+    for (const [k, v] of Object.entries(record.postAssessmentPassed)) {
+      postPassed[String(k)] = Boolean(v);
+    }
+  }
+  clean.postAssessmentPassed = postPassed;
+
+  const completedDays: Record<string, boolean> = {};
+  if (record.completedDays && typeof record.completedDays === 'object') {
+    for (const [k, v] of Object.entries(record.completedDays)) {
+      completedDays[String(k)] = Boolean(v);
+    }
+  }
+  clean.completedDays = completedDays;
+
+  const unlockedBadges: Record<string, string> = {};
+  if (record.unlockedBadges && typeof record.unlockedBadges === 'object') {
+    for (const [k, v] of Object.entries(record.unlockedBadges)) {
+      if (v) unlockedBadges[String(k)] = String(v).slice(0, 50);
+    }
+  }
+  clean.unlockedBadges = unlockedBadges;
+
+  // Scalar nullable and optional fields
+  clean.certificateId = record.certificateId ? String(record.certificateId).slice(0, 100) : null;
+  clean.certificateIssuedAt = record.certificateIssuedAt ? String(record.certificateIssuedAt).slice(0, 50) : null;
+
+  clean.patternQuizScore = typeof record.patternQuizScore === 'number' && !isNaN(record.patternQuizScore)
+    ? Math.min(100, Math.max(0, Math.round(record.patternQuizScore)))
+    : null;
+  clean.patternQuizCompleted = typeof record.patternQuizCompleted === 'boolean'
+    ? record.patternQuizCompleted
+    : null;
+
+  clean.stressQuizScore = typeof record.stressQuizScore === 'number' && !isNaN(record.stressQuizScore)
+    ? Math.min(100, Math.max(0, Math.round(record.stressQuizScore)))
+    : null;
+  clean.stressQuizAnswered = typeof record.stressQuizAnswered === 'number' && !isNaN(record.stressQuizAnswered)
+    ? Math.min(500, Math.max(0, Math.round(record.stressQuizAnswered)))
+    : null;
+  clean.stressQuizCompleted = typeof record.stressQuizCompleted === 'boolean'
+    ? record.stressQuizCompleted
+    : null;
+  clean.stressQuizAttemptedAt = record.stressQuizAttemptedAt ? String(record.stressQuizAttemptedAt).slice(0, 100) : null;
+
+  clean.aptitudeScore = typeof record.aptitudeScore === 'number' && !isNaN(record.aptitudeScore)
+    ? Math.min(100, Math.max(0, Math.round(record.aptitudeScore)))
+    : null;
+  clean.aptitudeCorrectCount = typeof record.aptitudeCorrectCount === 'number' && !isNaN(record.aptitudeCorrectCount)
+    ? Math.min(500, Math.max(0, Math.round(record.aptitudeCorrectCount)))
+    : null;
+  clean.aptitudePassed = typeof record.aptitudePassed === 'boolean'
+    ? record.aptitudePassed
+    : null;
+  clean.aptitudeAttemptedAt = record.aptitudeAttemptedAt ? String(record.aptitudeAttemptedAt).slice(0, 100) : null;
+
+  clean.lorIssuedAt = record.lorIssuedAt ? String(record.lorIssuedAt).slice(0, 100) : null;
+  clean.reportGeneratedAt = record.reportGeneratedAt ? String(record.reportGeneratedAt).slice(0, 100) : null;
 
   return clean;
 }
@@ -172,34 +254,33 @@ export async function recordUserSignIn(
 
   let firstLoginToUse =
     getCachedCanonicalFirstLogin(user.uid) ||
-    getCachedCanonicalFirstLogin(user.email) ||
-    existing?.firstLogin;
+    getCachedCanonicalFirstLogin(user.email);
 
-  if (!firstLoginToUse) {
-    try {
-      const learnerDocRef = doc(db, 'learners', user.uid);
-      const snap = await getDoc(learnerDocRef);
-      if (snap.exists() && snap.data()?.firstLogin) {
-        firstLoginToUse = snap.data().firstLogin;
-        cacheCanonicalFirstLogin(user.uid, firstLoginToUse);
-        cacheCanonicalFirstLogin(user.email, firstLoginToUse);
-      }
-    } catch {
-      // Offline fallback
+  // ALWAYS check Firestore directly first to ensure firstLogin strictly matches immutable rule
+  try {
+    const learnerDocRef = doc(db, 'learners', user.uid);
+    const snap = await getDoc(learnerDocRef);
+    if (snap.exists() && snap.data()?.firstLogin) {
+      const fl = String(snap.data().firstLogin);
+      firstLoginToUse = fl;
+      cacheCanonicalFirstLogin(user.uid, fl);
+      cacheCanonicalFirstLogin(user.email, fl);
     }
+  } catch {
+    // Offline fallback
   }
 
   if (!firstLoginToUse) {
-    firstLoginToUse = user.signedInAt || now;
+    firstLoginToUse = existing?.firstLogin || user.signedInAt || now;
   }
   cacheCanonicalFirstLogin(user.uid, firstLoginToUse);
   cacheCanonicalFirstLogin(user.email, firstLoginToUse);
 
   const updatedRecord: LearnerRecord = {
     uid: user.uid,
-    name: (user.name || 'SPSU Learner').slice(0, 150),
+    name: (user.name || existing?.name || 'SPSU Learner').slice(0, 150),
     email: user.email.toLowerCase().slice(0, 150),
-    photoURL: user.photoURL ? user.photoURL.slice(0, 1000) : '',
+    photoURL: user.photoURL ? user.photoURL.slice(0, 1000) : (existing?.photoURL || ''),
     firstLogin: firstLoginToUse,
     lastLoginAttempt: now,
     preAssessmentScores: mergeScoreMaps(existing?.preAssessmentScores, currentProgress?.preAssessmentScores),
@@ -232,16 +313,16 @@ export async function recordUserSignIn(
   try {
     const learnerDocRef = doc(db, 'learners', user.uid);
     await setDoc(learnerDocRef, cleanForFirestore(updatedRecord), { merge: true });
-    console.log('Learner synced successfully to Firestore:', user.uid);
+    console.log('✅ Learner sign-in synced successfully to Firestore:', user.uid);
   } catch (err) {
-    console.warn('Firestore learner sync notice (local registry preserved):', err);
+    console.warn('Firestore learner sign-in notice (local registry preserved):', err);
   }
 
   return updatedRecord;
 }
 
 /**
- * Update a learner's assessment progress and sync.
+ * Update a learner's assessment progress and sync immediately to Firestore & Local Registry.
  */
 export async function syncLearnerProgress(
   user: GoogleUser,
@@ -255,56 +336,59 @@ export async function syncLearnerProgress(
 
   let firstLoginToUse =
     getCachedCanonicalFirstLogin(user.uid) ||
-    getCachedCanonicalFirstLogin(user.email) ||
-    existing?.firstLogin;
+    getCachedCanonicalFirstLogin(user.email);
 
-  if (!firstLoginToUse) {
-    try {
-      const learnerDocRef = doc(db, 'learners', user.uid);
-      const snap = await getDoc(learnerDocRef);
-      if (snap.exists() && snap.data()?.firstLogin) {
-        firstLoginToUse = snap.data().firstLogin;
-        cacheCanonicalFirstLogin(user.uid, firstLoginToUse);
-        cacheCanonicalFirstLogin(user.email, firstLoginToUse);
+  // Check Firestore directly to guarantee firstLogin immutability and merge cloud scores
+  let cloudData: Partial<LearnerRecord> | undefined = undefined;
+  try {
+    const learnerDocRef = doc(db, 'learners', user.uid);
+    const snap = await getDoc(learnerDocRef);
+    if (snap.exists()) {
+      cloudData = snap.data() as Partial<LearnerRecord>;
+      if (cloudData?.firstLogin) {
+        const fl = String(cloudData.firstLogin);
+        firstLoginToUse = fl;
+        cacheCanonicalFirstLogin(user.uid, fl);
+        cacheCanonicalFirstLogin(user.email, fl);
       }
-    } catch {
-      // Offline fallback
     }
+  } catch {
+    // Offline fallback
   }
 
   if (!firstLoginToUse) {
-    firstLoginToUse = user.signedInAt || now;
+    firstLoginToUse = existing?.firstLogin || user.signedInAt || now;
   }
   cacheCanonicalFirstLogin(user.uid, firstLoginToUse);
   cacheCanonicalFirstLogin(user.email, firstLoginToUse);
 
   const updatedRecord: LearnerRecord = {
     uid: user.uid,
-    name: (user.name || existing?.name || 'SPSU Learner').slice(0, 150),
+    name: (user.name || existing?.name || cloudData?.name || 'SPSU Learner').slice(0, 150),
     email: user.email.toLowerCase().slice(0, 150),
-    photoURL: (user.photoURL || existing?.photoURL || '').slice(0, 1000),
+    photoURL: (user.photoURL || existing?.photoURL || cloudData?.photoURL || '').slice(0, 1000),
     firstLogin: firstLoginToUse,
     lastLoginAttempt: now,
-    preAssessmentScores: mergeScoreMaps(existing?.preAssessmentScores, progress.preAssessmentScores),
-    postAssessmentScores: mergeScoreMaps(existing?.postAssessmentScores, progress.postAssessmentScores),
-    preAssessmentPassed: mergeBooleanMaps(existing?.preAssessmentPassed, progress.preAssessmentPassed),
-    postAssessmentPassed: mergeBooleanMaps(existing?.postAssessmentPassed, progress.postAssessmentPassed),
-    completedDays: mergeBooleanMaps(existing?.completedDays, progress.completedDays),
-    unlockedBadges: mergeMaps(existing?.unlockedBadges, progress.unlockedBadges),
-    certificateId: progress.certificateId || existing?.certificateId || null,
-    certificateIssuedAt: progress.certificateIssuedAt || existing?.certificateIssuedAt || null,
-    patternQuizScore: progress.patternQuizScore ?? existing?.patternQuizScore ?? 0,
-    patternQuizCompleted: progress.patternQuizCompleted ?? existing?.patternQuizCompleted ?? false,
-    stressQuizScore: progress.stressQuizScore ?? existing?.stressQuizScore ?? 0,
-    stressQuizAnswered: progress.stressQuizAnswered ?? existing?.stressQuizAnswered ?? 0,
-    stressQuizCompleted: progress.stressQuizCompleted ?? existing?.stressQuizCompleted ?? false,
-    stressQuizAttemptedAt: progress.stressQuizAttemptedAt || existing?.stressQuizAttemptedAt || null,
-    aptitudeScore: progress.aptitudeScore ?? existing?.aptitudeScore ?? 0,
-    aptitudeCorrectCount: progress.aptitudeCorrectCount ?? existing?.aptitudeCorrectCount ?? 0,
-    aptitudePassed: progress.aptitudePassed ?? existing?.aptitudePassed ?? false,
-    aptitudeAttemptedAt: progress.aptitudeAttemptedAt || existing?.aptitudeAttemptedAt || null,
-    lorIssuedAt: progress.lorIssuedAt || existing?.lorIssuedAt || null,
-    reportGeneratedAt: progress.reportGeneratedAt || existing?.reportGeneratedAt || null,
+    preAssessmentScores: mergeScoreMaps(mergeScoreMaps(cloudData?.preAssessmentScores, existing?.preAssessmentScores), progress.preAssessmentScores),
+    postAssessmentScores: mergeScoreMaps(mergeScoreMaps(cloudData?.postAssessmentScores, existing?.postAssessmentScores), progress.postAssessmentScores),
+    preAssessmentPassed: mergeBooleanMaps(mergeBooleanMaps(cloudData?.preAssessmentPassed, existing?.preAssessmentPassed), progress.preAssessmentPassed),
+    postAssessmentPassed: mergeBooleanMaps(mergeBooleanMaps(cloudData?.postAssessmentPassed, existing?.postAssessmentPassed), progress.postAssessmentPassed),
+    completedDays: mergeBooleanMaps(mergeBooleanMaps(cloudData?.completedDays, existing?.completedDays), progress.completedDays),
+    unlockedBadges: mergeMaps(mergeMaps(cloudData?.unlockedBadges, existing?.unlockedBadges), progress.unlockedBadges),
+    certificateId: progress.certificateId || existing?.certificateId || cloudData?.certificateId || null,
+    certificateIssuedAt: progress.certificateIssuedAt || existing?.certificateIssuedAt || cloudData?.certificateIssuedAt || null,
+    patternQuizScore: progress.patternQuizScore ?? existing?.patternQuizScore ?? cloudData?.patternQuizScore ?? 0,
+    patternQuizCompleted: progress.patternQuizCompleted ?? existing?.patternQuizCompleted ?? cloudData?.patternQuizCompleted ?? false,
+    stressQuizScore: progress.stressQuizScore ?? existing?.stressQuizScore ?? cloudData?.stressQuizScore ?? 0,
+    stressQuizAnswered: progress.stressQuizAnswered ?? existing?.stressQuizAnswered ?? cloudData?.stressQuizAnswered ?? 0,
+    stressQuizCompleted: progress.stressQuizCompleted ?? existing?.stressQuizCompleted ?? cloudData?.stressQuizCompleted ?? false,
+    stressQuizAttemptedAt: progress.stressQuizAttemptedAt || existing?.stressQuizAttemptedAt || cloudData?.stressQuizAttemptedAt || null,
+    aptitudeScore: progress.aptitudeScore ?? existing?.aptitudeScore ?? cloudData?.aptitudeScore ?? 0,
+    aptitudeCorrectCount: progress.aptitudeCorrectCount ?? existing?.aptitudeCorrectCount ?? cloudData?.aptitudeCorrectCount ?? 0,
+    aptitudePassed: progress.aptitudePassed ?? existing?.aptitudePassed ?? cloudData?.aptitudePassed ?? false,
+    aptitudeAttemptedAt: progress.aptitudeAttemptedAt || existing?.aptitudeAttemptedAt || cloudData?.aptitudeAttemptedAt || null,
+    lorIssuedAt: progress.lorIssuedAt || existing?.lorIssuedAt || cloudData?.lorIssuedAt || null,
+    reportGeneratedAt: progress.reportGeneratedAt || existing?.reportGeneratedAt || cloudData?.reportGeneratedAt || null,
   };
 
   localRegistry[user.email.toLowerCase()] = updatedRecord;
@@ -313,9 +397,60 @@ export async function syncLearnerProgress(
   try {
     const learnerDocRef = doc(db, 'learners', user.uid);
     await setDoc(learnerDocRef, cleanForFirestore(updatedRecord), { merge: true });
+    console.log('✅ [REALTIME PROGRESS SYNC] Synchronized successfully to Firestore:', user.uid);
   } catch (err) {
-    console.warn('Firestore progress sync notice:', err);
+    console.warn('Firestore progress sync notice (local registry preserved):', err);
   }
+}
+
+/**
+ * Capture an assessment score real-time and commit to both local cache and Firestore.
+ * Returns the merged UserProgress state.
+ */
+export async function captureAssessmentScoreRealtime(
+  user: GoogleUser,
+  day: number,
+  type: 'pre' | 'post',
+  scorePercent: number,
+  currentProgress: UserProgress
+): Promise<UserProgress> {
+  const isPassed = scorePercent >= 80;
+  const isOtherPassed = type === 'pre'
+    ? Boolean(currentProgress.postAssessmentPassed?.[day])
+    : Boolean(currentProgress.preAssessmentPassed?.[day]);
+  const bothPassed = isPassed && isOtherPassed;
+
+  const nextScores = type === 'pre'
+    ? { ...(currentProgress.preAssessmentScores || {}), [day]: scorePercent }
+    : { ...(currentProgress.postAssessmentScores || {}), [day]: scorePercent };
+
+  const nextPassed = type === 'pre'
+    ? { ...(currentProgress.preAssessmentPassed || {}), [day]: isPassed }
+    : { ...(currentProgress.postAssessmentPassed || {}), [day]: isPassed };
+
+  const nextCompletedDays = { ...(currentProgress.completedDays || {}) };
+  if (bothPassed) {
+    nextCompletedDays[day] = true;
+  }
+
+  const nextBadges = { ...(currentProgress.unlockedBadges || {}) };
+  if (type === 'post' && isPassed && !nextBadges[day]) {
+    nextBadges[day] = new Date().toISOString();
+  }
+
+  const nextProgress: UserProgress = {
+    ...currentProgress,
+    ...(type === 'pre' ? { preAssessmentScores: nextScores, preAssessmentPassed: nextPassed } : {}),
+    ...(type === 'post' ? { postAssessmentScores: nextScores, postAssessmentPassed: nextPassed, unlockedBadges: nextBadges } : {}),
+    completedDays: nextCompletedDays,
+  };
+
+  // Sync to Firestore immediately
+  if (user && user.uid) {
+    await syncLearnerProgress(user, nextProgress);
+  }
+
+  return nextProgress;
 }
 
 /**

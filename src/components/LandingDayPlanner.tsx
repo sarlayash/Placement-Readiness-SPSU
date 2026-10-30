@@ -984,14 +984,16 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
                         <button
                           type="button"
                           onClick={() => onSelectDay(dayPlan.day, 'pre')}
-                          className={`flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                          className={`flex items-center justify-center gap-1 px-2 py-2 rounded-xl border text-[11px] font-bold transition-all cursor-pointer ${
                             preDone
-                              ? 'bg-[#EFF6FF] border-[#1E3A8A] text-[#0A192F]'
+                              ? 'bg-emerald-50 border-emerald-300 text-emerald-900 font-extrabold'
+                              : preScore !== undefined
+                              ? 'bg-rose-50 border-rose-300 text-rose-900'
                               : 'bg-white border-slate-300 hover:border-[#0A192F] text-[#0A192F]'
                           }`}
                         >
-                          <ClipboardCheck className="w-3.5 h-3.5 text-[#1E3A8A]" />
-                          <span>Pre-Test {preScore !== undefined ? `(${preScore}%)` : ''}</span>
+                          <ClipboardCheck className="w-3.5 h-3.5 text-[#1E3A8A] shrink-0" />
+                          <span>Pre: {preScore !== undefined ? `${preScore}% ${preScore >= 80 ? '✓' : '⟳'}` : '50 Qs'}</span>
                         </button>
 
                         <button
@@ -1015,14 +1017,16 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
                         <button
                           type="button"
                           onClick={() => onSelectDay(dayPlan.day, 'post')}
-                          className={`flex items-center justify-center gap-1.5 px-2.5 py-2 rounded-xl border text-xs font-bold transition-all cursor-pointer ${
+                          className={`flex items-center justify-center gap-1 px-2 py-2 rounded-xl border text-[11px] font-bold transition-all cursor-pointer ${
                             postDone
-                              ? 'bg-[#EFF6FF] border-[#1E3A8A] text-[#0A192F]'
+                              ? 'bg-emerald-50 border-emerald-300 text-emerald-900 font-extrabold'
+                              : postScore !== undefined
+                              ? 'bg-rose-50 border-rose-300 text-rose-900'
                               : 'bg-white border-slate-300 hover:border-[#0A192F] text-[#0A192F]'
                           }`}
                         >
-                          <Award className="w-3.5 h-3.5 text-[#1E3A8A]" />
-                          <span>Post-Test {postScore !== undefined ? `(${postScore}%)` : ''}</span>
+                          <Award className="w-3.5 h-3.5 text-[#1E3A8A] shrink-0" />
+                          <span>Post: {postScore !== undefined ? `${postScore}% ${postScore >= 80 ? '✓' : '⟳'}` : '50 Qs'}</span>
                         </button>
                       </div>
                     )}

@@ -463,8 +463,9 @@ export const LearnerDashboardModal: React.FC<LearnerDashboardModalProps> = ({
                 <Calendar className="w-4 h-4 text-[#1E3A8A]" />
                 <span>10-Day Live Assessment Scorecard (Passing: 80%)</span>
               </h4>
-              <span className="text-xs text-slate-500 font-mono">
-                Real-Time Firestore Synchronized
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-800 border border-emerald-300 font-mono text-[10px] font-bold shadow-xs">
+                <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                <span>Real-Time Firestore Synchronized</span>
               </span>
             </div>
 

@@ -35,6 +35,7 @@ import { SelfServiceCredentialsModal } from './components/SelfServiceCredentials
 import {
   recordUserSignIn,
   syncLearnerProgress,
+  captureAssessmentScoreRealtime,
   mergeMaps,
   mergeScoreMaps,
   mergeBooleanMaps,
@@ -48,6 +49,7 @@ export function App() {
     loadStoredProgress(loadStoredGoogleUser()?.email)
   );
   const isHydratedRef = useRef<boolean>(false);
+  const isRemoteUpdateRef = useRef<boolean>(false);
 
   // Landing page defaults to Complete Day Planner ('planner'), can be 'day-workspace' or 'admin'
   const [activeView, setActiveView] = useState<'planner' | 'day-workspace' | 'admin'>('planner');
@@ -179,6 +181,7 @@ export function App() {
             cacheCanonicalFirstLogin(user.uid, data.firstLogin);
             cacheCanonicalFirstLogin(user.email, data.firstLogin);
           }
+          isRemoteUpdateRef.current = true;
           setProgress((prev) => {
             const next: UserProgress = {
               ...prev,
@@ -292,6 +295,11 @@ export function App() {
   useEffect(() => {
     if (!isHydratedRef.current || !user) return;
     saveStoredProgress(progress, user.email);
+    // If progress update was triggered by a remote Firestore snapshot, do not echo back
+    if (isRemoteUpdateRef.current) {
+      isRemoteUpdateRef.current = false;
+      return;
+    }
     syncLearnerProgress(user, progress);
   }, [progress, user]);
 
@@ -359,9 +367,10 @@ export function App() {
   };
 
   const handleSavePreScore = (day: number, scorePercent: number) => {
-    const isPassed = scorePercent >= 80;
     isHydratedRef.current = true;
+    isRemoteUpdateRef.current = false;
     setProgress((prev) => {
+      const isPassed = scorePercent >= 80;
       const isPostPassed = Boolean(prev.postAssessmentPassed?.[day]);
       const bothPassed = isPassed && isPostPassed;
       const nextCompleted = { ...(prev.completedDays || {}) };
@@ -375,16 +384,17 @@ export function App() {
       };
       if (user) {
         saveStoredProgress(nextState, user.email);
-        syncLearnerProgress(user, nextState);
+        captureAssessmentScoreRealtime(user, day, 'pre', scorePercent, prev);
       }
       return nextState;
     });
   };
 
   const handleSavePostScore = (day: number, scorePercent: number) => {
-    const isPassed = scorePercent >= 80;
     isHydratedRef.current = true;
+    isRemoteUpdateRef.current = false;
     setProgress((prev) => {
+      const isPassed = scorePercent >= 80;
       const isPrePassed = Boolean(prev.preAssessmentPassed?.[day]);
       const bothPassed = isPassed && isPrePassed;
       const nextBadges = { ...prev.unlockedBadges };
@@ -410,7 +420,7 @@ export function App() {
       };
       if (user) {
         saveStoredProgress(nextState, user.email);
-        syncLearnerProgress(user, nextState);
+        captureAssessmentScoreRealtime(user, day, 'post', scorePercent, prev);
       }
       return nextState;
     });

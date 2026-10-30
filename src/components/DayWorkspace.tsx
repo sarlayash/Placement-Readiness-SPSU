@@ -866,7 +866,17 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
               }`}
             >
               <Sparkles className="w-4 h-4 text-amber-600" />
-              <span>Mini-Project (Calculator)</span>
+              <span>
+                Mini-Project ({
+                  dayPlan.day === 1 ? 'Calculator' :
+                  dayPlan.day === 2 ? 'Order Matching' :
+                  dayPlan.day === 3 ? 'Code Benchmark' :
+                  dayPlan.day === 4 ? 'Healthcare RDBMS' :
+                  dayPlan.day === 5 ? 'Ride Dispatch' :
+                  dayPlan.day === 6 ? 'OS Simulator' :
+                  'Capstone'
+                })
+              </span>
             </button>
           )}
 
@@ -1125,7 +1135,19 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
                     {dayPlan.miniProject.title}
                   </div>
                   <div className="text-xs text-slate-700 mt-0.5">
-                    Strict Constraint: <code className="font-mono font-bold text-[#0A192F]">ONLY #include &lt;stdio.h&gt;</code> • 10 Data Types • Control Flow &amp; Loops
+                    {dayPlan.day === 1 ? (
+                      <>Strict Constraint: <code className="font-mono font-bold text-[#0A192F]">ONLY #include &lt;stdio.h&gt;</code> • 10 Data Types • Control Flow &amp; Loops</>
+                    ) : dayPlan.day === 2 ? (
+                      <>Dual-Heap Priority Queues • Sliding Window Volatility • Monotonic Stack • Graph BFS Routing</>
+                    ) : dayPlan.day === 3 ? (
+                      <>10^8 Operations Iron Rule • Binary Search Answer Space • Kadane All-Negative Guard • Two-Pointer</>
+                    ) : dayPlan.day === 4 ? (
+                      <>Relational 3NF Schema • Foreign Key Constraints • ACID Rollback Undo Log • Hash Joins</>
+                    ) : dayPlan.day === 5 ? (
+                      <>SOLID Architecture • Strategy Dynamic Surge • Liskov Subtypes • DIP Mock Injection</>
+                    ) : (
+                      <>Preemptive Round-Robin Scheduling • Mutex Lock Synchronization • LRU Virtual Memory Paging</>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1832,7 +1854,14 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
               `[DAY ${dayPlan.day} CAPSTONE MINI-PROJECT LOADED INTO IDE]\n` +
               `Title: ${dayPlan.miniProject?.title}\n` +
               `Language: ${LANGUAGE_LABELS[lang]}\n` +
-              `Strict Educational Constraint: ONLY #include <stdio.h> allowed. Zero external math/stdlib headers.\n` +
+              `Day Focus: ${
+                dayPlan.day === 1 ? 'ONLY #include <stdio.h> allowed. Zero external math/stdlib headers.' :
+                dayPlan.day === 2 ? 'Dual-Heap Priority Queues, Sliding Window Volatility & Graph BFS Routing.' :
+                dayPlan.day === 3 ? '10^8 Operations Rule, Binary Search Answer Space & Kadane Invariant.' :
+                dayPlan.day === 4 ? 'Relational 3NF Schema, Foreign Keys & ACID Undo Log Rollback.' :
+                dayPlan.day === 5 ? 'SOLID Principles, Strategy Dynamic Surge & DIP Mock Injection.' :
+                'Preemptive Round-Robin, Mutex Lock Sync & LRU Virtual Memory Paging.'
+              }\n` +
               `Click "Run Code & Validate Solution" to test or modify your code.`
             );
           }}

@@ -1215,7 +1215,7 @@ export const MiniProjectWorkspace: React.FC<MiniProjectWorkspaceProps> = ({
                   </tr>
                 </tbody>
               </table>
-            ) : (
+            ) : miniProject.day === 5 ? (
               <table className="w-full text-left text-xs border-collapse">
                 <thead>
                   <tr className="border-b border-[#1E3A8A] text-[#93C5FD] font-mono uppercase text-[10px]">
@@ -1255,6 +1255,49 @@ export const MiniProjectWorkspace: React.FC<MiniProjectWorkspaceProps> = ({
                     <td className="py-2 px-3 font-sans text-slate-300">Interchangeable pricing algorithms</td>
                     <td className="py-2 px-3 font-sans text-slate-300">Hardcoded tariff formulas</td>
                     <td className="py-2 px-3 font-sans text-slate-300">Dynamic switch between Standard, Surge (2.0x), and NightFlat tariffs.</td>
+                  </tr>
+                </tbody>
+              </table>
+            ) : (
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-[#1E3A8A] text-[#93C5FD] font-mono uppercase text-[10px]">
+                    <th className="py-2 px-3">OS Subsystem / Primitive</th>
+                    <th className="py-2 px-3">Algorithmic Complexity</th>
+                    <th className="py-2 px-3">Safety & Liveness Guarantee</th>
+                    <th className="py-2 px-3">Kernel Engine Implementation</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/10 font-mono">
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">Preemptive Round-Robin</td>
+                    <td className="py-2 px-3">O(1) queue shift</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Fair CPU time slicing, no starvation</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Time quantum q=2 enforces cooperative/preemptive task context switches.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">Priority Scheduling + Aging</td>
+                    <td className="py-2 px-3">O(N) search / O(log N) heap</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Aging prevents starvation of low-priority tasks</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Dynamic priority boost increments priority for tasks waiting &gt; 5 time units.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">Mutex Lock Synchronization</td>
+                    <td className="py-2 px-3">O(1) atomic CAS</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Mutual exclusion on shared memory</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Acquire/release guards shared transaction counter against data race corruption.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">Banker's Deadlock Avoidance</td>
+                    <td className="py-2 px-3">O(P * R^2) safety check</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Resource allocation graph cycle avoidance</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Validates availability vector &gt;= need matrix before granting locks.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">LRU Virtual Memory Paging</td>
+                    <td className="py-2 px-3">O(1) hashmap + DLL cache</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Optimal temporal locality hit rate</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Tracks timestamp/recency across K frames, evicting oldest page on fault.</td>
                   </tr>
                 </tbody>
               </table>

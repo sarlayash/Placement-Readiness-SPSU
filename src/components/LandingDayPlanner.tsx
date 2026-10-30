@@ -1045,7 +1045,13 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
                             <span className="truncate text-slate-800 font-semibold">{dayPlan.miniProject.title}</span>
                           </span>
                           <span className="px-2.5 py-0.5 rounded-lg bg-amber-400 text-[#0A192F] font-mono text-[10px] font-black shrink-0 shadow-xs">
-                            Single Header C17
+                            {dayPlan.day === 1 ? 'Single Header C17' :
+                             dayPlan.day === 2 ? 'Dual-Heap & BFS' :
+                             dayPlan.day === 3 ? 'Benchmark & DP' :
+                             dayPlan.day === 4 ? '3NF SQL & ACID' :
+                             dayPlan.day === 5 ? 'SOLID & Patterns' :
+                             dayPlan.day === 6 ? 'OS Concurrency & LRU' :
+                             'Capstone'}
                           </span>
                         </button>
                       </div>

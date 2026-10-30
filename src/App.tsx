@@ -5,6 +5,7 @@ import {
   SYLLABUS_MODULES,
   ALL_DAILY_BADGES,
 } from './data/curriculum10Days';
+import { INITIAL_FIREBASE_AUTH_USERS } from './data/firebaseAuthUsers';
 import {
   loadStoredGoogleUser,
   saveStoredGoogleUser,
@@ -117,9 +118,51 @@ export function App() {
   // Helper to fetch live real scores from Firestore and merge with local progress
   const hydrateUserProgress = async (u: GoogleUser, localProgress: UserProgress): Promise<UserProgress> => {
     let merged: UserProgress = { ...localProgress };
+
+    // Check seed data first if available to ensure instant hydration on new devices
+    const seedUser = INITIAL_FIREBASE_AUTH_USERS.find(
+      (x) =>
+        (u.email && x.email.toLowerCase() === u.email.toLowerCase()) ||
+        (u.uid && x.uid === u.uid)
+    );
+    if (seedUser) {
+      if (seedUser.firstLogin) {
+        cacheCanonicalFirstLogin(u.uid, seedUser.firstLogin);
+        cacheCanonicalFirstLogin(u.email, seedUser.firstLogin);
+      }
+      merged = {
+        ...merged,
+        preAssessmentScores: mergeScoreMaps(seedUser.preAssessmentScores, merged.preAssessmentScores),
+        postAssessmentScores: mergeScoreMaps(seedUser.postAssessmentScores, merged.postAssessmentScores),
+        preAssessmentPassed: mergeBooleanMaps(seedUser.preAssessmentPassed, merged.preAssessmentPassed),
+        postAssessmentPassed: mergeBooleanMaps(seedUser.postAssessmentPassed, merged.postAssessmentPassed),
+        completedDays: mergeBooleanMaps(seedUser.completedDays, merged.completedDays),
+        unlockedBadges: mergeMaps(seedUser.unlockedBadges, merged.unlockedBadges),
+        certificateId: seedUser.certificateId || merged.certificateId,
+        certificateIssuedAt: seedUser.certificateIssuedAt || merged.certificateIssuedAt,
+        patternQuizScore: Math.max(seedUser.patternQuizScore ?? 0, merged.patternQuizScore ?? 0),
+        patternQuizCompleted: Boolean(seedUser.patternQuizCompleted ?? merged.patternQuizCompleted),
+        stressQuizScore: Math.max(seedUser.stressQuizScore ?? 0, merged.stressQuizScore ?? 0),
+        stressQuizAnswered: Math.max(seedUser.stressQuizAnswered ?? 0, merged.stressQuizAnswered ?? 0),
+        stressQuizCompleted: Boolean(seedUser.stressQuizCompleted ?? merged.stressQuizCompleted),
+        stressQuizAttemptedAt: seedUser.stressQuizAttemptedAt || merged.stressQuizAttemptedAt || null,
+        aptitudeScore: Math.max(seedUser.aptitudeScore ?? 0, merged.aptitudeScore ?? 0),
+        aptitudeCorrectCount: Math.max(seedUser.aptitudeCorrectCount ?? 0, merged.aptitudeCorrectCount ?? 0),
+        aptitudePassed: Boolean(seedUser.aptitudePassed ?? merged.aptitudePassed),
+        aptitudeAttemptedAt: seedUser.aptitudeAttemptedAt || merged.aptitudeAttemptedAt || null,
+        lorIssuedAt: seedUser.lorIssuedAt || merged.lorIssuedAt || null,
+        reportGeneratedAt: seedUser.reportGeneratedAt || merged.reportGeneratedAt || null,
+      };
+    }
+
     try {
-      const docRef = doc(db, 'learners', u.uid);
-      const snap = await getDoc(docRef);
+      let snap = await getDoc(doc(db, 'learners', u.uid));
+      if (!snap.exists() && u.email) {
+        const emailSnap = await getDoc(doc(db, 'learners', u.email.toLowerCase()));
+        if (emailSnap.exists()) {
+          snap = emailSnap;
+        }
+      }
       if (snap.exists()) {
         const data = snap.data();
         if (data?.firstLogin) {
@@ -127,27 +170,27 @@ export function App() {
           cacheCanonicalFirstLogin(u.email, data.firstLogin);
         }
         merged = {
-          ...localProgress,
-          preAssessmentScores: mergeScoreMaps(data?.preAssessmentScores, localProgress.preAssessmentScores),
-          postAssessmentScores: mergeScoreMaps(data?.postAssessmentScores, localProgress.postAssessmentScores),
-          preAssessmentPassed: mergeBooleanMaps(data?.preAssessmentPassed, localProgress.preAssessmentPassed),
-          postAssessmentPassed: mergeBooleanMaps(data?.postAssessmentPassed, localProgress.postAssessmentPassed),
-          completedDays: mergeBooleanMaps(data?.completedDays, localProgress.completedDays),
-          unlockedBadges: mergeMaps(data?.unlockedBadges, localProgress.unlockedBadges),
-          certificateId: data?.certificateId || localProgress.certificateId || generateOfficialCertificateId(u.email),
-          certificateIssuedAt: data?.certificateIssuedAt || localProgress.certificateIssuedAt,
-          patternQuizScore: Math.max(data?.patternQuizScore ?? 0, localProgress.patternQuizScore ?? 0),
-          patternQuizCompleted: Boolean(data?.patternQuizCompleted ?? localProgress.patternQuizCompleted),
-          stressQuizScore: Math.max(data?.stressQuizScore ?? 0, localProgress.stressQuizScore ?? 0),
-          stressQuizAnswered: Math.max(data?.stressQuizAnswered ?? 0, localProgress.stressQuizAnswered ?? 0),
-          stressQuizCompleted: Boolean(data?.stressQuizCompleted ?? localProgress.stressQuizCompleted),
-          stressQuizAttemptedAt: data?.stressQuizAttemptedAt || localProgress.stressQuizAttemptedAt || null,
-          aptitudeScore: Math.max(data?.aptitudeScore ?? 0, localProgress.aptitudeScore ?? 0),
-          aptitudeCorrectCount: Math.max(data?.aptitudeCorrectCount ?? 0, localProgress.aptitudeCorrectCount ?? 0),
-          aptitudePassed: Boolean(data?.aptitudePassed ?? localProgress.aptitudePassed),
-          aptitudeAttemptedAt: data?.aptitudeAttemptedAt || localProgress.aptitudeAttemptedAt || null,
-          lorIssuedAt: data?.lorIssuedAt || localProgress.lorIssuedAt || null,
-          reportGeneratedAt: data?.reportGeneratedAt || localProgress.reportGeneratedAt || null,
+          ...merged,
+          preAssessmentScores: mergeScoreMaps(data?.preAssessmentScores, merged.preAssessmentScores),
+          postAssessmentScores: mergeScoreMaps(data?.postAssessmentScores, merged.postAssessmentScores),
+          preAssessmentPassed: mergeBooleanMaps(data?.preAssessmentPassed, merged.preAssessmentPassed),
+          postAssessmentPassed: mergeBooleanMaps(data?.postAssessmentPassed, merged.postAssessmentPassed),
+          completedDays: mergeBooleanMaps(data?.completedDays, merged.completedDays),
+          unlockedBadges: mergeMaps(data?.unlockedBadges, merged.unlockedBadges),
+          certificateId: data?.certificateId || merged.certificateId || generateOfficialCertificateId(u.email),
+          certificateIssuedAt: data?.certificateIssuedAt || merged.certificateIssuedAt,
+          patternQuizScore: Math.max(data?.patternQuizScore ?? 0, merged.patternQuizScore ?? 0),
+          patternQuizCompleted: Boolean(data?.patternQuizCompleted ?? merged.patternQuizCompleted),
+          stressQuizScore: Math.max(data?.stressQuizScore ?? 0, merged.stressQuizScore ?? 0),
+          stressQuizAnswered: Math.max(data?.stressQuizAnswered ?? 0, merged.stressQuizAnswered ?? 0),
+          stressQuizCompleted: Boolean(data?.stressQuizCompleted ?? merged.stressQuizCompleted),
+          stressQuizAttemptedAt: data?.stressQuizAttemptedAt || merged.stressQuizAttemptedAt || null,
+          aptitudeScore: Math.max(data?.aptitudeScore ?? 0, merged.aptitudeScore ?? 0),
+          aptitudeCorrectCount: Math.max(data?.aptitudeCorrectCount ?? 0, merged.aptitudeCorrectCount ?? 0),
+          aptitudePassed: Boolean(data?.aptitudePassed ?? merged.aptitudePassed),
+          aptitudeAttemptedAt: data?.aptitudeAttemptedAt || merged.aptitudeAttemptedAt || null,
+          lorIssuedAt: data?.lorIssuedAt || merged.lorIssuedAt || null,
+          reportGeneratedAt: data?.reportGeneratedAt || merged.reportGeneratedAt || null,
         };
       }
     } catch (err) {
@@ -167,6 +210,7 @@ export function App() {
     const localProg = loadStoredProgress(user.email);
     hydrateUserProgress(user, localProg).then((hydrated) => {
       saveStoredProgress(hydrated, user.email);
+      isRemoteUpdateRef.current = true;
       setProgress(hydrated);
       isHydratedRef.current = true;
     });
@@ -227,6 +271,7 @@ export function App() {
         const p = loadStoredProgress(user.email);
         hydrateUserProgress(user, p).then((hydrated) => {
           saveStoredProgress(hydrated, user.email);
+          isRemoteUpdateRef.current = true;
           setProgress(hydrated);
           isHydratedRef.current = true;
         });
@@ -278,6 +323,7 @@ export function App() {
           const p = loadStoredProgress(mapped.email);
           const hydrated = await hydrateUserProgress(mapped, p);
           saveStoredProgress(hydrated, mapped.email);
+          isRemoteUpdateRef.current = true;
           setProgress(hydrated);
           setUser(mapped);
           isHydratedRef.current = true;
@@ -312,6 +358,7 @@ export function App() {
     }
     const hydrated = await hydrateUserProgress(authenticatedUser, loaded);
     saveStoredProgress(hydrated, authenticatedUser.email);
+    isRemoteUpdateRef.current = true;
     setProgress(hydrated);
     setUser(authenticatedUser);
     isHydratedRef.current = true;
@@ -384,7 +431,7 @@ export function App() {
       };
       if (user) {
         saveStoredProgress(nextState, user.email);
-        captureAssessmentScoreRealtime(user, day, 'pre', scorePercent, prev);
+        captureAssessmentScoreRealtime(user, day, 'pre', scorePercent, nextState);
       }
       return nextState;
     });
@@ -420,7 +467,7 @@ export function App() {
       };
       if (user) {
         saveStoredProgress(nextState, user.email);
-        captureAssessmentScoreRealtime(user, day, 'post', scorePercent, prev);
+        captureAssessmentScoreRealtime(user, day, 'post', scorePercent, nextState);
       }
       return nextState;
     });

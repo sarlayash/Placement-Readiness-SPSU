@@ -252,57 +252,74 @@ export async function recordUserSignIn(
   const localRegistry = getLocalLearnersRegistry();
   const existing = localRegistry[user.email.toLowerCase()] || localRegistry[user.uid];
 
+  const initMatch = INITIAL_FIREBASE_AUTH_USERS.find(
+    (x) =>
+      (user.email && x.email.toLowerCase() === user.email.toLowerCase()) ||
+      (user.uid && x.uid === user.uid)
+  );
+
   let firstLoginToUse =
     getCachedCanonicalFirstLogin(user.uid) ||
     getCachedCanonicalFirstLogin(user.email);
 
-  // ALWAYS check Firestore directly first to ensure firstLogin strictly matches immutable rule
+  // ALWAYS check Firestore directly first to ensure firstLogin strictly matches immutable rule and pull cloud data
+  let cloudData: Partial<LearnerRecord> | undefined = undefined;
   try {
     const learnerDocRef = doc(db, 'learners', user.uid);
-    const snap = await getDoc(learnerDocRef);
-    if (snap.exists() && snap.data()?.firstLogin) {
-      const fl = String(snap.data().firstLogin);
-      firstLoginToUse = fl;
-      cacheCanonicalFirstLogin(user.uid, fl);
-      cacheCanonicalFirstLogin(user.email, fl);
+    let snap = await getDoc(learnerDocRef);
+    if (!snap.exists() && user.email) {
+      const emailDocRef = doc(db, 'learners', user.email.toLowerCase());
+      const emailSnap = await getDoc(emailDocRef);
+      if (emailSnap.exists()) {
+        snap = emailSnap;
+      }
+    }
+    if (snap.exists()) {
+      cloudData = snap.data() as Partial<LearnerRecord>;
+      if (cloudData?.firstLogin) {
+        const fl = String(cloudData.firstLogin);
+        firstLoginToUse = fl;
+        cacheCanonicalFirstLogin(user.uid, fl);
+        cacheCanonicalFirstLogin(user.email, fl);
+      }
     }
   } catch {
     // Offline fallback
   }
 
   if (!firstLoginToUse) {
-    firstLoginToUse = existing?.firstLogin || user.signedInAt || now;
+    firstLoginToUse = existing?.firstLogin || initMatch?.firstLogin || user.signedInAt || now;
   }
   cacheCanonicalFirstLogin(user.uid, firstLoginToUse);
   cacheCanonicalFirstLogin(user.email, firstLoginToUse);
 
   const updatedRecord: LearnerRecord = {
     uid: user.uid,
-    name: (user.name || existing?.name || 'SPSU Learner').slice(0, 150),
+    name: (user.name || existing?.name || cloudData?.name || initMatch?.name || 'SPSU Learner').slice(0, 150),
     email: user.email.toLowerCase().slice(0, 150),
-    photoURL: user.photoURL ? user.photoURL.slice(0, 1000) : (existing?.photoURL || ''),
+    photoURL: user.photoURL ? user.photoURL.slice(0, 1000) : (existing?.photoURL || cloudData?.photoURL || initMatch?.photoURL || ''),
     firstLogin: firstLoginToUse,
     lastLoginAttempt: now,
-    preAssessmentScores: mergeScoreMaps(existing?.preAssessmentScores, currentProgress?.preAssessmentScores),
-    postAssessmentScores: mergeScoreMaps(existing?.postAssessmentScores, currentProgress?.postAssessmentScores),
-    preAssessmentPassed: mergeBooleanMaps(existing?.preAssessmentPassed, currentProgress?.preAssessmentPassed),
-    postAssessmentPassed: mergeBooleanMaps(existing?.postAssessmentPassed, currentProgress?.postAssessmentPassed),
-    completedDays: mergeBooleanMaps(existing?.completedDays, currentProgress?.completedDays),
-    unlockedBadges: mergeMaps(existing?.unlockedBadges, currentProgress?.unlockedBadges),
-    certificateId: currentProgress?.certificateId || existing?.certificateId || null,
-    certificateIssuedAt: currentProgress?.certificateIssuedAt || existing?.certificateIssuedAt || null,
-    patternQuizScore: currentProgress?.patternQuizScore ?? existing?.patternQuizScore ?? 0,
-    patternQuizCompleted: currentProgress?.patternQuizCompleted ?? existing?.patternQuizCompleted ?? false,
-    stressQuizScore: currentProgress?.stressQuizScore ?? existing?.stressQuizScore ?? 0,
-    stressQuizAnswered: currentProgress?.stressQuizAnswered ?? existing?.stressQuizAnswered ?? 0,
-    stressQuizCompleted: currentProgress?.stressQuizCompleted ?? existing?.stressQuizCompleted ?? false,
-    stressQuizAttemptedAt: currentProgress?.stressQuizAttemptedAt || existing?.stressQuizAttemptedAt || null,
-    aptitudeScore: currentProgress?.aptitudeScore ?? existing?.aptitudeScore ?? 0,
-    aptitudeCorrectCount: currentProgress?.aptitudeCorrectCount ?? existing?.aptitudeCorrectCount ?? 0,
-    aptitudePassed: currentProgress?.aptitudePassed ?? existing?.aptitudePassed ?? false,
-    aptitudeAttemptedAt: currentProgress?.aptitudeAttemptedAt || existing?.aptitudeAttemptedAt || null,
-    lorIssuedAt: currentProgress?.lorIssuedAt || existing?.lorIssuedAt || null,
-    reportGeneratedAt: currentProgress?.reportGeneratedAt || existing?.reportGeneratedAt || null,
+    preAssessmentScores: mergeScoreMaps(mergeScoreMaps(initMatch?.preAssessmentScores, cloudData?.preAssessmentScores), mergeScoreMaps(existing?.preAssessmentScores, currentProgress?.preAssessmentScores)),
+    postAssessmentScores: mergeScoreMaps(mergeScoreMaps(initMatch?.postAssessmentScores, cloudData?.postAssessmentScores), mergeScoreMaps(existing?.postAssessmentScores, currentProgress?.postAssessmentScores)),
+    preAssessmentPassed: mergeBooleanMaps(mergeBooleanMaps(initMatch?.preAssessmentPassed, cloudData?.preAssessmentPassed), mergeBooleanMaps(existing?.preAssessmentPassed, currentProgress?.preAssessmentPassed)),
+    postAssessmentPassed: mergeBooleanMaps(mergeBooleanMaps(initMatch?.postAssessmentPassed, cloudData?.postAssessmentPassed), mergeBooleanMaps(existing?.postAssessmentPassed, currentProgress?.postAssessmentPassed)),
+    completedDays: mergeBooleanMaps(mergeBooleanMaps(initMatch?.completedDays, cloudData?.completedDays), mergeBooleanMaps(existing?.completedDays, currentProgress?.completedDays)),
+    unlockedBadges: mergeMaps(mergeMaps(initMatch?.unlockedBadges, cloudData?.unlockedBadges), mergeMaps(existing?.unlockedBadges, currentProgress?.unlockedBadges)),
+    certificateId: currentProgress?.certificateId || existing?.certificateId || cloudData?.certificateId || initMatch?.certificateId || null,
+    certificateIssuedAt: currentProgress?.certificateIssuedAt || existing?.certificateIssuedAt || cloudData?.certificateIssuedAt || initMatch?.certificateIssuedAt || null,
+    patternQuizScore: Math.max(initMatch?.patternQuizScore ?? 0, cloudData?.patternQuizScore ?? 0, existing?.patternQuizScore ?? 0, currentProgress?.patternQuizScore ?? 0),
+    patternQuizCompleted: Boolean(initMatch?.patternQuizCompleted || cloudData?.patternQuizCompleted || existing?.patternQuizCompleted || currentProgress?.patternQuizCompleted),
+    stressQuizScore: Math.max(initMatch?.stressQuizScore ?? 0, cloudData?.stressQuizScore ?? 0, existing?.stressQuizScore ?? 0, currentProgress?.stressQuizScore ?? 0),
+    stressQuizAnswered: Math.max(initMatch?.stressQuizAnswered ?? 0, cloudData?.stressQuizAnswered ?? 0, existing?.stressQuizAnswered ?? 0, currentProgress?.stressQuizAnswered ?? 0),
+    stressQuizCompleted: Boolean(initMatch?.stressQuizCompleted || cloudData?.stressQuizCompleted || existing?.stressQuizCompleted || currentProgress?.stressQuizCompleted),
+    stressQuizAttemptedAt: currentProgress?.stressQuizAttemptedAt || existing?.stressQuizAttemptedAt || cloudData?.stressQuizAttemptedAt || initMatch?.stressQuizAttemptedAt || null,
+    aptitudeScore: Math.max(initMatch?.aptitudeScore ?? 0, cloudData?.aptitudeScore ?? 0, existing?.aptitudeScore ?? 0, currentProgress?.aptitudeScore ?? 0),
+    aptitudeCorrectCount: Math.max(initMatch?.aptitudeCorrectCount ?? 0, cloudData?.aptitudeCorrectCount ?? 0, existing?.aptitudeCorrectCount ?? 0, currentProgress?.aptitudeCorrectCount ?? 0),
+    aptitudePassed: Boolean(initMatch?.aptitudePassed || cloudData?.aptitudePassed || existing?.aptitudePassed || currentProgress?.aptitudePassed),
+    aptitudeAttemptedAt: currentProgress?.aptitudeAttemptedAt || existing?.aptitudeAttemptedAt || cloudData?.aptitudeAttemptedAt || initMatch?.aptitudeAttemptedAt || null,
+    lorIssuedAt: currentProgress?.lorIssuedAt || existing?.lorIssuedAt || cloudData?.lorIssuedAt || initMatch?.lorIssuedAt || null,
+    reportGeneratedAt: currentProgress?.reportGeneratedAt || existing?.reportGeneratedAt || cloudData?.reportGeneratedAt || initMatch?.reportGeneratedAt || null,
   };
 
   // Update local registry
@@ -334,6 +351,12 @@ export async function syncLearnerProgress(
   const existing = localRegistry[user.email.toLowerCase()] || localRegistry[user.uid];
   const now = new Date().toISOString();
 
+  const initMatch = INITIAL_FIREBASE_AUTH_USERS.find(
+    (x) =>
+      (user.email && x.email.toLowerCase() === user.email.toLowerCase()) ||
+      (user.uid && x.uid === user.uid)
+  );
+
   let firstLoginToUse =
     getCachedCanonicalFirstLogin(user.uid) ||
     getCachedCanonicalFirstLogin(user.email);
@@ -342,7 +365,14 @@ export async function syncLearnerProgress(
   let cloudData: Partial<LearnerRecord> | undefined = undefined;
   try {
     const learnerDocRef = doc(db, 'learners', user.uid);
-    const snap = await getDoc(learnerDocRef);
+    let snap = await getDoc(learnerDocRef);
+    if (!snap.exists() && user.email) {
+      const emailDocRef = doc(db, 'learners', user.email.toLowerCase());
+      const emailSnap = await getDoc(emailDocRef);
+      if (emailSnap.exists()) {
+        snap = emailSnap;
+      }
+    }
     if (snap.exists()) {
       cloudData = snap.data() as Partial<LearnerRecord>;
       if (cloudData?.firstLogin) {
@@ -357,38 +387,38 @@ export async function syncLearnerProgress(
   }
 
   if (!firstLoginToUse) {
-    firstLoginToUse = existing?.firstLogin || user.signedInAt || now;
+    firstLoginToUse = existing?.firstLogin || initMatch?.firstLogin || user.signedInAt || now;
   }
   cacheCanonicalFirstLogin(user.uid, firstLoginToUse);
   cacheCanonicalFirstLogin(user.email, firstLoginToUse);
 
   const updatedRecord: LearnerRecord = {
     uid: user.uid,
-    name: (user.name || existing?.name || cloudData?.name || 'SPSU Learner').slice(0, 150),
+    name: (user.name || existing?.name || cloudData?.name || initMatch?.name || 'SPSU Learner').slice(0, 150),
     email: user.email.toLowerCase().slice(0, 150),
-    photoURL: (user.photoURL || existing?.photoURL || cloudData?.photoURL || '').slice(0, 1000),
+    photoURL: (user.photoURL || existing?.photoURL || cloudData?.photoURL || initMatch?.photoURL || '').slice(0, 1000),
     firstLogin: firstLoginToUse,
     lastLoginAttempt: now,
-    preAssessmentScores: mergeScoreMaps(mergeScoreMaps(cloudData?.preAssessmentScores, existing?.preAssessmentScores), progress.preAssessmentScores),
-    postAssessmentScores: mergeScoreMaps(mergeScoreMaps(cloudData?.postAssessmentScores, existing?.postAssessmentScores), progress.postAssessmentScores),
-    preAssessmentPassed: mergeBooleanMaps(mergeBooleanMaps(cloudData?.preAssessmentPassed, existing?.preAssessmentPassed), progress.preAssessmentPassed),
-    postAssessmentPassed: mergeBooleanMaps(mergeBooleanMaps(cloudData?.postAssessmentPassed, existing?.postAssessmentPassed), progress.postAssessmentPassed),
-    completedDays: mergeBooleanMaps(mergeBooleanMaps(cloudData?.completedDays, existing?.completedDays), progress.completedDays),
-    unlockedBadges: mergeMaps(mergeMaps(cloudData?.unlockedBadges, existing?.unlockedBadges), progress.unlockedBadges),
-    certificateId: progress.certificateId || existing?.certificateId || cloudData?.certificateId || null,
-    certificateIssuedAt: progress.certificateIssuedAt || existing?.certificateIssuedAt || cloudData?.certificateIssuedAt || null,
-    patternQuizScore: progress.patternQuizScore ?? existing?.patternQuizScore ?? cloudData?.patternQuizScore ?? 0,
-    patternQuizCompleted: progress.patternQuizCompleted ?? existing?.patternQuizCompleted ?? cloudData?.patternQuizCompleted ?? false,
-    stressQuizScore: progress.stressQuizScore ?? existing?.stressQuizScore ?? cloudData?.stressQuizScore ?? 0,
-    stressQuizAnswered: progress.stressQuizAnswered ?? existing?.stressQuizAnswered ?? cloudData?.stressQuizAnswered ?? 0,
-    stressQuizCompleted: progress.stressQuizCompleted ?? existing?.stressQuizCompleted ?? cloudData?.stressQuizCompleted ?? false,
-    stressQuizAttemptedAt: progress.stressQuizAttemptedAt || existing?.stressQuizAttemptedAt || cloudData?.stressQuizAttemptedAt || null,
-    aptitudeScore: progress.aptitudeScore ?? existing?.aptitudeScore ?? cloudData?.aptitudeScore ?? 0,
-    aptitudeCorrectCount: progress.aptitudeCorrectCount ?? existing?.aptitudeCorrectCount ?? cloudData?.aptitudeCorrectCount ?? 0,
-    aptitudePassed: progress.aptitudePassed ?? existing?.aptitudePassed ?? cloudData?.aptitudePassed ?? false,
-    aptitudeAttemptedAt: progress.aptitudeAttemptedAt || existing?.aptitudeAttemptedAt || cloudData?.aptitudeAttemptedAt || null,
-    lorIssuedAt: progress.lorIssuedAt || existing?.lorIssuedAt || cloudData?.lorIssuedAt || null,
-    reportGeneratedAt: progress.reportGeneratedAt || existing?.reportGeneratedAt || cloudData?.reportGeneratedAt || null,
+    preAssessmentScores: mergeScoreMaps(mergeScoreMaps(initMatch?.preAssessmentScores, cloudData?.preAssessmentScores), mergeScoreMaps(existing?.preAssessmentScores, progress.preAssessmentScores)),
+    postAssessmentScores: mergeScoreMaps(mergeScoreMaps(initMatch?.postAssessmentScores, cloudData?.postAssessmentScores), mergeScoreMaps(existing?.postAssessmentScores, progress.postAssessmentScores)),
+    preAssessmentPassed: mergeBooleanMaps(mergeBooleanMaps(initMatch?.preAssessmentPassed, cloudData?.preAssessmentPassed), mergeBooleanMaps(existing?.preAssessmentPassed, progress.preAssessmentPassed)),
+    postAssessmentPassed: mergeBooleanMaps(mergeBooleanMaps(initMatch?.postAssessmentPassed, cloudData?.postAssessmentPassed), mergeBooleanMaps(existing?.postAssessmentPassed, progress.postAssessmentPassed)),
+    completedDays: mergeBooleanMaps(mergeBooleanMaps(initMatch?.completedDays, cloudData?.completedDays), mergeBooleanMaps(existing?.completedDays, progress.completedDays)),
+    unlockedBadges: mergeMaps(mergeMaps(initMatch?.unlockedBadges, cloudData?.unlockedBadges), mergeMaps(existing?.unlockedBadges, progress.unlockedBadges)),
+    certificateId: progress.certificateId || existing?.certificateId || cloudData?.certificateId || initMatch?.certificateId || null,
+    certificateIssuedAt: progress.certificateIssuedAt || existing?.certificateIssuedAt || cloudData?.certificateIssuedAt || initMatch?.certificateIssuedAt || null,
+    patternQuizScore: Math.max(initMatch?.patternQuizScore ?? 0, cloudData?.patternQuizScore ?? 0, existing?.patternQuizScore ?? 0, progress.patternQuizScore ?? 0),
+    patternQuizCompleted: Boolean(initMatch?.patternQuizCompleted || cloudData?.patternQuizCompleted || existing?.patternQuizCompleted || progress.patternQuizCompleted),
+    stressQuizScore: Math.max(initMatch?.stressQuizScore ?? 0, cloudData?.stressQuizScore ?? 0, existing?.stressQuizScore ?? 0, progress.stressQuizScore ?? 0),
+    stressQuizAnswered: Math.max(initMatch?.stressQuizAnswered ?? 0, cloudData?.stressQuizAnswered ?? 0, existing?.stressQuizAnswered ?? 0, progress.stressQuizAnswered ?? 0),
+    stressQuizCompleted: Boolean(initMatch?.stressQuizCompleted || cloudData?.stressQuizCompleted || existing?.stressQuizCompleted || progress.stressQuizCompleted),
+    stressQuizAttemptedAt: progress.stressQuizAttemptedAt || existing?.stressQuizAttemptedAt || cloudData?.stressQuizAttemptedAt || initMatch?.stressQuizAttemptedAt || null,
+    aptitudeScore: Math.max(initMatch?.aptitudeScore ?? 0, cloudData?.aptitudeScore ?? 0, existing?.aptitudeScore ?? 0, progress.aptitudeScore ?? 0),
+    aptitudeCorrectCount: Math.max(initMatch?.aptitudeCorrectCount ?? 0, cloudData?.aptitudeCorrectCount ?? 0, existing?.aptitudeCorrectCount ?? 0, progress.aptitudeCorrectCount ?? 0),
+    aptitudePassed: Boolean(initMatch?.aptitudePassed || cloudData?.aptitudePassed || existing?.aptitudePassed || progress.aptitudePassed),
+    aptitudeAttemptedAt: progress.aptitudeAttemptedAt || existing?.aptitudeAttemptedAt || cloudData?.aptitudeAttemptedAt || initMatch?.aptitudeAttemptedAt || null,
+    lorIssuedAt: progress.lorIssuedAt || existing?.lorIssuedAt || cloudData?.lorIssuedAt || initMatch?.lorIssuedAt || null,
+    reportGeneratedAt: progress.reportGeneratedAt || existing?.reportGeneratedAt || cloudData?.reportGeneratedAt || initMatch?.reportGeneratedAt || null,
   };
 
   localRegistry[user.email.toLowerCase()] = updatedRecord;
@@ -454,6 +484,89 @@ export async function captureAssessmentScoreRealtime(
 }
 
 /**
+ * Deeply reconciles an incoming learner record into the map.
+ * Matches by normalized email OR UID, preserving non-empty maps,
+ * maximum assessment scores, true passed flags, and canonical firstLogin.
+ * Consolidates duplicate keys if UID and email were previously split.
+ */
+export function reconcileLearnerIntoMap(
+  map: Record<string, LearnerRecord>,
+  incoming: Partial<LearnerRecord>
+): void {
+  if (!incoming || (!incoming.email && !incoming.uid)) return;
+
+  const inEmail = incoming.email ? String(incoming.email).toLowerCase().trim() : '';
+  const inUid = incoming.uid ? String(incoming.uid).trim() : '';
+
+  // 1. Identify existing key in the map (by email or UID)
+  let existingKey: string | undefined = undefined;
+  if (inEmail && map[inEmail]) {
+    existingKey = inEmail;
+  } else if (inUid && map[inUid]) {
+    existingKey = inUid;
+  } else {
+    for (const [k, v] of Object.entries(map)) {
+      if ((inEmail && v.email && v.email.toLowerCase().trim() === inEmail) ||
+          (inUid && v.uid && v.uid.trim() === inUid)) {
+        existingKey = k;
+        break;
+      }
+    }
+  }
+
+  const prev = existingKey ? map[existingKey] : undefined;
+
+  // 2. Compute canonical first login (never reset)
+  const canonicalFirstLogin =
+    getCachedCanonicalFirstLogin(inUid) ||
+    getCachedCanonicalFirstLogin(inEmail) ||
+    prev?.firstLogin ||
+    incoming.firstLogin ||
+    incoming.lastLoginAttempt ||
+    new Date().toISOString();
+
+  if (inUid) cacheCanonicalFirstLogin(inUid, canonicalFirstLogin);
+  if (inEmail) cacheCanonicalFirstLogin(inEmail, canonicalFirstLogin);
+
+  // 3. Deep-merge all properties
+  const mergedRecord: LearnerRecord = {
+    uid: inUid || prev?.uid || '',
+    name: (incoming.name && incoming.name !== 'SPSU Learner' ? incoming.name : prev?.name || incoming.name || 'SPSU Learner').slice(0, 150),
+    email: (inEmail || prev?.email || '').slice(0, 150),
+    photoURL: (incoming.photoURL || prev?.photoURL || '').slice(0, 1000),
+    firstLogin: canonicalFirstLogin,
+    lastLoginAttempt: incoming.lastLoginAttempt || prev?.lastLoginAttempt || canonicalFirstLogin,
+    preAssessmentScores: mergeScoreMaps(prev?.preAssessmentScores, incoming.preAssessmentScores),
+    postAssessmentScores: mergeScoreMaps(prev?.postAssessmentScores, incoming.postAssessmentScores),
+    preAssessmentPassed: mergeBooleanMaps(prev?.preAssessmentPassed, incoming.preAssessmentPassed),
+    postAssessmentPassed: mergeBooleanMaps(prev?.postAssessmentPassed, incoming.postAssessmentPassed),
+    completedDays: mergeBooleanMaps(prev?.completedDays, incoming.completedDays),
+    unlockedBadges: mergeMaps(prev?.unlockedBadges, incoming.unlockedBadges),
+    certificateId: incoming.certificateId || prev?.certificateId || null,
+    certificateIssuedAt: incoming.certificateIssuedAt || prev?.certificateIssuedAt || null,
+    patternQuizScore: Math.max(prev?.patternQuizScore ?? 0, incoming.patternQuizScore ?? 0),
+    patternQuizCompleted: Boolean(prev?.patternQuizCompleted || incoming.patternQuizCompleted),
+    stressQuizScore: Math.max(prev?.stressQuizScore ?? 0, incoming.stressQuizScore ?? 0),
+    stressQuizAnswered: Math.max(prev?.stressQuizAnswered ?? 0, incoming.stressQuizAnswered ?? 0),
+    stressQuizCompleted: Boolean(prev?.stressQuizCompleted || incoming.stressQuizCompleted),
+    stressQuizAttemptedAt: incoming.stressQuizAttemptedAt || prev?.stressQuizAttemptedAt || null,
+    aptitudeScore: Math.max(prev?.aptitudeScore ?? 0, incoming.aptitudeScore ?? 0),
+    aptitudeCorrectCount: Math.max(prev?.aptitudeCorrectCount ?? 0, incoming.aptitudeCorrectCount ?? 0),
+    aptitudePassed: Boolean(prev?.aptitudePassed || incoming.aptitudePassed),
+    aptitudeAttemptedAt: incoming.aptitudeAttemptedAt || prev?.aptitudeAttemptedAt || null,
+    lorIssuedAt: incoming.lorIssuedAt || prev?.lorIssuedAt || null,
+    reportGeneratedAt: incoming.reportGeneratedAt || prev?.reportGeneratedAt || null,
+  };
+
+  // 4. Store under preferred key (email if available, else uid) and clean up old split key
+  const targetKey = (mergedRecord.email || mergedRecord.uid).toLowerCase();
+  if (existingKey && existingKey !== targetKey) {
+    delete map[existingKey];
+  }
+  map[targetKey] = mergedRecord;
+}
+
+/**
  * Fetch all registered learners from Firebase Firestore, merged with local registry.
  */
 export async function fetchAllLearners(): Promise<LearnerRecord[]> {
@@ -461,17 +574,13 @@ export async function fetchAllLearners(): Promise<LearnerRecord[]> {
 
   // 1. Seed initial verified Firebase Auth users
   for (const initUser of INITIAL_FIREBASE_AUTH_USERS) {
-    mergedMap[initUser.email.toLowerCase()] = { ...initUser };
+    reconcileLearnerIntoMap(mergedMap, initUser);
   }
 
   // 2. Layer any local registry updates
   const localRegistry = getLocalLearnersRegistry();
-  for (const [key, record] of Object.entries(localRegistry)) {
-    const normKey = (record.email || key).toLowerCase();
-    mergedMap[normKey] = {
-      ...(mergedMap[normKey] || {}),
-      ...record,
-    };
+  for (const record of Object.values(localRegistry)) {
+    reconcileLearnerIntoMap(mergedMap, record);
   }
 
   // 3. Layer Firestore collection 'learners' data
@@ -480,23 +589,11 @@ export async function fetchAllLearners(): Promise<LearnerRecord[]> {
     snapshot.forEach((docSnap) => {
       if (docSnap.exists()) {
         const data = docSnap.data() as LearnerRecord;
-        if (data && (data.email || data.uid)) {
-          if (data.firstLogin) {
-            if (data.uid) cacheCanonicalFirstLogin(data.uid, data.firstLogin);
-            if (data.email) cacheCanonicalFirstLogin(data.email, data.firstLogin);
+        if (data) {
+          if (!data.uid && docSnap.id) {
+            data.uid = docSnap.id;
           }
-          const key = (data.email || data.uid).toLowerCase();
-          const prev = mergedMap[key] || {};
-          mergedMap[key] = {
-            ...prev,
-            ...data,
-            preAssessmentScores: mergeScoreMaps(prev.preAssessmentScores, data.preAssessmentScores),
-            postAssessmentScores: mergeScoreMaps(prev.postAssessmentScores, data.postAssessmentScores),
-            preAssessmentPassed: mergeBooleanMaps(prev.preAssessmentPassed, data.preAssessmentPassed),
-            postAssessmentPassed: mergeBooleanMaps(prev.postAssessmentPassed, data.postAssessmentPassed),
-            completedDays: mergeBooleanMaps(prev.completedDays, data.completedDays),
-            unlockedBadges: mergeMaps(prev.unlockedBadges, data.unlockedBadges),
-          };
+          reconcileLearnerIntoMap(mergedMap, data);
         }
       }
     });
@@ -530,33 +627,20 @@ export function subscribeToLearners(callback: (learners: LearnerRecord[]) => voi
       (snapshot) => {
         const mergedMap: Record<string, LearnerRecord> = {};
         for (const initUser of INITIAL_FIREBASE_AUTH_USERS) {
-          mergedMap[initUser.email.toLowerCase()] = { ...initUser };
+          reconcileLearnerIntoMap(mergedMap, initUser);
         }
         const localRegistry = getLocalLearnersRegistry();
-        for (const [key, record] of Object.entries(localRegistry)) {
-          const normKey = (record.email || key).toLowerCase();
-          mergedMap[normKey] = { ...(mergedMap[normKey] || {}), ...record };
+        for (const record of Object.values(localRegistry)) {
+          reconcileLearnerIntoMap(mergedMap, record);
         }
         snapshot.forEach((docSnap) => {
           if (docSnap.exists()) {
             const data = docSnap.data() as LearnerRecord;
-            if (data && (data.email || data.uid)) {
-              if (data.firstLogin) {
-                if (data.uid) cacheCanonicalFirstLogin(data.uid, data.firstLogin);
-                if (data.email) cacheCanonicalFirstLogin(data.email, data.firstLogin);
+            if (data) {
+              if (!data.uid && docSnap.id) {
+                data.uid = docSnap.id;
               }
-              const key = (data.email || data.uid).toLowerCase();
-              const prev = mergedMap[key] || {};
-              mergedMap[key] = {
-                ...prev,
-                ...data,
-                preAssessmentScores: mergeScoreMaps(prev.preAssessmentScores, data.preAssessmentScores),
-                postAssessmentScores: mergeScoreMaps(prev.postAssessmentScores, data.postAssessmentScores),
-                preAssessmentPassed: mergeBooleanMaps(prev.preAssessmentPassed, data.preAssessmentPassed),
-                postAssessmentPassed: mergeBooleanMaps(prev.postAssessmentPassed, data.postAssessmentPassed),
-                completedDays: mergeBooleanMaps(prev.completedDays, data.completedDays),
-                unlockedBadges: mergeMaps(prev.unlockedBadges, data.unlockedBadges),
-              };
+              reconcileLearnerIntoMap(mergedMap, data);
             }
           }
         });

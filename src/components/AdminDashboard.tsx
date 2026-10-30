@@ -39,7 +39,33 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [searchQuery, setSearchQuery] = useState<string>('');
   const [selectedDayFilter, setSelectedDayFilter] = useState<number>(1);
   const [tableScope, setTableScope] = useState<'days1_5' | 'days6_10' | 'day_focus'>('days1_5');
-  const [statusFilter, setStatusFilter] = useState<'all' | 'day1_pre' | 'day1_post' | 'day1_complete' | 'day2_pre' | 'day2_post' | 'day2_complete' | 'both_days_complete' | 'day3_pre' | 'day3_post' | 'day3_complete' | 'day4_pre' | 'day4_post' | 'day4_complete' | 'day5_pre' | 'day5_post' | 'day5_complete' | 'all_3_days_complete' | 'all_4_days_complete' | 'all_5_days_complete' | 'certified'>('all');
+  const [statusFilter, setStatusFilter] = useState<
+    | 'all'
+    | 'day1_pre'
+    | 'day1_post'
+    | 'day1_complete'
+    | 'day2_pre'
+    | 'day2_post'
+    | 'day2_complete'
+    | 'both_days_complete'
+    | 'day3_pre'
+    | 'day3_post'
+    | 'day3_complete'
+    | 'day4_pre'
+    | 'day4_post'
+    | 'day4_complete'
+    | 'day5_pre'
+    | 'day5_post'
+    | 'day5_complete'
+    | 'day6_pre'
+    | 'day6_post'
+    | 'day6_complete'
+    | 'all_3_days_complete'
+    | 'all_4_days_complete'
+    | 'all_5_days_complete'
+    | 'all_6_days_complete'
+    | 'certified'
+  >('all');
   const [inspectedLearner, setInspectedLearner] = useState<LearnerRecord | null>(null);
 
   const loadData = async () => {
@@ -124,6 +150,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     if (statusFilter === 'day5_complete') {
       return Boolean(l.completedDays?.[5] || (l.preAssessmentPassed?.[5] && l.postAssessmentPassed?.[5]));
     }
+    if (statusFilter === 'day6_pre') {
+      return Boolean(l.preAssessmentPassed?.[6]);
+    }
+    if (statusFilter === 'day6_post') {
+      return Boolean(l.postAssessmentPassed?.[6]);
+    }
+    if (statusFilter === 'day6_complete') {
+      return Boolean(l.completedDays?.[6] || (l.preAssessmentPassed?.[6] && l.postAssessmentPassed?.[6]));
+    }
     if (statusFilter === 'all_3_days_complete') {
       const d1 = Boolean(l.completedDays?.[1] || (l.preAssessmentPassed?.[1] && l.postAssessmentPassed?.[1]));
       const d2 = Boolean(l.completedDays?.[2] || (l.preAssessmentPassed?.[2] && l.postAssessmentPassed?.[2]));
@@ -145,6 +180,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       const d5 = Boolean(l.completedDays?.[5] || (l.preAssessmentPassed?.[5] && l.postAssessmentPassed?.[5]));
       return d1 && d2 && d3 && d4 && d5;
     }
+    if (statusFilter === 'all_6_days_complete') {
+      const d1 = Boolean(l.completedDays?.[1] || (l.preAssessmentPassed?.[1] && l.postAssessmentPassed?.[1]));
+      const d2 = Boolean(l.completedDays?.[2] || (l.preAssessmentPassed?.[2] && l.postAssessmentPassed?.[2]));
+      const d3 = Boolean(l.completedDays?.[3] || (l.preAssessmentPassed?.[3] && l.postAssessmentPassed?.[3]));
+      const d4 = Boolean(l.completedDays?.[4] || (l.preAssessmentPassed?.[4] && l.postAssessmentPassed?.[4]));
+      const d5 = Boolean(l.completedDays?.[5] || (l.preAssessmentPassed?.[5] && l.postAssessmentPassed?.[5]));
+      const d6 = Boolean(l.completedDays?.[6] || (l.preAssessmentPassed?.[6] && l.postAssessmentPassed?.[6]));
+      return d1 && d2 && d3 && d4 && d5 && d6;
+    }
     if (statusFilter === 'certified') {
       return Boolean(l.certificateId);
     }
@@ -164,6 +208,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const day4PostCompletedCount = learners.filter((l) => l.postAssessmentPassed?.[4]).length;
   const day5PreCompletedCount = learners.filter((l) => l.preAssessmentPassed?.[5]).length;
   const day5PostCompletedCount = learners.filter((l) => l.postAssessmentPassed?.[5]).length;
+  const day6PreCompletedCount = learners.filter((l) => l.preAssessmentPassed?.[6]).length;
+  const day6PostCompletedCount = learners.filter((l) => l.postAssessmentPassed?.[6]).length;
   const bothDaysCompletedCount = learners.filter((l) => {
     const d1 = Boolean(l.completedDays?.[1] || (l.preAssessmentPassed?.[1] && l.postAssessmentPassed?.[1]));
     const d2 = Boolean(l.completedDays?.[2] || (l.preAssessmentPassed?.[2] && l.postAssessmentPassed?.[2]));
@@ -189,6 +235,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     const d4 = Boolean(l.completedDays?.[4] || (l.preAssessmentPassed?.[4] && l.postAssessmentPassed?.[4]));
     const d5 = Boolean(l.completedDays?.[5] || (l.preAssessmentPassed?.[5] && l.postAssessmentPassed?.[5]));
     return d1 && d2 && d3 && d4 && d5;
+  }).length;
+  const all6DaysCompletedCount = learners.filter((l) => {
+    const d1 = Boolean(l.completedDays?.[1] || (l.preAssessmentPassed?.[1] && l.postAssessmentPassed?.[1]));
+    const d2 = Boolean(l.completedDays?.[2] || (l.preAssessmentPassed?.[2] && l.postAssessmentPassed?.[2]));
+    const d3 = Boolean(l.completedDays?.[3] || (l.preAssessmentPassed?.[3] && l.postAssessmentPassed?.[3]));
+    const d4 = Boolean(l.completedDays?.[4] || (l.preAssessmentPassed?.[4] && l.postAssessmentPassed?.[4]));
+    const d5 = Boolean(l.completedDays?.[5] || (l.preAssessmentPassed?.[5] && l.postAssessmentPassed?.[5]));
+    const d6 = Boolean(l.completedDays?.[6] || (l.preAssessmentPassed?.[6] && l.postAssessmentPassed?.[6]));
+    return d1 && d2 && d3 && d4 && d5 && d6;
   }).length;
   const certifiedCount = learners.filter((l) => l.certificateId).length;
   const totalBadgesEarned = learners.reduce(
@@ -503,15 +558,18 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <option value="day3_complete">Day 3 Completed ({day3PostCompletedCount})</option>
               <option value="day4_complete">Day 4 Completed ({day4PostCompletedCount})</option>
               <option value="day5_complete">Day 5 Completed ({day5PostCompletedCount})</option>
+              <option value="day6_complete">Day 6 Completed ({day6PostCompletedCount})</option>
               <option value="both_days_complete">Days 1 & 2 Completed ({bothDaysCompletedCount})</option>
               <option value="all_3_days_complete">All 3 Days (1-3) Completed ({all3DaysCompletedCount})</option>
               <option value="all_4_days_complete">All 4 Days (1-4) Completed ({all4DaysCompletedCount})</option>
               <option value="all_5_days_complete">All 5 Days (1-5) Completed ({all5DaysCompletedCount})</option>
+              <option value="all_6_days_complete">All 6 Days (1-6) Completed ({all6DaysCompletedCount})</option>
               <option value="day1_pre">Day 1 Pre-Test Passed ({day1PreCompletedCount})</option>
               <option value="day2_pre">Day 2 Pre-Test Passed ({day2PreCompletedCount})</option>
               <option value="day3_pre">Day 3 Pre-Test Passed ({day3PreCompletedCount})</option>
               <option value="day4_pre">Day 4 Pre-Test Passed ({day4PreCompletedCount})</option>
               <option value="day5_pre">Day 5 Pre-Test Passed ({day5PreCompletedCount})</option>
+              <option value="day6_pre">Day 6 Pre-Test Passed ({day6PreCompletedCount})</option>
               <option value="certified">Certificate Awarded ({certifiedCount})</option>
             </select>
           </div>

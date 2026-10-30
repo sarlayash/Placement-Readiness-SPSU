@@ -111,6 +111,24 @@ export const DAY_3_MINI_PROJECT: MiniProject = {
       expectedOutput: 'Maximum Subarray Sum: -3 (Single element [-3]) | Correctly guarded against 0 fallback',
       explanation: 'Defensive initialization with nums[0] guarantees correct answer when all numbers are negative.',
     },
+    {
+      id: 'd3-scen-4',
+      name: 'Two-Pointer Target Squeezing vs Nested Pairs',
+      choice: 4,
+      description: 'Search for pair summing to target 32 in sorted array: [1, 3, 5, 8, 12, 19, 24, 31, 45, 52].',
+      sampleInputs: ['Array: 10 elements', 'Target: 32'],
+      expectedOutput: 'PAIR FOUND: 8 + 24 = 32 | Two-Pointer Ops: 7 (O(N)) | Nested Loops Ops: 45 (O(N^2))',
+      explanation: 'Directional squeezing eliminates suboptimal sub-problems in linear single-pass time.',
+    },
+    {
+      id: 'd3-scen-5',
+      name: 'The 10^8 Operations Placement Rule Verifier',
+      choice: 5,
+      description: 'Stress test compiler constraints for input N = 100,000. Compares O(N^2) TLE vs O(N log N) pass.',
+      sampleInputs: ['N = 100,000', 'Time Budget: 1.0 sec'],
+      expectedOutput: 'O(N^2) -> 10^10 ops (~100 sec, TLE FAILED) | O(N log N) -> 1.7 * 10^6 ops (0.018 sec, PASSED)',
+      explanation: 'Empirically confirms the 10^8 operations rule for Indian campus placement coding platforms.',
+    },
   ],
   codeByLanguage: {
     c: `/*

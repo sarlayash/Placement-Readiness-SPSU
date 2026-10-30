@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   MiniProject,
   SupportedLanguage,
@@ -42,6 +42,7 @@ export const MiniProjectWorkspace: React.FC<MiniProjectWorkspaceProps> = ({
 }) => {
   const [selectedLang, setSelectedLang] = useState<SupportedLanguage>('c');
   const [copied, setCopied] = useState<boolean>(false);
+  const [selectedScenarioIdx, setSelectedScenarioIdx] = useState<number>(0);
 
   // Interactive Simulator State
   const [simOperation, setSimOperation] = useState<number>(1);
@@ -51,16 +52,61 @@ export const MiniProjectWorkspace: React.FC<MiniProjectWorkspaceProps> = ({
   const [modB, setModB] = useState<string>('5');
   const [baseVal, setBaseVal] = useState<string>('2.0');
   const [expVal, setExpVal] = useState<string>('10');
-  const [simOutput, setSimOutput] = useState<string>(
-    `================================================================\n` +
-    `       EDUCATIONAL CALCULATOR — SINGLE HEADER (<stdio.h>)      \n` +
-    `================================================================\n` +
-    ` 1. Addition       2. Subtraction    3. Multiplication\n` +
-    ` 4. Division       5. Modulus        6. Power (Iterative, No math.h)\n` +
-    ` 7. Data Types     8. Exit\n` +
-    `================================================================\n` +
-    `Simulator ready. Select an operation and click "Execute Operation" to simulate verbatim C console I/O.`
-  );
+  const [simOutput, setSimOutput] = useState<string>('');
+
+  useEffect(() => {
+    setSelectedScenarioIdx(0);
+    if (miniProject.day === 1) {
+      setSimOutput(
+        `================================================================\n` +
+        `       EDUCATIONAL CALCULATOR — SINGLE HEADER (<stdio.h>)      \n` +
+        `================================================================\n` +
+        ` 1. Addition       2. Subtraction    3. Multiplication\n` +
+        ` 4. Division       5. Modulus        6. Power (Iterative, No math.h)\n` +
+        ` 7. Data Types     8. Exit\n` +
+        `================================================================\n` +
+        `Simulator ready. Select an operation and click "Execute Operation" to simulate verbatim C console I/O.`
+      );
+    } else {
+      setSimOutput(
+        `===================================================================\n` +
+        `   ${miniProject.title.toUpperCase()}\n` +
+        `   MODULE ${miniProject.day} CAPSTONE • SPSU PLACEMENT READINESS PROGRAM\n` +
+        `===================================================================\n` +
+        `Interactive Execution Sandbox ready. Click any scenario button below to simulate the execution trace in real time.`
+      );
+    }
+  }, [miniProject.id, miniProject.day, miniProject.title]);
+
+  const runScenarioSimulation = (scIdx: number) => {
+    setSelectedScenarioIdx(scIdx);
+    const sc = miniProject.interactiveScenarios[scIdx];
+    if (!sc) return;
+
+    let out = '';
+    out += `===================================================================\n`;
+    out += `   ${miniProject.title.toUpperCase()}\n`;
+    out += `   MODULE ${miniProject.day} CAPSTONE • SPSU PLACEMENT READINESS PROGRAM\n`;
+    out += `===================================================================\n\n`;
+    out += `[ACTIVE SCENARIO #${scIdx + 1}] ${sc.name}\n`;
+    out += `-------------------------------------------------------------------\n`;
+    out += `Description   : ${sc.description}\n`;
+    out += `Input Stream  : ${sc.sampleInputs.join(' ')}\n\n`;
+    out += `[SIMULATED EXECUTION TRACE (stdout)]\n`;
+    out += `${sc.expectedOutput}\n\n`;
+    out += `[VERIFIED ARCHITECTURAL CONCEPT]\n`;
+    out += `✔ ${sc.explanation}\n`;
+    out += `-------------------------------------------------------------------\n`;
+    out += `STATUS: EXECUTION VERIFIED | EXIT CODE: 0 (PASSED)\n`;
+
+    setSimOutput(out);
+    confetti({
+      particleCount: 40,
+      spread: 60,
+      origin: { y: 0.7 },
+      colors: ['#0A192F', '#1E3A8A', '#93C5FD', '#10B981'],
+    });
+  };
 
   const handleCopyCode = () => {
     const code = miniProject.codeByLanguage[selectedLang];
@@ -241,13 +287,13 @@ export const MiniProjectWorkspace: React.FC<MiniProjectWorkspaceProps> = ({
           <div className="flex flex-wrap items-center gap-2">
             <span className="px-3 py-1 rounded-full bg-amber-400 text-[#0A192F] font-mono text-xs font-black tracking-wider uppercase flex items-center gap-1.5 shadow-sm">
               <Sparkles className="w-3.5 h-3.5" />
-              DAY 1 CAPSTONE MINI-PROJECT
+              DAY {miniProject.day} CAPSTONE MINI-PROJECT
             </span>
             <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-[#BFDBFE] font-mono text-xs font-bold">
-              Constraint: Only #include &lt;stdio.h&gt;
+              Module {miniProject.day} • {miniProject.subtitle}
             </span>
             <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-400/40 font-mono text-xs font-bold">
-              10 Fundamental Data Types
+              {miniProject.interactiveScenarios.length} Interactive Scenarios
             </span>
           </div>
 
@@ -265,30 +311,30 @@ export const MiniProjectWorkspace: React.FC<MiniProjectWorkspaceProps> = ({
             <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm space-y-1">
               <div className="text-[10px] font-mono uppercase text-amber-300 font-bold flex items-center gap-1.5">
                 <ShieldCheck className="w-3.5 h-3.5" />
-                Zero External Headers
+                Architectural Invariant
               </div>
-              <div className="text-xs text-slate-200">
-                Only <code className="text-amber-200 font-mono">&lt;stdio.h&gt;</code>. No <code className="text-slate-300 font-mono">&lt;math.h&gt;</code>, <code className="text-slate-300 font-mono">&lt;stdlib.h&gt;</code>, or <code className="text-slate-300 font-mono">&lt;string.h&gt;</code>.
+              <div className="text-xs text-slate-200 line-clamp-2">
+                {miniProject.conceptsCovered.constraints[0] || 'Strict System Invariants'}
               </div>
             </div>
 
             <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm space-y-1">
               <div className="text-[10px] font-mono uppercase text-[#93C5FD] font-bold flex items-center gap-1.5">
                 <Layers className="w-3.5 h-3.5" />
-                10 Data Types
+                Core Data Types & Structs
               </div>
-              <div className="text-xs text-slate-200">
-                char, short, int, unsigned int, long, long long, float, double, long double, _Bool.
+              <div className="text-xs text-slate-200 line-clamp-2">
+                {miniProject.conceptsCovered.dataTypes.slice(0, 3).join(', ')}
               </div>
             </div>
 
             <div className="p-3.5 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-sm space-y-1">
               <div className="text-[10px] font-mono uppercase text-emerald-300 font-bold flex items-center gap-1.5">
                 <Cpu className="w-3.5 h-3.5" />
-                Control Flow & Loops
+                Control Logic & Invariants
               </div>
-              <div className="text-xs text-slate-200">
-                if-else zero guards, switch-case dispatch, ternary, for loop power, while stream discard, do-while menu.
+              <div className="text-xs text-slate-200 line-clamp-2">
+                {miniProject.conceptsCovered.conditionals[0] || 'Domain Decision Logic'}
               </div>
             </div>
 
@@ -297,8 +343,8 @@ export const MiniProjectWorkspace: React.FC<MiniProjectWorkspaceProps> = ({
                 <Terminal className="w-3.5 h-3.5" />
                 Complexity Profile
               </div>
-              <div className="text-xs text-slate-200">
-                Ops 1-5, 7: <span className="font-mono text-purple-200">O(1)</span> | Power: <span className="font-mono text-purple-200">O(|exp|)</span> | Memory: <span className="font-mono text-purple-200">O(1)</span> stack.
+              <div className="text-xs text-slate-200 line-clamp-2">
+                Basic: <span className="font-mono text-purple-200">{miniProject.complexity.basicOperations}</span> | Space: <span className="font-mono text-purple-200">{miniProject.complexity.auxiliarySpace}</span>
               </div>
             </div>
           </div>
@@ -314,234 +360,330 @@ export const MiniProjectWorkspace: React.FC<MiniProjectWorkspaceProps> = ({
               Interactive Execution Sandbox
             </span>
             <h2 className="text-xl sm:text-2xl font-black text-[#0A192F]">
-              Live Educational Calculator Simulator
+              {miniProject.day === 1 ? 'Live Educational Calculator Simulator' : `Live ${miniProject.title} Simulator`}
             </h2>
             <p className="text-xs sm:text-sm text-slate-600">
-              Test menu operations, observe division-by-zero guards, test manual iterative power calculation without <code className="font-mono text-[#0A192F]">pow()</code>, and inspect the 10 data types.
+              {miniProject.day === 1
+                ? 'Test menu operations, observe division-by-zero guards, test manual iterative power calculation without pow(), and inspect the 10 data types.'
+                : miniProject.subtitle}
             </p>
           </div>
 
           <div className="flex items-center gap-2">
-            <button
-              type="button"
-              onClick={() => runSimulation(7)}
-              className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 text-xs font-black transition-colors cursor-pointer"
-            >
-              <Sparkles className="w-3.5 h-3.5 text-amber-600" />
-              <span>Inspect All 10 Data Types</span>
-            </button>
+            {miniProject.day === 1 ? (
+              <button
+                type="button"
+                onClick={() => runSimulation(7)}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 text-xs font-black transition-colors cursor-pointer"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                <span>Inspect All 10 Data Types</span>
+              </button>
+            ) : (
+              <button
+                type="button"
+                onClick={() => runScenarioSimulation(selectedScenarioIdx)}
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-300 text-amber-900 text-xs font-black transition-colors cursor-pointer"
+              >
+                <Sparkles className="w-3.5 h-3.5 text-amber-600" />
+                <span>Run Scenario #{selectedScenarioIdx + 1}</span>
+              </button>
+            )}
           </div>
         </div>
 
-        {/* Operation Selection Bar */}
-        <div className="space-y-2">
-          <label className="text-xs font-mono font-extrabold text-[#0A192F] uppercase">
-            Select Calculator Operation:
-          </label>
-          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
-            {[
-              { id: 1, label: '1. Addition', desc: 'a + b' },
-              { id: 2, label: '2. Subtraction', desc: 'a - b' },
-              { id: 3, label: '3. Multiplication', desc: 'a * b' },
-              { id: 4, label: '4. Division', desc: 'a / b (Guarded)' },
-              { id: 5, label: '5. Modulus', desc: 'a % b (Guarded)' },
-              { id: 6, label: '6. Power', desc: 'base ^ exp (No math.h)' },
-              { id: 7, label: '7. Data Types', desc: 'All 10 Types' },
-              { id: 8, label: '8. Exit', desc: 'Terminate' },
-            ].map((op) => (
-              <button
-                key={op.id}
-                type="button"
-                onClick={() => setSimOperation(op.id)}
-                className={`p-2.5 rounded-xl border-2 text-left transition-all cursor-pointer ${
-                  simOperation === op.id
-                    ? 'bg-[#0A192F] border-[#0A192F] text-white shadow-sm'
-                    : 'bg-white border-slate-200 hover:border-[#0A192F] text-[#0A192F]'
-                }`}
-              >
-                <div className="text-xs font-bold leading-tight">{op.label}</div>
-                <div className={`text-[10px] truncate ${simOperation === op.id ? 'text-[#BFDBFE]' : 'text-slate-500'}`}>
-                  {op.desc}
-                </div>
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Dynamic Parameter Inputs based on operation */}
-        <div className="p-4 sm:p-5 rounded-2xl bg-[#F8FAFC] border border-slate-200 space-y-4">
-          <div className="flex items-center justify-between gap-2">
-            <span className="text-xs font-mono font-bold text-[#1E3A8A] uppercase">
-              Operation Inputs (Simulated Console Stdin)
-            </span>
-            {/* Quick Test Presets */}
-            <div className="flex items-center gap-1.5 flex-wrap text-[11px]">
-              <span className="text-slate-500 font-medium">Quick Presets:</span>
-              <button
-                type="button"
-                onClick={() => {
-                  setSimOperation(4);
-                  setNum1('42.0');
-                  setNum2('0.0');
-                  runSimulation(4, { n1: '42.0', n2: '0.0' });
-                }}
-                className="px-2 py-0.5 rounded bg-white border border-slate-300 hover:border-[#0A192F] text-[#0A192F] font-mono cursor-pointer"
-              >
-                Zero Division Guard
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setSimOperation(5);
-                  setModA('100');
-                  setModB('0');
-                  runSimulation(5, { ma: '100', mb: '0' });
-                }}
-                className="px-2 py-0.5 rounded bg-white border border-slate-300 hover:border-[#0A192F] text-[#0A192F] font-mono cursor-pointer"
-              >
-                Zero Modulus Guard
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setSimOperation(6);
-                  setBaseVal('2.0');
-                  setExpVal('10');
-                  runSimulation(6, { b: '2.0', e: '10' });
-                }}
-                className="px-2 py-0.5 rounded bg-white border border-slate-300 hover:border-[#0A192F] text-[#0A192F] font-mono cursor-pointer"
-              >
-                Power 2^10
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setSimOperation(6);
-                  setBaseVal('2.0');
-                  setExpVal('-3');
-                  runSimulation(6, { b: '2.0', e: '-3' });
-                }}
-                className="px-2 py-0.5 rounded bg-white border border-slate-300 hover:border-[#0A192F] text-[#0A192F] font-mono cursor-pointer"
-              >
-                Power 2^-3 (Negative)
-              </button>
+        {miniProject.day === 1 ? (
+          <>
+            {/* Operation Selection Bar */}
+            <div className="space-y-2">
+              <label className="text-xs font-mono font-extrabold text-[#0A192F] uppercase">
+                Select Calculator Operation:
+              </label>
+              <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2">
+                {[
+                  { id: 1, label: '1. Addition', desc: 'a + b' },
+                  { id: 2, label: '2. Subtraction', desc: 'a - b' },
+                  { id: 3, label: '3. Multiplication', desc: 'a * b' },
+                  { id: 4, label: '4. Division', desc: 'a / b (Guarded)' },
+                  { id: 5, label: '5. Modulus', desc: 'a % b (Guarded)' },
+                  { id: 6, label: '6. Power', desc: 'base ^ exp (No math.h)' },
+                  { id: 7, label: '7. Data Types', desc: 'All 10 Types' },
+                  { id: 8, label: '8. Exit', desc: 'Terminate' },
+                ].map((op) => (
+                  <button
+                    key={op.id}
+                    type="button"
+                    onClick={() => setSimOperation(op.id)}
+                    className={`p-2.5 rounded-xl border-2 text-left transition-all cursor-pointer ${
+                      simOperation === op.id
+                        ? 'bg-[#0A192F] border-[#0A192F] text-white shadow-sm'
+                        : 'bg-white border-slate-200 hover:border-[#0A192F] text-[#0A192F]'
+                    }`}
+                  >
+                    <div className="text-xs font-bold leading-tight">{op.label}</div>
+                    <div className={`text-[10px] truncate ${simOperation === op.id ? 'text-[#BFDBFE]' : 'text-slate-500'}`}>
+                      {op.desc}
+                    </div>
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {(simOperation >= 1 && simOperation <= 4) && (
-              <>
-                <div>
-                  <label className="block text-xs font-mono font-bold text-slate-700 mb-1">
-                    First Operand (double):
-                  </label>
-                  <input
-                    type="number"
-                    step="any"
-                    value={num1}
-                    onChange={(e) => setNum1(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 font-mono text-sm bg-white text-[#0A192F] focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
-                    placeholder="e.g. 15.5"
-                  />
+            {/* Dynamic Parameter Inputs based on operation */}
+            <div className="p-4 sm:p-5 rounded-2xl bg-[#F8FAFC] border border-slate-200 space-y-4">
+              <div className="flex items-center justify-between gap-2">
+                <span className="text-xs font-mono font-bold text-[#1E3A8A] uppercase">
+                  Operation Inputs (Simulated Console Stdin)
+                </span>
+                {/* Quick Test Presets */}
+                <div className="flex items-center gap-1.5 flex-wrap text-[11px]">
+                  <span className="text-slate-500 font-medium">Quick Presets:</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSimOperation(4);
+                      setNum1('42.0');
+                      setNum2('0.0');
+                      runSimulation(4, { n1: '42.0', n2: '0.0' });
+                    }}
+                    className="px-2 py-0.5 rounded bg-white border border-slate-300 hover:border-[#0A192F] text-[#0A192F] font-mono cursor-pointer"
+                  >
+                    Zero Division Guard
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSimOperation(5);
+                      setModA('100');
+                      setModB('0');
+                      runSimulation(5, { ma: '100', mb: '0' });
+                    }}
+                    className="px-2 py-0.5 rounded bg-white border border-slate-300 hover:border-[#0A192F] text-[#0A192F] font-mono cursor-pointer"
+                  >
+                    Zero Modulus Guard
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSimOperation(6);
+                      setBaseVal('2.0');
+                      setExpVal('10');
+                      runSimulation(6, { b: '2.0', e: '10' });
+                    }}
+                    className="px-2 py-0.5 rounded bg-white border border-slate-300 hover:border-[#0A192F] text-[#0A192F] font-mono cursor-pointer"
+                  >
+                    Power 2^10
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      setSimOperation(6);
+                      setBaseVal('2.0');
+                      setExpVal('-3');
+                      runSimulation(6, { b: '2.0', e: '-3' });
+                    }}
+                    className="px-2 py-0.5 rounded bg-white border border-slate-300 hover:border-[#0A192F] text-[#0A192F] font-mono cursor-pointer"
+                  >
+                    Power 2^-3 (Negative)
+                  </button>
                 </div>
-                <div>
-                  <label className="block text-xs font-mono font-bold text-slate-700 mb-1">
-                    Second Operand (double):
-                  </label>
-                  <input
-                    type="number"
-                    step="any"
-                    value={num2}
-                    onChange={(e) => setNum2(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 font-mono text-sm bg-white text-[#0A192F] focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
-                    placeholder="e.g. 3.0"
-                  />
-                </div>
-              </>
-            )}
+              </div>
 
-            {simOperation === 5 && (
-              <>
-                <div>
-                  <label className="block text-xs font-mono font-bold text-slate-700 mb-1">
-                    Numerator a (long long):
-                  </label>
-                  <input
-                    type="number"
-                    step="1"
-                    value={modA}
-                    onChange={(e) => setModA(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 font-mono text-sm bg-white text-[#0A192F] focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
-                    placeholder="e.g. 47"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-mono font-bold text-slate-700 mb-1">
-                    Denominator b (long long):
-                  </label>
-                  <input
-                    type="number"
-                    step="1"
-                    value={modB}
-                    onChange={(e) => setModB(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 font-mono text-sm bg-white text-[#0A192F] focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
-                    placeholder="e.g. 5"
-                  />
-                </div>
-              </>
-            )}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                {(simOperation >= 1 && simOperation <= 4) && (
+                  <>
+                    <div>
+                      <label className="block text-xs font-mono font-bold text-slate-700 mb-1">
+                        First Operand (double):
+                      </label>
+                      <input
+                        type="number"
+                        step="any"
+                        value={num1}
+                        onChange={(e) => setNum1(e.target.value)}
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-300 font-mono text-sm bg-white text-[#0A192F] focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
+                        placeholder="e.g. 15.5"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono font-bold text-slate-700 mb-1">
+                        Second Operand (double):
+                      </label>
+                      <input
+                        type="number"
+                        step="any"
+                        value={num2}
+                        onChange={(e) => setNum2(e.target.value)}
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-300 font-mono text-sm bg-white text-[#0A192F] focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
+                        placeholder="e.g. 3.0"
+                      />
+                    </div>
+                  </>
+                )}
 
-            {simOperation === 6 && (
-              <>
-                <div>
-                  <label className="block text-xs font-mono font-bold text-slate-700 mb-1">
-                    Base (double):
-                  </label>
-                  <input
-                    type="number"
-                    step="any"
-                    value={baseVal}
-                    onChange={(e) => setBaseVal(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 font-mono text-sm bg-white text-[#0A192F] focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
-                    placeholder="e.g. 2.0"
-                  />
-                </div>
-                <div>
-                  <label className="block text-xs font-mono font-bold text-slate-700 mb-1">
-                    Exponent (integer):
-                  </label>
-                  <input
-                    type="number"
-                    step="1"
-                    value={expVal}
-                    onChange={(e) => setExpVal(e.target.value)}
-                    className="w-full px-3.5 py-2 rounded-xl border border-slate-300 font-mono text-sm bg-white text-[#0A192F] focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
-                    placeholder="e.g. 10 or -3"
-                  />
-                </div>
-              </>
-            )}
+                {simOperation === 5 && (
+                  <>
+                    <div>
+                      <label className="block text-xs font-mono font-bold text-slate-700 mb-1">
+                        Numerator a (long long):
+                      </label>
+                      <input
+                        type="number"
+                        step="1"
+                        value={modA}
+                        onChange={(e) => setModA(e.target.value)}
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-300 font-mono text-sm bg-white text-[#0A192F] focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
+                        placeholder="e.g. 47"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono font-bold text-slate-700 mb-1">
+                        Denominator b (long long):
+                      </label>
+                      <input
+                        type="number"
+                        step="1"
+                        value={modB}
+                        onChange={(e) => setModB(e.target.value)}
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-300 font-mono text-sm bg-white text-[#0A192F] focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
+                        placeholder="e.g. 5"
+                      />
+                    </div>
+                  </>
+                )}
 
-            {(simOperation === 7 || simOperation === 8) && (
-              <div className="sm:col-span-2 text-xs text-slate-600 bg-white p-3 rounded-xl border border-slate-200">
-                {simOperation === 7
-                  ? 'No input arguments needed. Operation 7 inspects and formats all 10 fundamental C data types with sizeof() and exact printf format specifiers.'
-                  : 'Terminates the calculator console loop.'}
+                {simOperation === 6 && (
+                  <>
+                    <div>
+                      <label className="block text-xs font-mono font-bold text-slate-700 mb-1">
+                        Base (double):
+                      </label>
+                      <input
+                        type="number"
+                        step="any"
+                        value={baseVal}
+                        onChange={(e) => setBaseVal(e.target.value)}
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-300 font-mono text-sm bg-white text-[#0A192F] focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
+                        placeholder="e.g. 2.0"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-xs font-mono font-bold text-slate-700 mb-1">
+                        Exponent (integer):
+                      </label>
+                      <input
+                        type="number"
+                        step="1"
+                        value={expVal}
+                        onChange={(e) => setExpVal(e.target.value)}
+                        className="w-full px-3.5 py-2 rounded-xl border border-slate-300 font-mono text-sm bg-white text-[#0A192F] focus:outline-none focus:ring-2 focus:ring-[#1E3A8A]"
+                        placeholder="e.g. 10 or -3"
+                      />
+                    </div>
+                  </>
+                )}
+
+                {(simOperation === 7 || simOperation === 8) && (
+                  <div className="sm:col-span-2 text-xs text-slate-600 bg-white p-3 rounded-xl border border-slate-200">
+                    {simOperation === 7
+                      ? 'No input arguments needed. Operation 7 inspects and formats all 10 fundamental C data types with sizeof() and exact printf format specifiers.'
+                      : 'Terminates the calculator console loop.'}
+                  </div>
+                )}
+              </div>
+
+              <div className="flex items-center justify-end gap-3 pt-2">
+                <button
+                  type="button"
+                  onClick={() => runSimulation(simOperation)}
+                  className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-black text-xs transition-all cursor-pointer shadow-md hover:scale-[1.02]"
+                >
+                  <Play className="w-4 h-4 fill-current" />
+                  <span>Execute Operation {simOperation}</span>
+                </button>
+              </div>
+            </div>
+          </>
+        ) : (
+          <>
+            {/* Scenarios Selection for Days 2 to 5 */}
+            <div className="space-y-2">
+              <label className="text-xs font-mono font-extrabold text-[#0A192F] uppercase">
+                Select Interactive Test Scenario:
+              </label>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+                {miniProject.interactiveScenarios.map((sc, idx) => (
+                  <button
+                    key={sc.id}
+                    type="button"
+                    onClick={() => runScenarioSimulation(idx)}
+                    className={`p-3 rounded-xl border-2 text-left transition-all cursor-pointer ${
+                      selectedScenarioIdx === idx
+                        ? 'bg-[#0A192F] border-[#0A192F] text-white shadow-sm'
+                        : 'bg-white border-slate-200 hover:border-[#0A192F] text-[#0A192F]'
+                    }`}
+                  >
+                    <div className="flex items-center justify-between gap-1 mb-1">
+                      <span className={`text-[10px] font-mono font-bold px-2 py-0.5 rounded-full ${
+                        selectedScenarioIdx === idx ? 'bg-amber-400 text-[#0A192F]' : 'bg-slate-100 text-slate-700'
+                      }`}>
+                        Scenario #{idx + 1}
+                      </span>
+                      <Play className={`w-3 h-3 ${selectedScenarioIdx === idx ? 'text-amber-400 fill-current' : 'text-slate-400'}`} />
+                    </div>
+                    <div className="text-xs font-bold leading-tight line-clamp-1">{sc.name}</div>
+                    <div className={`text-[10px] mt-1 line-clamp-2 ${selectedScenarioIdx === idx ? 'text-[#BFDBFE]' : 'text-slate-500'}`}>
+                      {sc.description}
+                    </div>
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Selected Scenario Preview Box */}
+            {miniProject.interactiveScenarios[selectedScenarioIdx] && (
+              <div className="p-4 sm:p-5 rounded-2xl bg-[#F8FAFC] border border-slate-200 space-y-3">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 pb-3">
+                  <div>
+                    <span className="text-[10px] font-mono uppercase text-[#1E3A8A] font-extrabold">
+                      Active Target Scenario
+                    </span>
+                    <h4 className="text-sm font-bold text-[#0A192F]">
+                      {miniProject.interactiveScenarios[selectedScenarioIdx].name}
+                    </h4>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => runScenarioSimulation(selectedScenarioIdx)}
+                    className="inline-flex items-center gap-2 px-5 py-2 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-black text-xs transition-all cursor-pointer shadow-md hover:scale-[1.02] shrink-0"
+                  >
+                    <Play className="w-3.5 h-3.5 fill-current" />
+                    <span>Run Scenario #{selectedScenarioIdx + 1}</span>
+                  </button>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
+                  <div className="p-3 rounded-xl bg-white border border-slate-200">
+                    <span className="text-[10px] font-mono font-bold uppercase text-slate-500 block mb-1">
+                      Simulated Input Stream
+                    </span>
+                    <code className="text-xs font-mono text-[#1E3A8A] font-bold">
+                      {miniProject.interactiveScenarios[selectedScenarioIdx].sampleInputs.join(' ')}
+                    </code>
+                  </div>
+                  <div className="p-3 rounded-xl bg-white border border-slate-200">
+                    <span className="text-[10px] font-mono font-bold uppercase text-slate-500 block mb-1">
+                      Pedagogical Concept & Invariant
+                    </span>
+                    <p className="text-xs text-slate-700">
+                      {miniProject.interactiveScenarios[selectedScenarioIdx].explanation}
+                    </p>
+                  </div>
+                </div>
               </div>
             )}
-          </div>
-
-          <div className="flex items-center justify-end gap-3 pt-2">
-            <button
-              type="button"
-              onClick={() => runSimulation(simOperation)}
-              className="inline-flex items-center gap-2 px-6 py-2.5 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-black text-xs transition-all cursor-pointer shadow-md hover:scale-[1.02]"
-            >
-              <Play className="w-4 h-4 fill-current" />
-              <span>Execute Operation {simOperation}</span>
-            </button>
-          </div>
-        </div>
+          </>
+        )}
 
         {/* Simulated Console Screen */}
         <div className="space-y-2">
@@ -620,12 +762,20 @@ export const MiniProjectWorkspace: React.FC<MiniProjectWorkspaceProps> = ({
           <div className="px-5 py-3 bg-[#112240] border-b border-[#1E3A8A] flex items-center justify-between text-xs">
             <span className="font-bold text-[#93C5FD]">
               {selectedLang === 'c'
-                ? 'main.c — C17 Strict Single Header (<stdio.h>)'
+                ? miniProject.day === 1
+                  ? 'main.c — C17 Strict Single Header (<stdio.h>)'
+                  : `day${miniProject.day}_solution.c — C17 Standard`
                 : selectedLang === 'cpp'
-                ? 'main.cpp — C++20 Stream I/O'
+                ? miniProject.day === 1
+                  ? 'main.cpp — C++20 Stream I/O'
+                  : `Day${miniProject.day}Solution.cpp — C++20 Standard`
                 : selectedLang === 'java'
-                ? 'Day1CalculatorMiniProject.java — OpenJDK 21'
-                : 'educational_calculator.py — Python 3.12'}
+                ? miniProject.day === 1
+                  ? 'Day1CalculatorMiniProject.java — OpenJDK 21'
+                  : `Day${miniProject.day}App.java — OpenJDK 21`
+                : miniProject.day === 1
+                ? 'educational_calculator.py — Python 3.12'
+                : `day${miniProject.day}_solution.py — Python 3.12`}
             </span>
             <span className="text-[11px] text-[#BFDBFE]">
               {miniProject.codeByLanguage[selectedLang].split('\n').length} lines
@@ -648,7 +798,7 @@ export const MiniProjectWorkspace: React.FC<MiniProjectWorkspaceProps> = ({
               Edge Cases & Verification
             </span>
             <h2 className="text-xl sm:text-2xl font-black text-[#0A192F]">
-              6 Core Verification Test Scenarios
+              {miniProject.interactiveScenarios.length} Core Verification Test Scenarios
             </h2>
           </div>
           <span className="text-xs font-mono px-3 py-1 rounded-lg bg-emerald-50 text-emerald-800 border border-emerald-300 font-bold">
@@ -682,32 +832,36 @@ export const MiniProjectWorkspace: React.FC<MiniProjectWorkspaceProps> = ({
                     <button
                       type="button"
                       onClick={() => {
-                        if (tc.choice === 1 || tc.choice === 0) {
-                          setSimOperation(1);
-                          setNum1('12.5');
-                          setNum2('4.5');
-                          runSimulation(1, { n1: '12.5', n2: '4.5' });
-                        } else if (tc.choice === 4) {
-                          setSimOperation(4);
-                          setNum1('25.0');
-                          setNum2('0.0');
-                          runSimulation(4, { n1: '25.0', n2: '0.0' });
-                        } else if (tc.choice === 5) {
-                          setSimOperation(5);
-                          setModA('100');
-                          setModB('0');
-                          runSimulation(5, { ma: '100', mb: '0' });
-                        } else if (tc.choice === 6) {
-                          setSimOperation(6);
-                          setBaseVal('2.0');
-                          setExpVal('10');
-                          runSimulation(6, { b: '2.0', e: '10' });
-                        } else if (tc.choice === 7) {
-                          setSimOperation(7);
-                          runSimulation(7);
+                        if (miniProject.day === 1) {
+                          if (tc.choice === 1 || tc.choice === 0) {
+                            setSimOperation(1);
+                            setNum1('12.5');
+                            setNum2('4.5');
+                            runSimulation(1, { n1: '12.5', n2: '4.5' });
+                          } else if (tc.choice === 4) {
+                            setSimOperation(4);
+                            setNum1('25.0');
+                            setNum2('0.0');
+                            runSimulation(4, { n1: '25.0', n2: '0.0' });
+                          } else if (tc.choice === 5) {
+                            setSimOperation(5);
+                            setModA('100');
+                            setModB('0');
+                            runSimulation(5, { ma: '100', mb: '0' });
+                          } else if (tc.choice === 6) {
+                            setSimOperation(6);
+                            setBaseVal('2.0');
+                            setExpVal('10');
+                            runSimulation(6, { b: '2.0', e: '10' });
+                          } else if (tc.choice === 7) {
+                            setSimOperation(7);
+                            runSimulation(7);
+                          } else {
+                            setSimOperation(tc.choice);
+                            runSimulation(tc.choice);
+                          }
                         } else {
-                          setSimOperation(tc.choice);
-                          runSimulation(tc.choice);
+                          runScenarioSimulation(idx);
                         }
                       }}
                       className="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-bold text-[11px] cursor-pointer transition-colors shadow-xs"
@@ -757,110 +911,354 @@ export const MiniProjectWorkspace: React.FC<MiniProjectWorkspaceProps> = ({
                   Core Architectural Rule:
                 </span>
                 <div className="font-medium">
-                  {note.number === 1
-                    ? 'Only <stdio.h> allowed — manual stream clearing with getchar() prevents runaway input loop.'
+                  {miniProject.day === 1
+                    ? note.number === 1
+                      ? 'Only <stdio.h> allowed — manual stream clearing with getchar() prevents runaway input loop.'
+                      : note.number === 2
+                      ? 'Accumulates product iteratively without powl(); handles negative exponents via reciprocal division.'
+                      : note.number === 3
+                      ? 'Uses correct conversion specifiers (%c, %hd, %d, %u, %ld, %lld, %f, %lf, %Lf, %d) to prevent stack misalignment.'
+                      : note.number === 4
+                      ? 'Protects against zero division, zero modulus, and non-integer input mismatch.'
+                      : 'All arithmetic operations run in O(1) time; iterative exponentiation runs in O(|exp|) time.'
+                    : miniProject.day === 2
+                    ? note.number === 1
+                      ? 'Dual-Heap guarantees O(1) top access with O(log N) balance step across bid/ask boundaries.'
+                      : note.number === 2
+                      ? 'Sliding window keeps exactly K entries in amortized O(1) time per price tick update.'
+                      : note.number === 3
+                      ? 'Monotonic stack preserves order invariant; each element is pushed and popped at most once O(N).'
+                      : note.number === 4
+                      ? 'Graph BFS guarantees shortest path hop count in unweighted topology networks O(V + E).'
+                      : '0/1 Knapsack dynamic programming guarantees optimal multi-asset fee yields in O(N*W).'
+                    : miniProject.day === 3
+                    ? note.number === 1
+                      ? 'Binary search on monotonic answer space reduces search space from O(N) to O(log(Max-Min)).'
+                      : note.number === 2
+                      ? 'Kadane dynamic programming with all-negative array guard preserves optimal subarray invariant.'
+                      : note.number === 3
+                      ? 'Two-pointer inward squeeze runs in O(N) linear time on sorted sequences without auxiliary space.'
+                      : note.number === 4
+                      ? '10^8 Operations rule strictly dictates algorithmic time complexity budget for 1.0s CPU limits.'
+                      : 'Benchmarking compares real execution wall-clock time against asymptotic theoretical bounds.'
+                    : miniProject.day === 4
+                    ? note.number === 1
+                      ? 'Foreign keys enforce referential integrity across normalized schemas with CASCADE / RESTRICT guards.'
+                      : note.number === 2
+                      ? 'ACID Write-Ahead Logging (WAL) and atomic rollback prevent inconsistent state upon transaction abort.'
+                      : note.number === 3
+                      ? 'Relational hash joins probe O(N+M) avoiding expensive O(N*M) nested loop Cartesian products.'
+                      : note.number === 4
+                      ? 'Analytical window functions like DENSE_RANK() compute rankings across partitions without collapsing row granularity.'
+                      : 'Integrates patient demographics, clinical notes, and billing history into unified audit logs.'
+                    : note.number === 1
+                    ? 'Single Responsibility and Open/Closed principles ensure payment gateways can be extended without touching core checkout.'
                     : note.number === 2
-                    ? 'Accumulates product iteratively without powl(); handles negative exponents via reciprocal division.'
+                    ? 'Strategy pattern decouples dynamic surge pricing algorithms from vehicle dispatch controllers.'
                     : note.number === 3
-                    ? 'Uses correct conversion specifiers (%c, %hd, %d, %u, %ld, %lld, %f, %lf, %Lf, %d) to prevent stack misalignment.'
+                    ? 'Liskov Substitution Principle ensures Electric and Luxury cabs can substitute standard vehicles without side effects.'
                     : note.number === 4
-                    ? 'Protects against zero division, zero modulus, and non-integer input mismatch.'
-                    : 'All arithmetic operations run in O(1) time; iterative exponentiation runs in O(|exp|) time.'}
+                    ? 'Dependency Inversion Principle allows mock payment service injection for 100% deterministic unit testing.'
+                    : 'Design patterns and encapsulation guarantee strict audit invariants across ride lifecycles.'}
                 </div>
               </div>
             </div>
           ))}
         </div>
 
-        {/* 10 Data Types Master Reference Card */}
+        {/* Day-Aware Master Architectural Reference Card */}
         <div className="p-6 rounded-2xl bg-[#0A192F] text-white space-y-4">
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
             <div>
               <span className="text-[10px] font-mono uppercase text-amber-300 font-bold">
-                C Standard Library Memory Model
+                {miniProject.day === 1
+                  ? 'C Standard Library Memory Model'
+                  : miniProject.day === 2
+                  ? 'Data Structure Complexity & Space-Time Invariants'
+                  : miniProject.day === 3
+                  ? 'Placement Coding Complexity Bounds & 10^8 Operations Rule'
+                  : miniProject.day === 4
+                  ? 'Relational DBMS & SQL Execution Engine Reference'
+                  : 'SOLID Principles & Gang-of-Four Design Patterns Reference'}
               </span>
               <h3 className="text-lg font-black text-white">
-                10 Fundamental C Data Types & Format Specifiers Reference
+                {miniProject.day === 1
+                  ? '10 Fundamental C Data Types & Format Specifiers Reference'
+                  : miniProject.day === 2
+                  ? 'High-Frequency Order Engine Algorithmic Complexity Table'
+                  : miniProject.day === 3
+                  ? 'Company Coding Time Complexity Benchmark & Operations Table'
+                  : miniProject.day === 4
+                  ? 'Healthcare RDBMS Schema, ACID & Query Optimization Reference'
+                  : 'Enterprise OOP Architecture, Design Patterns & Invariants Reference'}
               </h3>
             </div>
             <span className="text-xs font-mono text-[#BFDBFE]">
-              C99 / C11 / C17 Standard
+              {miniProject.day === 1
+                ? 'C99 / C11 / C17 Standard'
+                : miniProject.day === 2
+                ? 'High-Performance Algorithmic Trading'
+                : miniProject.day === 3
+                ? 'FAANG / Tier-1 Placement Benchmark'
+                : miniProject.day === 4
+                ? 'Enterprise SQL & Database Internals'
+                : 'Production Enterprise Software Architecture'}
             </span>
           </div>
 
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs border-collapse">
-              <thead>
-                <tr className="border-b border-[#1E3A8A] text-[#93C5FD] font-mono uppercase text-[10px]">
-                  <th className="py-2 px-3">Data Type</th>
-                  <th className="py-2 px-3">Format Specifier</th>
-                  <th className="py-2 px-3">Typical Size (bytes)</th>
-                  <th className="py-2 px-3">Value Range & Characteristics</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/10 font-mono">
-                <tr>
-                  <td className="py-2 px-3 text-amber-300 font-bold">char</td>
-                  <td className="py-2 px-3">%c</td>
-                  <td className="py-2 px-3">1</td>
-                  <td className="py-2 px-3 font-sans text-slate-300">-128 to 127 or 0 to 255 (Single ASCII character)</td>
-                </tr>
-                <tr>
-                  <td className="py-2 px-3 text-amber-300 font-bold">short</td>
-                  <td className="py-2 px-3">%hd</td>
-                  <td className="py-2 px-3">2</td>
-                  <td className="py-2 px-3 font-sans text-slate-300">-32,768 to 32,767</td>
-                </tr>
-                <tr>
-                  <td className="py-2 px-3 text-amber-300 font-bold">int</td>
-                  <td className="py-2 px-3">%d</td>
-                  <td className="py-2 px-3">4</td>
-                  <td className="py-2 px-3 font-sans text-slate-300">-2,147,483,648 to 2,147,483,647 (Standard signed int)</td>
-                </tr>
-                <tr>
-                  <td className="py-2 px-3 text-amber-300 font-bold">unsigned int</td>
-                  <td className="py-2 px-3">%u</td>
-                  <td className="py-2 px-3">4</td>
-                  <td className="py-2 px-3 font-sans text-slate-300">0 to 4,294,967,295 (Non-negative)</td>
-                </tr>
-                <tr>
-                  <td className="py-2 px-3 text-amber-300 font-bold">long</td>
-                  <td className="py-2 px-3">%ld</td>
-                  <td className="py-2 px-3">4 or 8</td>
-                  <td className="py-2 px-3 font-sans text-slate-300">At least 32-bit (Typically 64-bit on LP64 Linux/macOS)</td>
-                </tr>
-                <tr>
-                  <td className="py-2 px-3 text-amber-300 font-bold">long long</td>
-                  <td className="py-2 px-3">%lld</td>
-                  <td className="py-2 px-3">8</td>
-                  <td className="py-2 px-3 font-sans text-slate-300">-9.22 * 10^18 to +9.22 * 10^18 (Guaranteed &gt;= 64-bit)</td>
-                </tr>
-                <tr>
-                  <td className="py-2 px-3 text-amber-300 font-bold">float</td>
-                  <td className="py-2 px-3">%f</td>
-                  <td className="py-2 px-3">4</td>
-                  <td className="py-2 px-3 font-sans text-slate-300">IEEE 754 Single Precision (~6-7 decimal digits)</td>
-                </tr>
-                <tr>
-                  <td className="py-2 px-3 text-amber-300 font-bold">double</td>
-                  <td className="py-2 px-3">%lf</td>
-                  <td className="py-2 px-3">8</td>
-                  <td className="py-2 px-3 font-sans text-slate-300">IEEE 754 Double Precision (~15-17 decimal digits)</td>
-                </tr>
-                <tr>
-                  <td className="py-2 px-3 text-amber-300 font-bold">long double</td>
-                  <td className="py-2 px-3">%Lf</td>
-                  <td className="py-2 px-3">12 or 16</td>
-                  <td className="py-2 px-3 font-sans text-slate-300">Extended Precision (~19-34 decimal digits)</td>
-                </tr>
-                <tr>
-                  <td className="py-2 px-3 text-amber-300 font-bold">_Bool</td>
-                  <td className="py-2 px-3">%d</td>
-                  <td className="py-2 px-3">1</td>
-                  <td className="py-2 px-3 font-sans text-slate-300">0 (false) or 1 (true) (C99 standard boolean primitive)</td>
-                </tr>
-              </tbody>
-            </table>
+            {miniProject.day === 1 ? (
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-[#1E3A8A] text-[#93C5FD] font-mono uppercase text-[10px]">
+                    <th className="py-2 px-3">Data Type</th>
+                    <th className="py-2 px-3">Format Specifier</th>
+                    <th className="py-2 px-3">Typical Size (bytes)</th>
+                    <th className="py-2 px-3">Value Range & Characteristics</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/10 font-mono">
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">char</td>
+                    <td className="py-2 px-3">%c</td>
+                    <td className="py-2 px-3">1</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">-128 to 127 or 0 to 255 (Single ASCII character)</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">short</td>
+                    <td className="py-2 px-3">%hd</td>
+                    <td className="py-2 px-3">2</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">-32,768 to 32,767</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">int</td>
+                    <td className="py-2 px-3">%d</td>
+                    <td className="py-2 px-3">4</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">-2,147,483,648 to 2,147,483,647 (Standard signed int)</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">unsigned int</td>
+                    <td className="py-2 px-3">%u</td>
+                    <td className="py-2 px-3">4</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">0 to 4,294,967,295 (Non-negative)</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">long</td>
+                    <td className="py-2 px-3">%ld</td>
+                    <td className="py-2 px-3">4 or 8</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">At least 32-bit (Typically 64-bit on LP64 Linux/macOS)</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">long long</td>
+                    <td className="py-2 px-3">%lld</td>
+                    <td className="py-2 px-3">8</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">-9.22 * 10^18 to +9.22 * 10^18 (Guaranteed &gt;= 64-bit)</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">float</td>
+                    <td className="py-2 px-3">%f</td>
+                    <td className="py-2 px-3">4</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">IEEE 754 Single Precision (~6-7 decimal digits)</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">double</td>
+                    <td className="py-2 px-3">%lf</td>
+                    <td className="py-2 px-3">8</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">IEEE 754 Double Precision (~15-17 decimal digits)</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">long double</td>
+                    <td className="py-2 px-3">%Lf</td>
+                    <td className="py-2 px-3">12 or 16</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Extended Precision (~19-34 decimal digits)</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">_Bool</td>
+                    <td className="py-2 px-3">%d</td>
+                    <td className="py-2 px-3">1</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">0 (false) or 1 (true) (C99 standard boolean primitive)</td>
+                  </tr>
+                </tbody>
+              </table>
+            ) : miniProject.day === 2 ? (
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-[#1E3A8A] text-[#93C5FD] font-mono uppercase text-[10px]">
+                    <th className="py-2 px-3">Data Structure</th>
+                    <th className="py-2 px-3">Time Complexity</th>
+                    <th className="py-2 px-3">Space Complexity</th>
+                    <th className="py-2 px-3">Order-Matching Engine Application</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/10 font-mono">
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">Dual Heap (Min/Max)</td>
+                    <td className="py-2 px-3">O(log N) insert, O(1) peek</td>
+                    <td className="py-2 px-3">O(N)</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Order book crossing: Max-Heap for Bids, Min-Heap for Asks.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">Sliding Window Deque</td>
+                    <td className="py-2 px-3">O(1) amortized per tick</td>
+                    <td className="py-2 px-3">O(K)</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Rolling volatility and moving VWAP over the last K trade events.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">Monotonic Stack</td>
+                    <td className="py-2 px-3">O(1) amortized per push</td>
+                    <td className="py-2 px-3">O(N)</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Instant price breakout and next higher tick barrier discovery.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">Hash Table Ledger</td>
+                    <td className="py-2 px-3">O(1) average lookup/insert</td>
+                    <td className="py-2 px-3">O(U) users</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Instant balance validation and trade allocation to accounts.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">BFS Network Router</td>
+                    <td className="py-2 px-3">O(V + E)</td>
+                    <td className="py-2 px-3">O(V)</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Shortest path multi-hop order execution to exchange venues.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">0/1 Knapsack DP</td>
+                    <td className="py-2 px-3">O(N * W)</td>
+                    <td className="py-2 px-3">O(W)</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Maximizing trade bundle fee revenue under capital margin ceiling.</td>
+                  </tr>
+                </tbody>
+              </table>
+            ) : miniProject.day === 3 ? (
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-[#1E3A8A] text-[#93C5FD] font-mono uppercase text-[10px]">
+                    <th className="py-2 px-3">Time Complexity</th>
+                    <th className="py-2 px-3">Max Permissible N (1.0s)</th>
+                    <th className="py-2 px-3">Typical Algorithmic Paradigm</th>
+                    <th className="py-2 px-3">Placement Problem Archetype</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/10 font-mono">
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">O(1) / O(log N)</td>
+                    <td className="py-2 px-3">N &lt;= 10^18</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Binary Search on Answer, Math, Fast Exponentiation</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Aggressive Cows, Painter's Partition, Ship Packages</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">O(N)</td>
+                    <td className="py-2 px-3">N &lt;= 10^7</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Kadane's DP, Two-Pointer Squeezing, Prefix Sums</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Maximum Subarray, Two Sum in Sorted Array, Trapping Rainwater</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">O(N log N)</td>
+                    <td className="py-2 px-3">N &lt;= 10^6</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Merge / Quick / Heap Sort, Sweepline, Greedy Sorting</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Non-overlapping Intervals, Meeting Rooms II, Huffman Coding</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">O(N^2)</td>
+                    <td className="py-2 px-3">N &lt;= 5,000</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Double Nested Loops, Floyd-Warshall, Matrix DP</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Longest Common Subsequence, Shortest Common Supersequence</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">O(2^N) / O(N!)</td>
+                    <td className="py-2 px-3">N &lt;= 20 (2^N), N &lt;= 11 (N!)</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Recursive Backtracking, Bitmask DP</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">N-Queens, Sudoku Solver, Traveling Salesperson Problem</td>
+                  </tr>
+                </tbody>
+              </table>
+            ) : miniProject.day === 4 ? (
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-[#1E3A8A] text-[#93C5FD] font-mono uppercase text-[10px]">
+                    <th className="py-2 px-3">RDBMS Concept</th>
+                    <th className="py-2 px-3">Execution Cost</th>
+                    <th className="py-2 px-3">Integrity Guarantee</th>
+                    <th className="py-2 px-3">Healthcare DBMS Implementation</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/10 font-mono">
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">Primary & Foreign Keys</td>
+                    <td className="py-2 px-3">O(1) index probe</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Referential Integrity</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Admissions cannot reference missing patient_id or dept_id.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">ACID Transactions</td>
+                    <td className="py-2 px-3">O(1) commit / rollback</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Atomicity & Consistency</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Write-Ahead Undo Log rolls back bed allocation on payment abort.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">Relational Hash Join</td>
+                    <td className="py-2 px-3">O(N + M) probe</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Equi-join completeness</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Joins Patients, Admissions, and Doctors without nested loop penalty.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">GROUP BY & HAVING</td>
+                    <td className="py-2 px-3">O(N) hash bucket aggregation</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Aggregate constraint</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Department bed occupancy filters with HAVING COUNT(*) &gt;= threshold.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">DENSE_RANK() Window</td>
+                    <td className="py-2 px-3">O(N log N) partition sort</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">No tie gaps</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Clinical doctor performance ranking partitioned by medical department.</td>
+                  </tr>
+                </tbody>
+              </table>
+            ) : (
+              <table className="w-full text-left text-xs border-collapse">
+                <thead>
+                  <tr className="border-b border-[#1E3A8A] text-[#93C5FD] font-mono uppercase text-[10px]">
+                    <th className="py-2 px-3">SOLID / Design Pattern</th>
+                    <th className="py-2 px-3">Architectural Role</th>
+                    <th className="py-2 px-3">Failure Prevented</th>
+                    <th className="py-2 px-3">Fleet Dispatch Application</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/10 font-mono">
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">Single Responsibility (SRP)</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Separates pricing, dispatch & payments</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">God Object anti-pattern</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">FareCalculator only computes rates; DispatchEngine handles matching.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">Open / Closed (OCP)</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Extensible payment gateways</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Brittle switch-case statements</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Add UPI or Crypto payments without modifying existing checkout code.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">Liskov Substitution (LSP)</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Vehicle class hierarchies</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Runtime UnsupportedOperation errors</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">ElectricCab, LuxuryLimo, and AutoRickshaw satisfy Vehicle contract.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">Dependency Inversion (DIP)</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Inject abstractions not concretes</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Tight database / network coupling</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">MockPaymentService injected seamlessly during deterministic unit tests.</td>
+                  </tr>
+                  <tr>
+                    <td className="py-2 px-3 text-amber-300 font-bold">Strategy Pattern (GoF)</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Interchangeable pricing algorithms</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Hardcoded tariff formulas</td>
+                    <td className="py-2 px-3 font-sans text-slate-300">Dynamic switch between Standard, Surge (2.0x), and NightFlat tariffs.</td>
+                  </tr>
+                </tbody>
+              </table>
+            )}
           </div>
         </div>
       </div>

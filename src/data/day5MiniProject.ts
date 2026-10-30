@@ -119,6 +119,15 @@ export const DAY_5_MINI_PROJECT: MiniProject = {
       expectedOutput: 'DISPATCH COMPLETE: 3 vehicles evaluated polymorphically with zero instanceof checks.',
       explanation: 'Open/Closed and Liskov Substitution principles guarantee that any new Vehicle subclass works seamlessly.',
     },
+    {
+      id: 'sc5',
+      name: 'Dependency Inversion Principle: Mock Payment Injection',
+      choice: 5,
+      description: 'Inject a MockPaymentGateway into DispatchCoordinator to execute automated zero-latency unit tests without third-party network calls.',
+      sampleInputs: ['Gateway: MockPaymentService', 'Status: Simulated 200 OK'],
+      expectedOutput: 'TEST PASSED: Ride processed via MockPaymentService. DIP decouples high-level policy from low-level payment providers.',
+      explanation: 'High-level business coordinators depend on IPaymentGateway abstractions, enabling seamless test mocking.',
+    },
   ],
   codeByLanguage: {
     c: `#include <stdio.h>

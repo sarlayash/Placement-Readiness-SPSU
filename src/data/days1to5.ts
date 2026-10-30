@@ -6,6 +6,7 @@ import { DAY_1_MINI_PROJECT } from './day1MiniProject';
 import { DAY_2_PROGRAMMING_NOTES } from './day2ProgrammingNotes';
 import { DAY_2_PRE_ASSESSMENT_50, DAY_2_POST_ASSESSMENT_50 } from './day2Assessments50';
 import { DAY_2_PRACTICAL_CHALLENGES_10 } from './day2Challenges10';
+import { DAY_2_MINI_PROJECT } from './day2MiniProject';
 import { DAY_3_PROGRAMMING_NOTES } from './day3ProgrammingNotes';
 import { DAY_3_PRACTICAL_CHALLENGES_10 } from './day3Challenges10';
 import { DAY_3_PRE_ASSESSMENT_50, DAY_3_POST_ASSESSMENT_50 } from './day3Assessments50';
@@ -111,8 +112,9 @@ export const DAYS_1_TO_5: DayPlan[] = [
     ],
     programmingNotes: DAY_2_PROGRAMMING_NOTES,
     practicalChallenges: DAY_2_PRACTICAL_CHALLENGES_10,
-        preAssessment: DAY_2_PRE_ASSESSMENT_50,
+    preAssessment: DAY_2_PRE_ASSESSMENT_50,
     postAssessment: DAY_2_POST_ASSESSMENT_50,
+    miniProject: DAY_2_MINI_PROJECT,
     badge: {
       id: 'badge-day-2',
       day: 2,

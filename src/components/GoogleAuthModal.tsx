@@ -106,6 +106,30 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({ onSuccess, onC
             <span>{loading ? 'Waiting for Google…' : 'Continue with Google'}</span>
             {!loading && <ArrowRight className="w-4 h-4 ml-1 opacity-70" />}
           </button>
+
+          <div className="relative flex py-1 items-center">
+            <div className="flex-grow border-t border-slate-200"></div>
+            <span className="shrink mx-3 text-slate-400 text-[10px] font-mono uppercase font-bold">or evaluate</span>
+            <div className="flex-grow border-t border-slate-200"></div>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              const demoUser: GoogleUser = {
+                uid: 'demo-spsu-learner-2026',
+                name: 'Demo SPSU Learner',
+                email: 'demo.learner@spsu.ac.in',
+                photoURL: '',
+                signedInAt: new Date().toISOString(),
+              };
+              onSuccess(demoUser);
+            }}
+            className="w-full flex items-center justify-center gap-2 py-2.5 px-4 rounded-xl bg-[#F8FAFC] hover:bg-[#EFF6FF] border border-slate-300 hover:border-[#1E3A8A] text-[#0A192F] font-bold text-xs transition-all cursor-pointer shadow-xs"
+          >
+            <span>🧪</span>
+            <span>Continue as Demo Learner (1-Click Instant Preview)</span>
+          </button>
         </div>
       </div>
     </div>

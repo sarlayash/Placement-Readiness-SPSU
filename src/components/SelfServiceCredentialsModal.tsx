@@ -9,7 +9,14 @@ import {
   getPersonalizedLearnerProfile,
   generateVerificationHash,
 } from '../utils/reportAndLorGenerator';
-import { downloadCertificatePDF, downloadCertificatePNG } from '../utils/exportCredentials';
+import {
+  downloadCertificatePDF,
+  downloadCertificatePNG,
+  downloadSystemDesignCertificatePDF,
+  downloadSystemDesignCertificatePNG,
+  downloadSystemDesignBadgePDF,
+  downloadSystemDesignBadgePNG,
+} from '../utils/exportCredentials';
 import {
   Award,
   CheckCircle2,
@@ -440,6 +447,58 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                     <Download className="w-4 h-4 text-amber-300" />
                     <span>Download Day {selectedBadgeDay} Badge Card (PNG)</span>
                   </button>
+                </div>
+
+                {/* 5. Special Edition: System Design Architect Credential Suite */}
+                <div className="md:col-span-2 p-5 rounded-3xl bg-linear-to-r from-amber-500/10 via-white to-amber-500/5 border-2 border-amber-400 transition-all shadow-md flex flex-col md:flex-row items-start md:items-center justify-between gap-5">
+                  <div className="space-y-2 max-w-xl">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono px-2.5 py-0.5 rounded-full bg-amber-400 text-[#0A192F] font-black uppercase shadow-xs">
+                        ★ Special Edition Credentials
+                      </span>
+                      <span className="text-[10px] font-mono text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded-full">
+                        {progress.systemDesignPassed ? `Passed: ${progress.systemDesignScore}%` : 'Benchmark: 80% (96/120)'}
+                      </span>
+                    </div>
+                    <h4 className="text-base font-black text-[#0A192F]">
+                      System Design Architect Badge & Official Certificate
+                    </h4>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      Conferred for mastering High-Level & Low-Level Design, Gmail End-to-End Architecture, Undo Send task queues, Postman REST testing, and achieving $\ge 80\%$ on the 60-Minute 120-MCQ Assessment.
+                    </p>
+                  </div>
+
+                  <div className="flex flex-wrap items-center gap-2 shrink-0 w-full md:w-auto">
+                    <button
+                      type="button"
+                      onClick={() =>
+                        downloadSystemDesignBadgePNG(
+                          learnerUser,
+                          progress.systemDesignScore || 100,
+                          progress.systemDesignBadgeUnlockedAt || new Date().toISOString()
+                        )
+                      }
+                      className="flex-1 md:flex-none px-3.5 py-2.5 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white text-xs font-bold transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-xs"
+                    >
+                      <Award className="w-3.5 h-3.5 text-amber-400" />
+                      <span>Badge (PNG)</span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() =>
+                        downloadSystemDesignCertificatePDF(
+                          learnerUser,
+                          progress.systemDesignScore || 100,
+                          progress.systemDesignCorrectCount || 96,
+                          progress.systemDesignCertificateIssuedAt || new Date().toISOString()
+                        )
+                      }
+                      className="flex-1 md:flex-none px-3.5 py-2.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-[#0A192F] text-xs font-black transition-all cursor-pointer flex items-center justify-center gap-1.5 shadow-xs"
+                    >
+                      <Download className="w-3.5 h-3.5 text-[#0A192F]" />
+                      <span>Certificate (PDF)</span>
+                    </button>
+                  </div>
                 </div>
 
                 {/* 5. Official Commemorative Institutional & Mentorship Banner */}

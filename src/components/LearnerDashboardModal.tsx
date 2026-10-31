@@ -267,6 +267,18 @@ export const LearnerDashboardModal: React.FC<LearnerDashboardModalProps> = ({
                 {progress.certificateId ? '✓ Generated' : 'Pending (80%+)'}
               </span>
             </div>
+
+            <div className="p-3.5 rounded-xl border border-amber-300 bg-amber-50/50">
+              <span className="text-[10px] font-extrabold uppercase text-amber-800 block">
+                ★ System Design (120 Q)
+              </span>
+              <span className="text-lg font-black text-[#0A192F] font-mono mt-0.5 block">
+                {progress.systemDesignScore !== undefined ? `${progress.systemDesignScore}%` : 'Pending'}
+              </span>
+              <span className="text-[9px] font-mono text-slate-600">
+                {progress.systemDesignPassed ? '✓ Passed (≥80%)' : 'Cutoff: 80% (96/120)'}
+              </span>
+            </div>
           </div>
 
           {/* Self-Service Instant Downloads Section */}

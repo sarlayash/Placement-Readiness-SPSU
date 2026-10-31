@@ -19,12 +19,13 @@ import { LiveDateTime } from './LiveDateTime';
 interface NavbarProps {
   user: GoogleUser | null;
   progress: UserProgress;
-  activeView: 'planner' | 'day-workspace' | 'admin';
+  activeView: 'planner' | 'day-workspace' | 'admin' | 'system-design';
   selectedDay: number;
   isSidebarCollapsed: boolean;
   onToggleSidebar: () => void;
   onSelectPlanner: () => void;
   onSelectDay: (day: number) => void;
+  onSelectSystemDesign?: () => void;
   onOpenAuth: () => void;
   onSignOut: () => void;
   onOpenBadges: () => void;
@@ -44,6 +45,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onToggleSidebar,
   onSelectPlanner,
   onSelectDay,
+  onSelectSystemDesign,
   onOpenAuth,
   onSignOut,
   onOpenBadges,
@@ -113,6 +115,23 @@ export const Navbar: React.FC<NavbarProps> = ({
 
         {/* Right: Notifications, Learner Dashboard, Badges, Certificate & Strict Google Auth */}
         <div className="flex items-center gap-2 sm:gap-2.5">
+          {/* Special Edition System Design Link */}
+          {onSelectSystemDesign && (
+            <button
+              type="button"
+              onClick={onSelectSystemDesign}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-black transition-all cursor-pointer shadow-xs ${
+                activeView === 'system-design'
+                  ? 'bg-amber-400 text-[#0A192F] ring-2 ring-white'
+                  : 'bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 border border-amber-400/40'
+              }`}
+              title="Special Edition: System Design Masterclass & Postman Lab"
+            >
+              <span className="text-amber-400">★</span>
+              <span className="hidden sm:inline">System Design</span>
+            </button>
+          )}
+
           {/* Automatic Reminders Notification Bell */}
           <button
             type="button"

@@ -39,6 +39,7 @@ interface LandingDayPlannerProps {
   user: GoogleUser | null;
   progress: UserProgress;
   onSelectDay: (day: number, initialTab?: 'notes' | 'ide' | 'pre' | 'post' | 'project') => void;
+  onSelectSystemDesign?: () => void;
   onOpenAuth: () => void;
   onOpenBadges: () => void;
   onOpenCertificate: () => void;
@@ -55,6 +56,7 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
   user,
   progress,
   onSelectDay,
+  onSelectSystemDesign,
   onOpenAuth,
   onOpenBadges,
   onOpenCertificate,
@@ -634,6 +636,67 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
           </div>
         </div>
       </section>
+
+      {/* SPECIAL EDITION HERO BANNER: System Design Masterclass, Postman IDE & 120-MCQ Assessment */}
+      {onSelectSystemDesign && (
+        <section className="rounded-3xl bg-linear-to-r from-[#0A192F] via-[#112240] to-[#0A192F] border-2 border-amber-400 p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-amber-400/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
+            <div className="space-y-3 max-w-3xl">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-3 py-1 rounded-full bg-amber-400 text-[#0A192F] text-xs font-mono font-black shadow-xs">
+                  ★ SPECIAL EDITION MODULE
+                </span>
+                <span className="px-3 py-1 rounded-full bg-[#1E3A8A] text-[#BFDBFE] text-xs font-mono font-bold border border-[#93C5FD]/30">
+                  107-Slide Masterclass Reference
+                </span>
+                <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-mono font-bold border border-emerald-400/40">
+                  Real Postman IDE Simulations
+                </span>
+              </div>
+
+              <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                System Design Masterclass, Postman IDE & 120-MCQ Assessment
+              </h2>
+
+              <p className="text-xs sm:text-sm text-[#BFDBFE] leading-relaxed">
+                Crack FAANG System Design rounds: Outage post-mortems (Instagram DNS, Meta BGP, WhatsApp queues, Twitter rate limits), end-to-end Gmail architecture (Anycast DNS, GFE Load Balancer, Spanner, GCS attachments, 30s Undo Send delay queue), live REST API testing with Postman IDE, and a 60-Minute 120-Question Assessment (Benchmark 80%) to earn the <strong>System Design Architect Badge & Certificate</strong>.
+              </p>
+
+              <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-300 pt-1">
+                <span className="flex items-center gap-1.5 text-amber-300 font-bold">
+                  <span>⚡</span> 9 Comprehensive Architecture Modules
+                </span>
+                <span className="flex items-center gap-1.5 text-[#93C5FD] font-bold">
+                  <span>⚡</span> Live Postman IDE Simulator
+                </span>
+                <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
+                  <span>⚡</span> 60-Min 120-MCQ Placement Assessment
+                </span>
+              </div>
+            </div>
+
+            <div className="shrink-0 flex flex-col sm:flex-row lg:flex-col gap-3 w-full sm:w-auto">
+              <button
+                type="button"
+                onClick={onSelectSystemDesign}
+                className="px-6 py-3.5 rounded-2xl bg-amber-400 hover:bg-amber-300 text-[#0A192F] font-black text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg hover:scale-[1.02]"
+              >
+                <span>Launch System Design Lab</span>
+                <ChevronRight className="w-5 h-5 text-[#0A192F]" />
+              </button>
+
+              {progress.systemDesignPassed && (
+                <div className="px-4 py-2 rounded-xl bg-emerald-950/80 border border-emerald-400/50 text-emerald-300 text-xs font-mono font-bold text-center flex items-center justify-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <span>Credential Earned ({progress.systemDesignScore}%)</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* 3. NEW SPECIAL PLACEMENT TOOLS: Spinning Wheel Stress Buster + 50 Aptitude MCQs + Self-Service Hub */}
       <section className="space-y-4">

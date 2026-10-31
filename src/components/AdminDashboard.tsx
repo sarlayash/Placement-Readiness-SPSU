@@ -679,6 +679,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   )}
 
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Aptitude (50 Qs)</th>
+                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Sys Design (120 Qs)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Stress (25 Qs)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Days Done</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Badges</th>
@@ -830,6 +831,26 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               <span>{learner.aptitudeScore}%</span>
                               <span className="text-[8px] uppercase tracking-wider">
                                 {learner.aptitudePassed ? 'PASS' : 'RETAKE'}
+                              </span>
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
+                          )}
+                        </td>
+
+                        {/* System Design Assessment */}
+                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
+                          {learner.systemDesignScore !== undefined ? (
+                            <span
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
+                                learner.systemDesignPassed
+                                  ? 'bg-amber-100 text-amber-900 border-amber-400 font-bold'
+                                  : 'bg-rose-50 text-rose-800 border-rose-300'
+                              }`}
+                            >
+                              <span>{learner.systemDesignScore}%</span>
+                              <span className="text-[8px] uppercase tracking-wider">
+                                {learner.systemDesignPassed ? 'PASS' : 'RETAKE'}
                               </span>
                             </span>
                           ) : (

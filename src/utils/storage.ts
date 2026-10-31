@@ -81,6 +81,13 @@ export function loadStoredProgress(userEmail?: string): UserProgress {
       aptitudeAttemptedAt: parsed.aptitudeAttemptedAt,
       lorIssuedAt: parsed.lorIssuedAt || null,
       reportGeneratedAt: parsed.reportGeneratedAt || null,
+      systemDesignScore: parsed.systemDesignScore,
+      systemDesignCorrectCount: parsed.systemDesignCorrectCount,
+      systemDesignPassed: parsed.systemDesignPassed,
+      systemDesignAttemptedAt: parsed.systemDesignAttemptedAt || null,
+      systemDesignBadgeUnlockedAt: parsed.systemDesignBadgeUnlockedAt || null,
+      systemDesignCertificateId: parsed.systemDesignCertificateId || null,
+      systemDesignCertificateIssuedAt: parsed.systemDesignCertificateIssuedAt || null,
     };
   } catch {
     return { ...EMPTY_PROGRESS };

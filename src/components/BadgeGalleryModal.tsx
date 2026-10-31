@@ -1,7 +1,12 @@
 import React from 'react';
 import { DailyBadge, GoogleUser, UserProgress } from '../types';
-import { Award, CheckCircle2, Download, Image, ShieldCheck, X } from 'lucide-react';
-import { downloadBadgePNG, downloadBadgePDF } from '../utils/exportCredentials';
+import { Award, CheckCircle2, Download, Image, ShieldCheck, Sparkles, X } from 'lucide-react';
+import {
+  downloadBadgePNG,
+  downloadBadgePDF,
+  downloadSystemDesignBadgePNG,
+  downloadSystemDesignBadgePDF,
+} from '../utils/exportCredentials';
 
 interface BadgeGalleryModalProps {
   badges: DailyBadge[];
@@ -58,6 +63,90 @@ export const BadgeGalleryModal: React.FC<BadgeGalleryModalProps> = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {/* SPECIAL EDITION: System Design Architect Badge */}
+            <div
+              className={`rounded-2xl border-2 p-5 flex flex-col justify-between gap-4 transition-all md:col-span-2 ${
+                progress.systemDesignPassed
+                  ? 'border-amber-500 bg-linear-to-r from-amber-50/40 via-white to-amber-50/20 shadow-md'
+                  : 'border-slate-200 bg-[#F8FAFC]'
+              }`}
+            >
+              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <div className="flex items-start gap-4">
+                  <div
+                    className={`w-14 h-14 rounded-2xl flex flex-col items-center justify-center shrink-0 font-mono font-black border-2 ${
+                      progress.systemDesignPassed
+                        ? 'bg-[#0A192F] text-amber-400 border-amber-400 shadow-md'
+                        : 'bg-slate-200 text-slate-600 border-slate-300'
+                    }`}
+                  >
+                    <span className="text-[9px] uppercase tracking-wider">SPECIAL</span>
+                    <span className="text-xl leading-none">HLD</span>
+                  </div>
+
+                  <div className="space-y-1">
+                    <div className="flex items-center gap-2">
+                      <span className="text-[10px] font-mono uppercase font-black px-2 py-0.5 rounded-full bg-amber-400 text-[#0A192F]">
+                        ★ SPECIAL EDITION BADGE
+                      </span>
+                      {progress.systemDesignPassed ? (
+                        <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-emerald-100 border border-emerald-400 text-emerald-900 text-[10px] font-black">
+                          <CheckCircle2 className="w-3 h-3 text-emerald-700" />
+                          <span>EARNED ({progress.systemDesignScore || 100}%)</span>
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-mono text-slate-500 font-semibold">
+                          Requires 80% on 60-Min 120-MCQ Assessment
+                        </span>
+                      )}
+                    </div>
+
+                    <h3 className="text-base font-black text-[#0A192F]">
+                      System Design Architect Badge
+                    </h3>
+                    <p className="text-xs font-bold text-[#1E3A8A]">
+                      High-Level Design, Gmail End-to-End Architecture & Postman Masterclass
+                    </p>
+                    <p className="text-xs text-slate-600 leading-relaxed">
+                      Conferred for mastering distributed architecture concepts, Layer 4/7 load balancing, database sharding, Redis caching, and scoring ≥ 80% on the 120-question placement post-assessment.
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 shrink-0 w-full sm:w-auto justify-end pt-2 sm:pt-0 border-t sm:border-t-0 border-slate-200">
+                  <button
+                    type="button"
+                    onClick={() =>
+                      downloadSystemDesignBadgePNG(
+                        user,
+                        progress.systemDesignScore || 100,
+                        progress.systemDesignBadgeUnlockedAt || new Date().toISOString()
+                      )
+                    }
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl border-2 border-[#0A192F] bg-white hover:bg-[#0A192F] text-[#0A192F] hover:text-white text-xs font-bold transition-colors cursor-pointer"
+                  >
+                    <Image className="w-3.5 h-3.5" />
+                    <span>Download PNG</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      downloadSystemDesignBadgePDF(
+                        user,
+                        progress.systemDesignScore || 100,
+                        progress.systemDesignBadgeUnlockedAt || new Date().toISOString()
+                      )
+                    }
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-400 hover:bg-amber-300 text-[#0A192F] font-black text-xs transition-colors cursor-pointer shadow-xs"
+                  >
+                    <Download className="w-3.5 h-3.5" />
+                    <span>Download PDF</span>
+                  </button>
+                </div>
+              </div>
+            </div>
+
             {badges.map((badge) => {
               const unlockedAt = progress.unlockedBadges[badge.day];
               const isUnlocked = Boolean(unlockedAt);

@@ -320,6 +320,14 @@ export async function recordUserSignIn(
     aptitudeAttemptedAt: currentProgress?.aptitudeAttemptedAt || existing?.aptitudeAttemptedAt || cloudData?.aptitudeAttemptedAt || initMatch?.aptitudeAttemptedAt || null,
     lorIssuedAt: currentProgress?.lorIssuedAt || existing?.lorIssuedAt || cloudData?.lorIssuedAt || initMatch?.lorIssuedAt || null,
     reportGeneratedAt: currentProgress?.reportGeneratedAt || existing?.reportGeneratedAt || cloudData?.reportGeneratedAt || initMatch?.reportGeneratedAt || null,
+    // Special Edition: System Design Masterclass & 120-Assessment
+    systemDesignScore: Math.max(initMatch?.systemDesignScore ?? 0, cloudData?.systemDesignScore ?? 0, existing?.systemDesignScore ?? 0, currentProgress?.systemDesignScore ?? 0),
+    systemDesignCorrectCount: Math.max(initMatch?.systemDesignCorrectCount ?? 0, cloudData?.systemDesignCorrectCount ?? 0, existing?.systemDesignCorrectCount ?? 0, currentProgress?.systemDesignCorrectCount ?? 0),
+    systemDesignPassed: Boolean(initMatch?.systemDesignPassed || cloudData?.systemDesignPassed || existing?.systemDesignPassed || currentProgress?.systemDesignPassed),
+    systemDesignAttemptedAt: currentProgress?.systemDesignAttemptedAt || existing?.systemDesignAttemptedAt || cloudData?.systemDesignAttemptedAt || initMatch?.systemDesignAttemptedAt || null,
+    systemDesignBadgeUnlockedAt: currentProgress?.systemDesignBadgeUnlockedAt || existing?.systemDesignBadgeUnlockedAt || cloudData?.systemDesignBadgeUnlockedAt || initMatch?.systemDesignBadgeUnlockedAt || null,
+    systemDesignCertificateId: currentProgress?.systemDesignCertificateId || existing?.systemDesignCertificateId || cloudData?.systemDesignCertificateId || initMatch?.systemDesignCertificateId || null,
+    systemDesignCertificateIssuedAt: currentProgress?.systemDesignCertificateIssuedAt || existing?.systemDesignCertificateIssuedAt || cloudData?.systemDesignCertificateIssuedAt || initMatch?.systemDesignCertificateIssuedAt || null,
   };
 
   // Update local registry
@@ -419,6 +427,14 @@ export async function syncLearnerProgress(
     aptitudeAttemptedAt: progress.aptitudeAttemptedAt || existing?.aptitudeAttemptedAt || cloudData?.aptitudeAttemptedAt || initMatch?.aptitudeAttemptedAt || null,
     lorIssuedAt: progress.lorIssuedAt || existing?.lorIssuedAt || cloudData?.lorIssuedAt || initMatch?.lorIssuedAt || null,
     reportGeneratedAt: progress.reportGeneratedAt || existing?.reportGeneratedAt || cloudData?.reportGeneratedAt || initMatch?.reportGeneratedAt || null,
+    // Special Edition: System Design Masterclass & 120-Assessment
+    systemDesignScore: Math.max(initMatch?.systemDesignScore ?? 0, cloudData?.systemDesignScore ?? 0, existing?.systemDesignScore ?? 0, progress.systemDesignScore ?? 0),
+    systemDesignCorrectCount: Math.max(initMatch?.systemDesignCorrectCount ?? 0, cloudData?.systemDesignCorrectCount ?? 0, existing?.systemDesignCorrectCount ?? 0, progress.systemDesignCorrectCount ?? 0),
+    systemDesignPassed: Boolean(initMatch?.systemDesignPassed || cloudData?.systemDesignPassed || existing?.systemDesignPassed || progress.systemDesignPassed),
+    systemDesignAttemptedAt: progress.systemDesignAttemptedAt || existing?.systemDesignAttemptedAt || cloudData?.systemDesignAttemptedAt || initMatch?.systemDesignAttemptedAt || null,
+    systemDesignBadgeUnlockedAt: progress.systemDesignBadgeUnlockedAt || existing?.systemDesignBadgeUnlockedAt || cloudData?.systemDesignBadgeUnlockedAt || initMatch?.systemDesignBadgeUnlockedAt || null,
+    systemDesignCertificateId: progress.systemDesignCertificateId || existing?.systemDesignCertificateId || cloudData?.systemDesignCertificateId || initMatch?.systemDesignCertificateId || null,
+    systemDesignCertificateIssuedAt: progress.systemDesignCertificateIssuedAt || existing?.systemDesignCertificateIssuedAt || cloudData?.systemDesignCertificateIssuedAt || initMatch?.systemDesignCertificateIssuedAt || null,
   };
 
   localRegistry[user.email.toLowerCase()] = updatedRecord;

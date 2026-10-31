@@ -22,11 +22,12 @@ import { isDayUnlocked, isDayCompleted } from '../utils/dayLocking';
 interface LeftSidebarProps {
   days: DayPlan[];
   selectedDay: number;
-  activeView: 'planner' | 'day-workspace' | 'admin';
+  activeView: 'planner' | 'day-workspace' | 'admin' | 'system-design';
   isCollapsed: boolean;
   onToggleCollapse: () => void;
   onSelectPlanner: () => void;
   onSelectDay: (day: number) => void;
+  onSelectSystemDesign?: () => void;
   onOpenBadges: () => void;
   onOpenCertificate: () => void;
   onOpenAdmin: () => void;
@@ -48,6 +49,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   onToggleCollapse,
   onSelectPlanner,
   onSelectDay,
+  onSelectSystemDesign,
   onOpenBadges,
   onOpenCertificate,
   onOpenAdmin,
@@ -142,6 +144,53 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
             </div>
           )}
         </button>
+
+        {/* SPECIAL EDITION: System Design Masterclass & Postman Lab */}
+        {onSelectSystemDesign && (
+          <button
+            type="button"
+            onClick={onSelectSystemDesign}
+            className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-left text-xs font-bold transition-all cursor-pointer group ${
+              activeView === 'system-design'
+                ? 'bg-amber-400 text-[#0A192F] shadow-md font-black'
+                : 'text-amber-300 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-400/30'
+            }`}
+            title="Special Edition: System Design Masterclass & Postman IDE Lab"
+          >
+            <div
+              className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 font-mono text-sm ${
+                activeView === 'system-design'
+                  ? 'bg-[#0A192F] text-amber-400 font-black'
+                  : 'bg-amber-400 text-[#0A192F] font-black'
+              }`}
+            >
+              ★
+            </div>
+            {!isCollapsed && (
+              <div className="truncate">
+                <div className="truncate flex items-center gap-1.5 font-extrabold">
+                  <span>System Design</span>
+                  <span
+                    className={`text-[9px] px-1.5 py-0.2 rounded font-mono font-bold ${
+                      activeView === 'system-design'
+                        ? 'bg-[#0A192F] text-amber-300'
+                        : 'bg-amber-400 text-[#0A192F]'
+                    }`}
+                  >
+                    SPECIAL
+                  </span>
+                </div>
+                <div
+                  className={`text-[10px] truncate font-mono ${
+                    activeView === 'system-design' ? 'text-[#0A192F]' : 'text-amber-300'
+                  }`}
+                >
+                  Gmail HLD & Postman
+                </div>
+              </div>
+            )}
+          </button>
+        )}
 
         {/* Learner Real-Time Scorecard Link */}
         {onOpenLearnerDashboard && (

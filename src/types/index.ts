@@ -175,6 +175,14 @@ export interface UserProgress {
   aptitudeAttemptedAt?: string | null;
   lorIssuedAt?: string | null;
   reportGeneratedAt?: string | null;
+  // Special Edition: System Design Masterclass & 120 Assessment
+  systemDesignScore?: number; // 0..100 percentage
+  systemDesignCorrectCount?: number; // 0..120
+  systemDesignPassed?: boolean; // >= 80% (>= 96 correct)
+  systemDesignAttemptedAt?: string | null;
+  systemDesignBadgeUnlockedAt?: string | null;
+  systemDesignCertificateId?: string | null;
+  systemDesignCertificateIssuedAt?: string | null;
 }
 
 export interface LearnerRecord {
@@ -205,4 +213,12 @@ export interface LearnerRecord {
   aptitudeAttemptedAt?: string | null;
   lorIssuedAt?: string | null;
   reportGeneratedAt?: string | null;
+  // Special Edition: System Design Masterclass & 120 Assessment
+  systemDesignScore?: number;
+  systemDesignCorrectCount?: number;
+  systemDesignPassed?: boolean;
+  systemDesignAttemptedAt?: string | null;
+  systemDesignBadgeUnlockedAt?: string | null;
+  systemDesignCertificateId?: string | null;
+  systemDesignCertificateIssuedAt?: string | null;
 }

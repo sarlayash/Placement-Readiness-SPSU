@@ -33,6 +33,7 @@ import { IndustryPatternQuizModal } from './components/IndustryPatternQuizModal'
 import { SpinningWheelQuizModal } from './components/SpinningWheelQuizModal';
 import { AptitudeAssessmentModal } from './components/AptitudeAssessmentModal';
 import { SelfServiceCredentialsModal } from './components/SelfServiceCredentialsModal';
+import { SystemDesignWorkspace } from './components/SystemDesignWorkspace';
 import {
   recordUserSignIn,
   syncLearnerProgress,
@@ -52,8 +53,8 @@ export function App() {
   const isHydratedRef = useRef<boolean>(false);
   const isRemoteUpdateRef = useRef<boolean>(false);
 
-  // Landing page defaults to Complete Day Planner ('planner'), can be 'day-workspace' or 'admin'
-  const [activeView, setActiveView] = useState<'planner' | 'day-workspace' | 'admin'>('planner');
+  // Landing page defaults to Complete Day Planner ('planner'), can be 'day-workspace', 'admin', or 'system-design'
+  const [activeView, setActiveView] = useState<'planner' | 'day-workspace' | 'admin' | 'system-design'>('planner');
   const [selectedDay, setSelectedDay] = useState<number>(1);
   const [initialDayTab, setInitialDayTab] = useState<'notes' | 'ide' | 'pre' | 'post' | 'project'>('notes');
 
@@ -525,6 +526,38 @@ export function App() {
     }));
   };
 
+  const handleSaveSystemDesignScore = (
+    score: number,
+    correctCount: number,
+    passed: boolean
+  ) => {
+    setProgress((prev) => {
+      const now = new Date().toISOString();
+      const nextProgress: UserProgress = {
+        ...prev,
+        systemDesignScore: score,
+        systemDesignCorrectCount: correctCount,
+        systemDesignPassed: passed,
+        systemDesignAttemptedAt: now,
+        systemDesignBadgeUnlockedAt: passed
+          ? prev.systemDesignBadgeUnlockedAt || now
+          : prev.systemDesignBadgeUnlockedAt,
+        systemDesignCertificateId: passed
+          ? prev.systemDesignCertificateId || (user ? generateOfficialCertificateId(user.email) : 'SPSU-SD-ARCH-2026')
+          : prev.systemDesignCertificateId,
+        systemDesignCertificateIssuedAt: passed
+          ? prev.systemDesignCertificateIssuedAt || now
+          : prev.systemDesignCertificateIssuedAt,
+      };
+
+      saveStoredProgress(nextProgress, user?.email);
+      if (user) {
+        syncLearnerProgress(user, nextProgress);
+      }
+      return nextProgress;
+    });
+  };
+
   const activeDayPlan =
     COMPLETE_10_DAY_PLAN.find((d) => d.day === selectedDay) || COMPLETE_10_DAY_PLAN[0];
 
@@ -540,6 +573,7 @@ export function App() {
         onToggleSidebar={() => setIsSidebarCollapsed((prev) => !prev)}
         onSelectPlanner={() => setActiveView('planner')}
         onSelectDay={(d) => handleSelectDay(d, 'notes')}
+        onSelectSystemDesign={() => setActiveView('system-design')}
         onOpenAuth={() => setShowAuthModal(true)}
         onSignOut={handleSignOut}
         onOpenBadges={() => setShowBadgesModal(true)}
@@ -563,6 +597,7 @@ export function App() {
           onToggleCollapse={() => setIsSidebarCollapsed((prev) => !prev)}
           onSelectPlanner={() => setActiveView('planner')}
           onSelectDay={(d) => handleSelectDay(d, 'notes')}
+          onSelectSystemDesign={() => setActiveView('system-design')}
           onOpenBadges={() => setShowBadgesModal(true)}
           onOpenCertificate={() => setShowCertificateModal(true)}
           onOpenAdmin={handleOpenAdmin}
@@ -591,6 +626,14 @@ export function App() {
                 onBackToPortal={() => setActiveView('planner')}
                 onAdminSignOut={handleAdminSignOut}
               />
+            ) : activeView === 'system-design' ? (
+              <SystemDesignWorkspace
+                user={user}
+                progress={progress}
+                onBackToPlanner={() => setActiveView('planner')}
+                onRequireAuth={() => setShowAuthModal(true)}
+                onSaveSystemDesignScore={handleSaveSystemDesignScore}
+              />
             ) : activeView === 'planner' ? (
               <LandingDayPlanner
                 days={COMPLETE_10_DAY_PLAN}
@@ -598,6 +641,7 @@ export function App() {
                 user={user}
                 progress={progress}
                 onSelectDay={handleSelectDay}
+                onSelectSystemDesign={() => setActiveView('system-design')}
                 onOpenAuth={() => setShowAuthModal(true)}
                 onOpenBadges={() => setShowBadgesModal(true)}
                 onOpenCertificate={() => setShowCertificateModal(true)}

@@ -22,12 +22,13 @@ import { isDayUnlocked, isDayCompleted } from '../utils/dayLocking';
 interface LeftSidebarProps {
   days: DayPlan[];
   selectedDay: number;
-  activeView: 'planner' | 'day-workspace' | 'admin' | 'system-design';
+  activeView: 'planner' | 'day-workspace' | 'admin' | 'system-design' | 'interview-readiness';
   isCollapsed: boolean;
   onToggleCollapse: () => void;
   onSelectPlanner: () => void;
   onSelectDay: (day: number) => void;
   onSelectSystemDesign?: () => void;
+  onSelectInterviewReadiness?: () => void;
   onOpenBadges: () => void;
   onOpenCertificate: () => void;
   onOpenAdmin: () => void;
@@ -50,6 +51,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
   onSelectPlanner,
   onSelectDay,
   onSelectSystemDesign,
+  onSelectInterviewReadiness,
   onOpenBadges,
   onOpenCertificate,
   onOpenAdmin,
@@ -186,6 +188,53 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                   }`}
                 >
                   Gmail HLD & Postman
+                </div>
+              </div>
+            )}
+          </button>
+        )}
+
+        {/* NEW SECTION: Interview Readiness Hub */}
+        {onSelectInterviewReadiness && (
+          <button
+            type="button"
+            onClick={onSelectInterviewReadiness}
+            className={`w-full flex items-center gap-2.5 p-2 rounded-xl text-left text-xs font-bold transition-all cursor-pointer group ${
+              activeView === 'interview-readiness'
+                ? 'bg-emerald-400 text-slate-950 shadow-md font-black'
+                : 'text-emerald-300 bg-emerald-500/10 hover:bg-emerald-500/20 border border-emerald-400/30'
+            }`}
+            title="Interview Readiness: Fresher & Lateral (100 Core + 100 Scenario MCQs)"
+          >
+            <div
+              className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 font-mono text-sm ${
+                activeView === 'interview-readiness'
+                  ? 'bg-slate-950 text-emerald-400 font-black'
+                  : 'bg-emerald-400 text-slate-950 font-black'
+              }`}
+            >
+              🎯
+            </div>
+            {!isCollapsed && (
+              <div className="truncate">
+                <div className="truncate flex items-center gap-1.5 font-extrabold">
+                  <span>Interview Readiness</span>
+                  <span
+                    className={`text-[9px] px-1.5 py-0.2 rounded font-mono font-bold ${
+                      activeView === 'interview-readiness'
+                        ? 'bg-slate-950 text-emerald-300'
+                        : 'bg-emerald-400 text-slate-950'
+                    }`}
+                  >
+                    200 Q
+                  </span>
+                </div>
+                <div
+                  className={`text-[10px] truncate font-mono ${
+                    activeView === 'interview-readiness' ? 'text-slate-950' : 'text-emerald-300'
+                  }`}
+                >
+                  Fresher & Lateral Prep
                 </div>
               </div>
             )}

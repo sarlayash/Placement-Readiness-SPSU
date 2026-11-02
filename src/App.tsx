@@ -34,6 +34,7 @@ import { SpinningWheelQuizModal } from './components/SpinningWheelQuizModal';
 import { AptitudeAssessmentModal } from './components/AptitudeAssessmentModal';
 import { SelfServiceCredentialsModal } from './components/SelfServiceCredentialsModal';
 import { SystemDesignWorkspace } from './components/SystemDesignWorkspace';
+import { InterviewReadinessWorkspace } from './components/InterviewReadinessWorkspace';
 import {
   recordUserSignIn,
   syncLearnerProgress,
@@ -54,7 +55,7 @@ export function App() {
   const isRemoteUpdateRef = useRef<boolean>(false);
 
   // Landing page defaults to Complete Day Planner ('planner'), can be 'day-workspace', 'admin', or 'system-design'
-  const [activeView, setActiveView] = useState<'planner' | 'day-workspace' | 'admin' | 'system-design'>('planner');
+  const [activeView, setActiveView] = useState<'planner' | 'day-workspace' | 'admin' | 'system-design' | 'interview-readiness'>('planner');
   const [selectedDay, setSelectedDay] = useState<number>(1);
   const [initialDayTab, setInitialDayTab] = useState<'notes' | 'ide' | 'pre' | 'post' | 'project'>('notes');
 
@@ -574,6 +575,7 @@ export function App() {
         onSelectPlanner={() => setActiveView('planner')}
         onSelectDay={(d) => handleSelectDay(d, 'notes')}
         onSelectSystemDesign={() => setActiveView('system-design')}
+        onSelectInterviewReadiness={() => setActiveView('interview-readiness')}
         onOpenAuth={() => setShowAuthModal(true)}
         onSignOut={handleSignOut}
         onOpenBadges={() => setShowBadgesModal(true)}
@@ -598,6 +600,7 @@ export function App() {
           onSelectPlanner={() => setActiveView('planner')}
           onSelectDay={(d) => handleSelectDay(d, 'notes')}
           onSelectSystemDesign={() => setActiveView('system-design')}
+          onSelectInterviewReadiness={() => setActiveView('interview-readiness')}
           onOpenBadges={() => setShowBadgesModal(true)}
           onOpenCertificate={() => setShowCertificateModal(true)}
           onOpenAdmin={handleOpenAdmin}
@@ -642,6 +645,7 @@ export function App() {
                 progress={progress}
                 onSelectDay={handleSelectDay}
                 onSelectSystemDesign={() => setActiveView('system-design')}
+                onSelectInterviewReadiness={() => setActiveView('interview-readiness')}
                 onOpenAuth={() => setShowAuthModal(true)}
                 onOpenBadges={() => setShowBadgesModal(true)}
                 onOpenCertificate={() => setShowCertificateModal(true)}

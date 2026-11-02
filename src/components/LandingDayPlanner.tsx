@@ -40,6 +40,7 @@ interface LandingDayPlannerProps {
   progress: UserProgress;
   onSelectDay: (day: number, initialTab?: 'notes' | 'ide' | 'pre' | 'post' | 'project') => void;
   onSelectSystemDesign?: () => void;
+  onSelectInterviewReadiness?: () => void;
   onOpenAuth: () => void;
   onOpenBadges: () => void;
   onOpenCertificate: () => void;
@@ -57,6 +58,7 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
   progress,
   onSelectDay,
   onSelectSystemDesign,
+  onSelectInterviewReadiness,
   onOpenAuth,
   onOpenBadges,
   onOpenCertificate,
@@ -691,6 +693,77 @@ export const LandingDayPlanner: React.FC<LandingDayPlannerProps> = ({
                 <div className="px-4 py-2 rounded-xl bg-emerald-950/80 border border-emerald-400/50 text-emerald-300 text-xs font-mono font-bold text-center flex items-center justify-center gap-1.5">
                   <CheckCircle2 className="w-4 h-4 text-emerald-400" />
                   <span>Credential Earned ({progress.systemDesignScore}%)</span>
+                </div>
+              )}
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* NEW SECTION HERO BANNER: Interview Readiness Hub (Fresher & Experienced + 200 MCQs) */}
+      {onSelectInterviewReadiness && (
+        <section className="rounded-3xl bg-linear-to-r from-slate-950 via-emerald-950/70 to-slate-950 border-2 border-emerald-400 p-6 sm:p-8 text-white shadow-2xl relative overflow-hidden">
+          <div className="absolute top-0 right-0 w-96 h-96 bg-emerald-400/10 rounded-full blur-3xl pointer-events-none" />
+
+          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6 relative z-10">
+            <div className="space-y-3 max-w-3xl">
+              <div className="flex flex-wrap items-center gap-2">
+                <span className="px-3 py-1 rounded-full bg-emerald-400 text-slate-950 text-xs font-mono font-black shadow-xs">
+                  🎯 NEW DEDICATED SECTION
+                </span>
+                <span className="px-3 py-1 rounded-full bg-blue-900/60 text-blue-200 text-xs font-mono font-bold border border-blue-400/30">
+                  Fresher & Lateral Dual Tracks
+                </span>
+                <span className="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-300 text-xs font-mono font-bold border border-emerald-400/40">
+                  100 Core + 100 Scenario MCQs (200 Total)
+                </span>
+              </div>
+
+              <h2 className="text-2xl sm:text-3xl font-black text-white tracking-tight">
+                Interview Readiness Hub: Fresher & Lateral Career Mastery
+              </h2>
+
+              <p className="text-xs sm:text-sm text-emerald-100/90 leading-relaxed">
+                Comprehensive interview preparation curriculum built for top tech roles. 
+                <strong> Fresher Track:</strong> DSA 7-step method, Core CS (OOP, OS, DBMS, Networks), ATS resume optimization, STAR HR drills. 
+                <strong> Experienced Track:</strong> System architecture, LLD/HLD, microservices, outage root-cause analysis, and compensation negotiation. 
+                Complete the <strong>100 Core MCQs</strong> and <strong>100 Workplace Scenario MCQs</strong> (Passing benchmark: 80%) to unlock the 
+                <strong> Verifiable Interview Readiness Credential & LinkedIn Badge</strong> signed by Placement Mentor Kapil.
+              </p>
+
+              <div className="flex flex-wrap items-center gap-4 text-xs font-mono text-slate-300 pt-1">
+                <span className="flex items-center gap-1.5 text-emerald-400 font-bold">
+                  <span>⚡</span> 10 Comprehensive Preparation Modules
+                </span>
+                <span className="flex items-center gap-1.5 text-blue-300 font-bold">
+                  <span>⚡</span> 100 Core Interview MCQs
+                </span>
+                <span className="flex items-center gap-1.5 text-amber-300 font-bold">
+                  <span>⚡</span> 100 Real Engineering Scenario MCQs
+                </span>
+              </div>
+            </div>
+
+            <div className="shrink-0 flex flex-col sm:flex-row lg:flex-col gap-3 w-full sm:w-auto">
+              <button
+                type="button"
+                onClick={onSelectInterviewReadiness}
+                className="px-6 py-3.5 rounded-2xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-black text-sm flex items-center justify-center gap-2 transition-all cursor-pointer shadow-lg hover:scale-[1.02]"
+              >
+                <span>Launch Interview Readiness</span>
+                <ChevronRight className="w-5 h-5 text-slate-950" />
+              </button>
+
+              {(progress.interviewReadinessPassed || progress.interviewScenariosPassed) && (
+                <div className="px-4 py-2 rounded-xl bg-emerald-950/90 border border-emerald-400/60 text-emerald-300 text-xs font-mono font-bold text-center flex items-center justify-center gap-1.5">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                  <span>
+                    Passed:{' '}
+                    {[
+                      progress.interviewReadinessPassed ? `Core ${progress.interviewReadinessScore}%` : null,
+                      progress.interviewScenariosPassed ? `Scenarios ${progress.interviewScenariosScore}%` : null,
+                    ].filter(Boolean).join(' | ')}
+                  </span>
                 </div>
               )}
             </div>

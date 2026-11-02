@@ -328,6 +328,18 @@ export async function recordUserSignIn(
     systemDesignBadgeUnlockedAt: currentProgress?.systemDesignBadgeUnlockedAt || existing?.systemDesignBadgeUnlockedAt || cloudData?.systemDesignBadgeUnlockedAt || initMatch?.systemDesignBadgeUnlockedAt || null,
     systemDesignCertificateId: currentProgress?.systemDesignCertificateId || existing?.systemDesignCertificateId || cloudData?.systemDesignCertificateId || initMatch?.systemDesignCertificateId || null,
     systemDesignCertificateIssuedAt: currentProgress?.systemDesignCertificateIssuedAt || existing?.systemDesignCertificateIssuedAt || cloudData?.systemDesignCertificateIssuedAt || initMatch?.systemDesignCertificateIssuedAt || null,
+    // Special Section: Interview Readiness Hub (Fresher & Experienced)
+    interviewReadinessScore: Math.max(initMatch?.interviewReadinessScore ?? 0, cloudData?.interviewReadinessScore ?? 0, existing?.interviewReadinessScore ?? 0, currentProgress?.interviewReadinessScore ?? 0),
+    interviewReadinessCorrectCount: Math.max(initMatch?.interviewReadinessCorrectCount ?? 0, cloudData?.interviewReadinessCorrectCount ?? 0, existing?.interviewReadinessCorrectCount ?? 0, currentProgress?.interviewReadinessCorrectCount ?? 0),
+    interviewReadinessPassed: Boolean(initMatch?.interviewReadinessPassed || cloudData?.interviewReadinessPassed || existing?.interviewReadinessPassed || currentProgress?.interviewReadinessPassed),
+    interviewReadinessAttemptedAt: currentProgress?.interviewReadinessAttemptedAt || existing?.interviewReadinessAttemptedAt || cloudData?.interviewReadinessAttemptedAt || initMatch?.interviewReadinessAttemptedAt || null,
+    interviewScenariosScore: Math.max(initMatch?.interviewScenariosScore ?? 0, cloudData?.interviewScenariosScore ?? 0, existing?.interviewScenariosScore ?? 0, currentProgress?.interviewScenariosScore ?? 0),
+    interviewScenariosCorrectCount: Math.max(initMatch?.interviewScenariosCorrectCount ?? 0, cloudData?.interviewScenariosCorrectCount ?? 0, existing?.interviewScenariosCorrectCount ?? 0, currentProgress?.interviewScenariosCorrectCount ?? 0),
+    interviewScenariosPassed: Boolean(initMatch?.interviewScenariosPassed || cloudData?.interviewScenariosPassed || existing?.interviewScenariosPassed || currentProgress?.interviewScenariosPassed),
+    interviewScenariosAttemptedAt: currentProgress?.interviewScenariosAttemptedAt || existing?.interviewScenariosAttemptedAt || cloudData?.interviewScenariosAttemptedAt || initMatch?.interviewScenariosAttemptedAt || null,
+    interviewBadgeUnlockedAt: currentProgress?.interviewBadgeUnlockedAt || existing?.interviewBadgeUnlockedAt || cloudData?.interviewBadgeUnlockedAt || initMatch?.interviewBadgeUnlockedAt || null,
+    interviewCertificateId: currentProgress?.interviewCertificateId || existing?.interviewCertificateId || cloudData?.interviewCertificateId || initMatch?.interviewCertificateId || null,
+    interviewCertificateIssuedAt: currentProgress?.interviewCertificateIssuedAt || existing?.interviewCertificateIssuedAt || cloudData?.interviewCertificateIssuedAt || initMatch?.interviewCertificateIssuedAt || null,
   };
 
   // Update local registry
@@ -435,6 +447,18 @@ export async function syncLearnerProgress(
     systemDesignBadgeUnlockedAt: progress.systemDesignBadgeUnlockedAt || existing?.systemDesignBadgeUnlockedAt || cloudData?.systemDesignBadgeUnlockedAt || initMatch?.systemDesignBadgeUnlockedAt || null,
     systemDesignCertificateId: progress.systemDesignCertificateId || existing?.systemDesignCertificateId || cloudData?.systemDesignCertificateId || initMatch?.systemDesignCertificateId || null,
     systemDesignCertificateIssuedAt: progress.systemDesignCertificateIssuedAt || existing?.systemDesignCertificateIssuedAt || cloudData?.systemDesignCertificateIssuedAt || initMatch?.systemDesignCertificateIssuedAt || null,
+    // Special Section: Interview Readiness Hub (Fresher & Experienced)
+    interviewReadinessScore: Math.max(initMatch?.interviewReadinessScore ?? 0, cloudData?.interviewReadinessScore ?? 0, existing?.interviewReadinessScore ?? 0, progress.interviewReadinessScore ?? 0),
+    interviewReadinessCorrectCount: Math.max(initMatch?.interviewReadinessCorrectCount ?? 0, cloudData?.interviewReadinessCorrectCount ?? 0, existing?.interviewReadinessCorrectCount ?? 0, progress.interviewReadinessCorrectCount ?? 0),
+    interviewReadinessPassed: Boolean(initMatch?.interviewReadinessPassed || cloudData?.interviewReadinessPassed || existing?.interviewReadinessPassed || progress.interviewReadinessPassed),
+    interviewReadinessAttemptedAt: progress.interviewReadinessAttemptedAt || existing?.interviewReadinessAttemptedAt || cloudData?.interviewReadinessAttemptedAt || initMatch?.interviewReadinessAttemptedAt || null,
+    interviewScenariosScore: Math.max(initMatch?.interviewScenariosScore ?? 0, cloudData?.interviewScenariosScore ?? 0, existing?.interviewScenariosScore ?? 0, progress.interviewScenariosScore ?? 0),
+    interviewScenariosCorrectCount: Math.max(initMatch?.interviewScenariosCorrectCount ?? 0, cloudData?.interviewScenariosCorrectCount ?? 0, existing?.interviewScenariosCorrectCount ?? 0, progress.interviewScenariosCorrectCount ?? 0),
+    interviewScenariosPassed: Boolean(initMatch?.interviewScenariosPassed || cloudData?.interviewScenariosPassed || existing?.interviewScenariosPassed || progress.interviewScenariosPassed),
+    interviewScenariosAttemptedAt: progress.interviewScenariosAttemptedAt || existing?.interviewScenariosAttemptedAt || cloudData?.interviewScenariosAttemptedAt || initMatch?.interviewScenariosAttemptedAt || null,
+    interviewBadgeUnlockedAt: progress.interviewBadgeUnlockedAt || existing?.interviewBadgeUnlockedAt || cloudData?.interviewBadgeUnlockedAt || initMatch?.interviewBadgeUnlockedAt || null,
+    interviewCertificateId: progress.interviewCertificateId || existing?.interviewCertificateId || cloudData?.interviewCertificateId || initMatch?.interviewCertificateId || null,
+    interviewCertificateIssuedAt: progress.interviewCertificateIssuedAt || existing?.interviewCertificateIssuedAt || cloudData?.interviewCertificateIssuedAt || initMatch?.interviewCertificateIssuedAt || null,
   };
 
   localRegistry[user.email.toLowerCase()] = updatedRecord;
@@ -716,6 +740,9 @@ export function downloadAssessmentScoresCSV(learners: LearnerRecord[], dayFilter
       const postPassed = rawPost !== undefined ? (rawPost >= 80 ? 'PASSED (>=80%)' : 'NEEDS RETAKE (<80%)') : 'NOT ATTEMPTED';
 
       const dayCompleted = (rawPre !== undefined && rawPre >= 80 && rawPost !== undefined && rawPost >= 80) ? 'YES' : 'NO';
+      const sysDesignStr = l.systemDesignScore !== undefined ? `${l.systemDesignScore}% (${l.systemDesignPassed ? 'PASS' : 'RETAKE'})` : 'Not Attempted';
+      const intCoreStr = l.interviewReadinessScore !== undefined ? `${l.interviewReadinessScore}% (${l.interviewReadinessPassed ? 'PASS' : 'RETAKE'})` : 'Not Attempted';
+      const intScenStr = l.interviewScenariosScore !== undefined ? `${l.interviewScenariosScore}% (${l.interviewScenariosPassed ? 'PASS' : 'RETAKE'})` : 'Not Attempted';
       const badgeCount = Object.keys(l.unlockedBadges || {}).length;
 
       return [
@@ -765,6 +792,9 @@ export function downloadAssessmentScoresCSV(learners: LearnerRecord[], dayFilter
       'Day 10 Pre (Cutoff 80%)',
       'Day 10 Post (Cutoff 80%)',
       'Aptitude Assessment (50 Qs, Cutoff 80%)',
+      'System Design (120 Qs, Cutoff 80%)',
+      'Interview Core (100 Qs, Cutoff 80%)',
+      'Interview Scenarios (100 Qs, Cutoff 80%)',
       'Aptitude Passed',
       'B-Tech Stress Wheel Score (25 Qs)',
       'DSA Pattern Quiz (100 Scenarios)',
@@ -803,6 +833,9 @@ export function downloadAssessmentScoresCSV(learners: LearnerRecord[], dayFilter
       const aptPassStr = l.aptitudePassed ? 'PASSED (>=80%)' : (l.aptitudeScore !== undefined ? 'FAILED (<80%)' : 'Pending');
       const stressScoreStr = l.stressQuizScore !== undefined ? `${l.stressQuizScore}/25 (${Math.round((l.stressQuizScore/25)*100)}%)` : 'Not Attempted';
       const patternScoreStr = l.patternQuizScore !== undefined ? `${l.patternQuizScore}/100` : 'Not Attempted';
+      const sysDesignStr = l.systemDesignScore !== undefined ? `${l.systemDesignScore}% (${l.systemDesignPassed ? 'PASS' : 'RETAKE'})` : 'Not Attempted';
+      const intCoreStr = l.interviewReadinessScore !== undefined ? `${l.interviewReadinessScore}% (${l.interviewReadinessPassed ? 'PASS' : 'RETAKE'})` : 'Not Attempted';
+      const intScenStr = l.interviewScenariosScore !== undefined ? `${l.interviewScenariosScore}% (${l.interviewScenariosPassed ? 'PASS' : 'RETAKE'})` : 'Not Attempted';
 
       return [
         `"${(l.name || 'Learner').replace(/"/g, '""')}"`,
@@ -812,6 +845,9 @@ export function downloadAssessmentScoresCSV(learners: LearnerRecord[], dayFilter
         `"${l.lastLoginAttempt || ''}"`,
         ...scoresCols,
         `"${aptScoreStr}"`,
+        `"${sysDesignStr}"`,
+        `"${intCoreStr}"`,
+        `"${intScenStr}"`, 
         `"${aptPassStr}"`,
         `"${stressScoreStr}"`,
         `"${patternScoreStr}"`,

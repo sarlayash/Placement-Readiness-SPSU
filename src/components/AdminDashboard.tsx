@@ -680,6 +680,8 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
 
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Aptitude (50 Qs)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Sys Design (120 Qs)</th>
+                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Interview Core (100 Qs)</th>
+                  <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Interview Scenarios (100 Qs)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Stress (25 Qs)</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Days Done</th>
                   <th className="py-3 px-3 text-center border-r border-[#1E3A8A]">Badges</th>
@@ -689,7 +691,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
               <tbody className="divide-y divide-slate-200">
                 {filteredLearners.length === 0 ? (
                   <tr>
-                    <td colSpan={tableScope === 'day_focus' ? 11 : 18} className="py-12 text-center text-slate-500">
+                    <td colSpan={tableScope === 'day_focus' ? 13 : 20} className="py-12 text-center text-slate-500">
                       <div className="space-y-2">
                         <Users className="w-8 h-8 text-slate-400 mx-auto" />
                         <div className="font-bold text-slate-700">No learners found matching criteria.</div>
@@ -851,6 +853,46 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                               <span>{learner.systemDesignScore}%</span>
                               <span className="text-[8px] uppercase tracking-wider">
                                 {learner.systemDesignPassed ? 'PASS' : 'RETAKE'}
+                              </span>
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
+                          )}
+                        </td>
+
+                        {/* Interview Core Assessment */}
+                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
+                          {learner.interviewReadinessScore !== undefined ? (
+                            <span
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
+                                learner.interviewReadinessPassed
+                                  ? 'bg-emerald-100 text-emerald-900 border-emerald-400 font-bold'
+                                  : 'bg-rose-50 text-rose-800 border-rose-300'
+                              }`}
+                            >
+                              <span>{learner.interviewReadinessScore}%</span>
+                              <span className="text-[8px] uppercase tracking-wider">
+                                {learner.interviewReadinessPassed ? 'PASS' : 'RETAKE'}
+                              </span>
+                            </span>
+                          ) : (
+                            <span className="text-slate-400 font-mono text-[10px]">Pending</span>
+                          )}
+                        </td>
+
+                        {/* Interview Scenarios Assessment */}
+                        <td className="py-3 px-2.5 text-center border-r border-slate-200">
+                          {learner.interviewScenariosScore !== undefined ? (
+                            <span
+                              className={`inline-flex items-center gap-1 px-2 py-0.5 rounded-full font-mono font-bold text-[10px] border ${
+                                learner.interviewScenariosPassed
+                                  ? 'bg-blue-100 text-blue-900 border-blue-400 font-bold'
+                                  : 'bg-rose-50 text-rose-800 border-rose-300'
+                              }`}
+                            >
+                              <span>{learner.interviewScenariosScore}%</span>
+                              <span className="text-[8px] uppercase tracking-wider">
+                                {learner.interviewScenariosPassed ? 'PASS' : 'RETAKE'}
                               </span>
                             </span>
                           ) : (

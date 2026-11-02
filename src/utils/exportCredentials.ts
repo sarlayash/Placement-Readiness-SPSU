@@ -931,3 +931,334 @@ export function downloadSystemDesignCertificatePDF(
   const safeName = user.name.replace(/[^a-zA-Z0-9]/g, '_');
   pdf.save(`SPSU_System_Design_Certificate_${safeName}.pdf`);
 }
+
+/**
+ * Generates an uncropped 1000x1000 Canvas for Interview Readiness Badge
+ */
+export function renderInterviewReadinessBadgeCanvas(
+  user: GoogleUser | null,
+  score: number = 100,
+  unlockedTimestamp?: string
+): HTMLCanvasElement {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1000;
+  canvas.height = 1000;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return canvas;
+
+  // Background
+  const bgGrad = ctx.createRadialGradient(500, 500, 50, 500, 500, 500);
+  bgGrad.addColorStop(0, '#064e3b');
+  bgGrad.addColorStop(0.6, '#022c22');
+  bgGrad.addColorStop(1, '#01140e');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, 1000, 1000);
+
+  // Outer Gold Rings
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(500, 500, 460, 0, Math.PI * 2);
+  ctx.strokeStyle = '#10b981';
+  ctx.lineWidth = 6;
+  ctx.stroke();
+
+  ctx.beginPath();
+  ctx.arc(500, 500, 440, 0, Math.PI * 2);
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 14;
+  ctx.stroke();
+  ctx.restore();
+
+  // Shield Emblem
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(500, 500, 410, 0, Math.PI * 2);
+  ctx.fillStyle = '#065f46';
+  ctx.fill();
+  ctx.restore();
+
+  // Inner Glow
+  const innerGrad = ctx.createRadialGradient(500, 500, 80, 500, 500, 400);
+  innerGrad.addColorStop(0, '#047857');
+  innerGrad.addColorStop(1, '#022c22');
+  ctx.fillStyle = innerGrad;
+  ctx.beginPath();
+  ctx.arc(500, 500, 390, 0, Math.PI * 2);
+  ctx.fill();
+
+  // Decorative Starburst / Ribbons
+  ctx.fillStyle = '#fbbf24';
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 30px "Inter", sans-serif';
+  ctx.letterSpacing = '6px';
+  ctx.fillText('★ SIR PADAMPAT SINGHANIA UNIVERSITY ★', 500, 210);
+
+  // Center Emblem Icon (Target & Laurel Ring)
+  ctx.save();
+  ctx.beginPath();
+  ctx.arc(500, 360, 85, 0, Math.PI * 2);
+  ctx.fillStyle = '#f59e0b';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(500, 360, 65, 0, Math.PI * 2);
+  ctx.fillStyle = '#047857';
+  ctx.fill();
+
+  ctx.beginPath();
+  ctx.arc(500, 360, 35, 0, Math.PI * 2);
+  ctx.fillStyle = '#fef3c7';
+  ctx.fill();
+  ctx.restore();
+
+  // Badge Titles
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '900 48px "Inter", sans-serif';
+  ctx.fillText('INTERVIEW READINESS', 500, 510);
+
+  ctx.fillStyle = '#34d399';
+  ctx.font = 'bold 36px "Inter", sans-serif';
+  ctx.fillText('PLACEMENT SPECIALIST', 500, 560);
+
+  ctx.fillStyle = '#fde68a';
+  ctx.font = '600 24px "Inter", sans-serif';
+  ctx.fillText('DUAL TRACK: FRESHER & EXPERIENCED SDE', 500, 610);
+
+  // Learner Pill
+  const learnerName = user?.name || 'Verified Placement Candidate';
+  ctx.fillStyle = 'rgba(2, 44, 34, 0.9)';
+  ctx.beginPath();
+  ctx.roundRect(160, 660, 680, 85, 42);
+  ctx.fill();
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 3;
+  ctx.stroke();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 34px "Inter", sans-serif';
+  ctx.fillText(learnerName, 500, 715);
+
+  // Score & Verification
+  const dateStr = unlockedTimestamp
+    ? new Date(unlockedTimestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })
+    : new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+  ctx.fillStyle = '#6ee7b7';
+  ctx.font = 'bold 24px "Inter", sans-serif';
+  ctx.fillText(`VERIFIED SCORE: ${score}% • ${dateStr}`, 500, 790);
+
+  // Signatory
+  ctx.fillStyle = '#e2e8f0';
+  ctx.font = 'italic 26px "Inter", sans-serif';
+  ctx.fillText('Placement Mentor Kapil', 500, 850);
+
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '500 18px "Inter", sans-serif';
+  ctx.fillText('Head of Corporate Training & Placements • SPSU Udaipur', 500, 885);
+
+  return canvas;
+}
+
+export function downloadInterviewReadinessBadgePNG(
+  user: GoogleUser | null,
+  score: number = 100,
+  unlockedTimestamp?: string
+): void {
+  const canvas = renderInterviewReadinessBadgeCanvas(user, score, unlockedTimestamp);
+  const dataUrl = canvas.toDataURL('image/png', 1.0);
+  const link = document.createElement('a');
+  const safeName = (user?.name || 'Learner').replace(/[^a-zA-Z0-9]/g, '_');
+  link.download = `SPSU_Interview_Readiness_Badge_${safeName}.png`;
+  link.href = dataUrl;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+export function downloadInterviewReadinessBadgePDF(
+  user: GoogleUser | null,
+  score: number = 100,
+  unlockedTimestamp?: string
+): void {
+  const canvas = renderInterviewReadinessBadgeCanvas(user, score, unlockedTimestamp);
+  const dataUrl = canvas.toDataURL('image/png', 1.0);
+  const pdf = new jsPDF({
+    orientation: 'portrait',
+    unit: 'pt',
+    format: [1000, 1000],
+  });
+  pdf.addImage(dataUrl, 'PNG', 0, 0, 1000, 1000, undefined, 'FAST');
+  const safeName = (user?.name || 'Learner').replace(/[^a-zA-Z0-9]/g, '_');
+  pdf.save(`SPSU_Interview_Readiness_Badge_${safeName}.pdf`);
+}
+
+/**
+ * Generates an uncropped 1920x1080 Landscape Canvas for Interview Readiness Certificate
+ */
+export function renderInterviewReadinessCertificateCanvas(
+  user: GoogleUser,
+  score: number = 100,
+  correctCount: number = 80,
+  issuedTimestamp?: string
+): HTMLCanvasElement {
+  const canvas = document.createElement('canvas');
+  canvas.width = 1920;
+  canvas.height = 1080;
+  const ctx = canvas.getContext('2d');
+  if (!ctx) return canvas;
+
+  // Background
+  const bgGrad = ctx.createLinearGradient(0, 0, 1920, 1080);
+  bgGrad.addColorStop(0, '#022c22');
+  bgGrad.addColorStop(0.5, '#064e3b');
+  bgGrad.addColorStop(1, '#01140e');
+  ctx.fillStyle = bgGrad;
+  ctx.fillRect(0, 0, 1920, 1080);
+
+  // Outer Border & Guilloche Frame
+  ctx.save();
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 12;
+  ctx.strokeRect(50, 50, 1820, 980);
+
+  ctx.strokeStyle = '#10b981';
+  ctx.lineWidth = 4;
+  ctx.strokeRect(70, 70, 1780, 940);
+  ctx.restore();
+
+  // University Header
+  ctx.fillStyle = '#fbbf24';
+  ctx.textAlign = 'center';
+  ctx.font = 'bold 36px "Inter", sans-serif';
+  ctx.letterSpacing = '8px';
+  ctx.fillText('SIR PADAMPAT SINGHANIA UNIVERSITY, UDAIPUR', 960, 140);
+
+  ctx.fillStyle = '#a7f3d0';
+  ctx.font = '600 22px "Inter", sans-serif';
+  ctx.letterSpacing = '4px';
+  ctx.fillText('DEPARTMENT OF TRAINING & PLACEMENT • SPECIAL EXECUTIVE CREDENTIAL', 960, 180);
+
+  // Certificate Title
+  ctx.fillStyle = '#ffffff';
+  ctx.font = '900 56px "Inter", sans-serif';
+  ctx.fillText('CERTIFICATE OF INTERVIEW READINESS', 960, 280);
+
+  ctx.fillStyle = '#34d399';
+  ctx.font = 'bold 28px "Inter", sans-serif';
+  ctx.fillText('DUAL TRACK: CAMPUS FRESHER & EXPERIENCED SDE', 960, 330);
+
+  // Presentation text
+  ctx.fillStyle = '#cbd5e1';
+  ctx.font = 'italic 28px "Inter", sans-serif';
+  ctx.fillText('This official credential certifies that', 960, 420);
+
+  // Candidate Name
+  ctx.fillStyle = '#fef08a';
+  ctx.font = '900 68px "Inter", sans-serif';
+  ctx.fillText(user.name.toUpperCase(), 960, 500);
+
+  // Email & Student Ref
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '500 22px "Inter", sans-serif';
+  ctx.fillText(`Verified Email: ${user.email}`, 960, 545);
+
+  // Description body
+  ctx.fillStyle = '#e2e8f0';
+  ctx.font = '400 26px "Inter", sans-serif';
+  ctx.fillText(
+    'has successfully mastered the comprehensive Placement & Lateral Interview Readiness Curriculum,',
+    960,
+    620
+  );
+  ctx.fillText(
+    'demonstrating superior competence across Algorithmic Problem Solving, Core CS Fundamentals, Low-Level Design (LLD),',
+    960,
+    660
+  );
+  ctx.fillText(
+    'High-Level System Design (HLD), Production Incident Outage Triage, and Behavioral STAR Leadership.',
+    960,
+    700
+  );
+
+  // Score Badge
+  ctx.fillStyle = '#10b981';
+  ctx.font = 'bold 30px "Inter", sans-serif';
+  ctx.fillText(`Assessment Score: ${score}% (${correctCount}/100 Correct) • Status: PASSED`, 960, 770);
+
+  // Footer Metadata
+  const dateStr = issuedTimestamp
+    ? new Date(issuedTimestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
+    : new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  const certId = `SPSU-IR-${Math.abs(user.email.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase()}-${new Date().getFullYear()}`;
+
+  // Left: Date & Credential ID
+  ctx.textAlign = 'left';
+  ctx.fillStyle = '#cbd5e1';
+  ctx.font = 'bold 22px "Inter", sans-serif';
+  ctx.fillText(`Date of Issuance: ${dateStr}`, 140, 880);
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '500 20px "Inter", sans-serif';
+  ctx.fillText(`Credential ID: ${certId}`, 140, 920);
+  ctx.fillText(`Verification: portal.spsu.edu.in/verify/${certId}`, 140, 950);
+
+  // Right: Signature
+  ctx.textAlign = 'right';
+  ctx.fillStyle = '#fef08a';
+  ctx.font = 'italic bold 34px "Inter", sans-serif';
+  ctx.fillText('Kapil', 1780, 870);
+
+  ctx.strokeStyle = '#f59e0b';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(1500, 885);
+  ctx.lineTo(1780, 885);
+  ctx.stroke();
+
+  ctx.fillStyle = '#ffffff';
+  ctx.font = 'bold 24px "Inter", sans-serif';
+  ctx.fillText('Placement Mentor Kapil', 1780, 920);
+
+  ctx.fillStyle = '#94a3b8';
+  ctx.font = '500 18px "Inter", sans-serif';
+  ctx.fillText('Head of Corporate Training & Placements', 1780, 950);
+  ctx.fillText('Sir Padampat Singhania University, Udaipur', 1780, 975);
+
+  return canvas;
+}
+
+export function downloadInterviewReadinessCertificatePNG(
+  user: GoogleUser,
+  score: number = 100,
+  correctCount: number = 80,
+  issuedTimestamp?: string
+): void {
+  const canvas = renderInterviewReadinessCertificateCanvas(user, score, correctCount, issuedTimestamp);
+  const dataUrl = canvas.toDataURL('image/png', 1.0);
+  const link = document.createElement('a');
+  const safeName = user.name.replace(/[^a-zA-Z0-9]/g, '_');
+  link.download = `SPSU_Interview_Readiness_Certificate_${safeName}.png`;
+  link.href = dataUrl;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+export function downloadInterviewReadinessCertificatePDF(
+  user: GoogleUser,
+  score: number = 100,
+  correctCount: number = 80,
+  issuedTimestamp?: string
+): void {
+  const canvas = renderInterviewReadinessCertificateCanvas(user, score, correctCount, issuedTimestamp);
+  const dataUrl = canvas.toDataURL('image/png', 1.0);
+  const pdf = new jsPDF({
+    orientation: 'landscape',
+    unit: 'pt',
+    format: [1920, 1080],
+  });
+  pdf.addImage(dataUrl, 'PNG', 0, 0, 1920, 1080, undefined, 'FAST');
+  const safeName = user.name.replace(/[^a-zA-Z0-9]/g, '_');
+  pdf.save(`SPSU_Interview_Readiness_Certificate_${safeName}.pdf`);
+}

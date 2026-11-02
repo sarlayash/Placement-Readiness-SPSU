@@ -183,6 +183,18 @@ export interface UserProgress {
   systemDesignBadgeUnlockedAt?: string | null;
   systemDesignCertificateId?: string | null;
   systemDesignCertificateIssuedAt?: string | null;
+  // Special Section: Interview Readiness Hub (Fresher & Experienced)
+  interviewReadinessScore?: number; // 0..100 percentage
+  interviewReadinessCorrectCount?: number; // 0..100
+  interviewReadinessPassed?: boolean; // >= 80%
+  interviewReadinessAttemptedAt?: string | null;
+  interviewScenariosScore?: number; // 0..100 percentage
+  interviewScenariosCorrectCount?: number; // 0..100
+  interviewScenariosPassed?: boolean; // >= 80%
+  interviewScenariosAttemptedAt?: string | null;
+  interviewBadgeUnlockedAt?: string | null;
+  interviewCertificateId?: string | null;
+  interviewCertificateIssuedAt?: string | null;
 }
 
 export interface LearnerRecord {
@@ -221,4 +233,61 @@ export interface LearnerRecord {
   systemDesignBadgeUnlockedAt?: string | null;
   systemDesignCertificateId?: string | null;
   systemDesignCertificateIssuedAt?: string | null;
+  // Special Section: Interview Readiness Hub (Fresher & Experienced)
+  interviewReadinessScore?: number;
+  interviewReadinessCorrectCount?: number;
+  interviewReadinessPassed?: boolean;
+  interviewReadinessAttemptedAt?: string | null;
+  interviewScenariosScore?: number;
+  interviewScenariosCorrectCount?: number;
+  interviewScenariosPassed?: boolean;
+  interviewScenariosAttemptedAt?: string | null;
+  interviewBadgeUnlockedAt?: string | null;
+  interviewCertificateId?: string | null;
+  interviewCertificateIssuedAt?: string | null;
+}
+
+export interface InterviewTrackModule {
+  id: string;
+  track: 'fresher' | 'experienced' | 'universal';
+  title: string;
+  subtitle: string;
+  estimatedReadTime: string;
+  summary: string;
+  keyTakeaways: string[];
+  kapilMentorTips: string[];
+  deepDiveMarkdown: string;
+  codeSnippets?: {
+    language: string;
+    title: string;
+    code: string;
+  }[];
+  sampleInterviewQA: {
+    question: string;
+    interviewerExpectation: string;
+    idealAnswer: string;
+    redFlagsToAvoid: string;
+  }[];
+}
+
+export interface InterviewAssessmentQuestion {
+  id: string;
+  question: string;
+  options: string[];
+  correctIndex: number;
+  explanation: string;
+  track: 'fresher' | 'experienced' | 'universal';
+  category: string;
+  companyTags?: string[];
+}
+
+export interface InterviewScenarioQuestion {
+  id: string;
+  scenarioContext: string;
+  question: string;
+  options: string[];
+  correctIndex: number;
+  explanation: string;
+  roleContext: string; // e.g. "Fresher / Campus Placement", "Experienced SDE (1-5 Yrs)", "Team Lead / Architect"
+  category: string;
 }

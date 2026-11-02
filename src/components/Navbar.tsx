@@ -19,13 +19,14 @@ import { LiveDateTime } from './LiveDateTime';
 interface NavbarProps {
   user: GoogleUser | null;
   progress: UserProgress;
-  activeView: 'planner' | 'day-workspace' | 'admin' | 'system-design';
+  activeView: 'planner' | 'day-workspace' | 'admin' | 'system-design' | 'interview-readiness';
   selectedDay: number;
   isSidebarCollapsed: boolean;
   onToggleSidebar: () => void;
   onSelectPlanner: () => void;
   onSelectDay: (day: number) => void;
   onSelectSystemDesign?: () => void;
+  onSelectInterviewReadiness?: () => void;
   onOpenAuth: () => void;
   onSignOut: () => void;
   onOpenBadges: () => void;
@@ -46,6 +47,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSelectPlanner,
   onSelectDay,
   onSelectSystemDesign,
+  onSelectInterviewReadiness,
   onOpenAuth,
   onSignOut,
   onOpenBadges,
@@ -129,6 +131,27 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <span className="text-amber-400">★</span>
               <span className="hidden sm:inline">System Design</span>
+            </button>
+          )}
+
+          {/* New Section: Interview Readiness Hub Link */}
+          {onSelectInterviewReadiness && (
+            <button
+              type="button"
+              onClick={onSelectInterviewReadiness}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-xs font-black transition-all cursor-pointer shadow-xs ${
+                activeView === 'interview-readiness'
+                  ? 'bg-emerald-400 text-slate-950 ring-2 ring-white'
+                  : 'bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 border border-emerald-400/40'
+              }`}
+              title="Interview Readiness Hub: Fresher & Experienced Dual Tracks (200 MCQs)"
+            >
+              <span className="text-sm">🎯</span>
+              <span className="hidden sm:inline">Interview Readiness</span>
+              <span className="sm:hidden">Interviews</span>
+              <span className="text-[10px] bg-emerald-400 text-slate-950 font-black px-1 rounded-sm uppercase tracking-wider">
+                200 Q
+              </span>
             </button>
           )}
 

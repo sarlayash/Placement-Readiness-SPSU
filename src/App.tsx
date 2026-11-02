@@ -559,6 +559,44 @@ export function App() {
     });
   };
 
+  const handleSaveInterviewScore = (
+    type: 'core' | 'scenarios',
+    score: number,
+    correctCount: number,
+    passed: boolean
+  ) => {
+    setProgress((prev) => {
+      const now = new Date().toISOString();
+      const isCore = type === 'core';
+      const nextProgress: UserProgress = {
+        ...prev,
+        interviewReadinessScore: isCore ? score : prev.interviewReadinessScore,
+        interviewReadinessCorrectCount: isCore ? correctCount : prev.interviewReadinessCorrectCount,
+        interviewReadinessPassed: isCore ? (passed || prev.interviewReadinessPassed) : prev.interviewReadinessPassed,
+        interviewReadinessAttemptedAt: isCore ? now : prev.interviewReadinessAttemptedAt,
+        interviewScenariosScore: !isCore ? score : prev.interviewScenariosScore,
+        interviewScenariosCorrectCount: !isCore ? correctCount : prev.interviewScenariosCorrectCount,
+        interviewScenariosPassed: !isCore ? (passed || prev.interviewScenariosPassed) : prev.interviewScenariosPassed,
+        interviewScenariosAttemptedAt: !isCore ? now : prev.interviewScenariosAttemptedAt,
+        interviewBadgeUnlockedAt: passed
+          ? prev.interviewBadgeUnlockedAt || now
+          : prev.interviewBadgeUnlockedAt,
+        interviewCertificateId: passed
+          ? prev.interviewCertificateId || (user ? generateOfficialCertificateId(user.email) : 'SPSU-INT-READY-2026')
+          : prev.interviewCertificateId,
+        interviewCertificateIssuedAt: passed
+          ? prev.interviewCertificateIssuedAt || now
+          : prev.interviewCertificateIssuedAt,
+      };
+
+      saveStoredProgress(nextProgress, user?.email);
+      if (user) {
+        syncLearnerProgress(user, nextProgress);
+      }
+      return nextProgress;
+    });
+  };
+
   const activeDayPlan =
     COMPLETE_10_DAY_PLAN.find((d) => d.day === selectedDay) || COMPLETE_10_DAY_PLAN[0];
 
@@ -575,7 +613,10 @@ export function App() {
         onSelectPlanner={() => setActiveView('planner')}
         onSelectDay={(d) => handleSelectDay(d, 'notes')}
         onSelectSystemDesign={() => setActiveView('system-design')}
-        onSelectInterviewReadiness={() => setActiveView('interview-readiness')}
+        onSelectInterviewReadiness={() => {
+          setActiveView('interview-readiness');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
         onOpenAuth={() => setShowAuthModal(true)}
         onSignOut={handleSignOut}
         onOpenBadges={() => setShowBadgesModal(true)}
@@ -600,7 +641,10 @@ export function App() {
           onSelectPlanner={() => setActiveView('planner')}
           onSelectDay={(d) => handleSelectDay(d, 'notes')}
           onSelectSystemDesign={() => setActiveView('system-design')}
-          onSelectInterviewReadiness={() => setActiveView('interview-readiness')}
+          onSelectInterviewReadiness={() => {
+          setActiveView('interview-readiness');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
           onOpenBadges={() => setShowBadgesModal(true)}
           onOpenCertificate={() => setShowCertificateModal(true)}
           onOpenAdmin={handleOpenAdmin}
@@ -637,6 +681,17 @@ export function App() {
                 onRequireAuth={() => setShowAuthModal(true)}
                 onSaveSystemDesignScore={handleSaveSystemDesignScore}
               />
+            ) : activeView === 'interview-readiness' ? (
+              <InterviewReadinessWorkspace
+                user={user}
+                progress={progress}
+                onBackToPlanner={() => {
+                  setActiveView('planner');
+                  window.scrollTo({ top: 0, behavior: 'smooth' });
+                }}
+                onRequireAuth={() => setShowAuthModal(true)}
+                onSaveInterviewScore={handleSaveInterviewScore}
+              />
             ) : activeView === 'planner' ? (
               <LandingDayPlanner
                 days={COMPLETE_10_DAY_PLAN}
@@ -645,7 +700,10 @@ export function App() {
                 progress={progress}
                 onSelectDay={handleSelectDay}
                 onSelectSystemDesign={() => setActiveView('system-design')}
-                onSelectInterviewReadiness={() => setActiveView('interview-readiness')}
+                onSelectInterviewReadiness={() => {
+          setActiveView('interview-readiness');
+          window.scrollTo({ top: 0, behavior: 'smooth' });
+        }}
                 onOpenAuth={() => setShowAuthModal(true)}
                 onOpenBadges={() => setShowBadgesModal(true)}
                 onOpenCertificate={() => setShowCertificateModal(true)}

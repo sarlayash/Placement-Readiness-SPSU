@@ -621,6 +621,7 @@ export function App() {
         onSignOut={handleSignOut}
         onOpenBadges={() => setShowBadgesModal(true)}
         onOpenCertificate={() => setShowCertificateModal(true)}
+        onOpenCredentials={() => setShowSelfService(true)}
         onOpenAdmin={handleOpenAdmin}
         onOpenLearnerDashboard={() => setShowLearnerDashboard(true)}
         onOpenNotifications={() => {

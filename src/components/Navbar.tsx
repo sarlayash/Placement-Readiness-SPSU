@@ -6,6 +6,7 @@ import {
   Calendar,
   Code2,
   FileCheck2,
+  FileText,
   Layers,
   Lock,
   LogIn,
@@ -31,6 +32,7 @@ interface NavbarProps {
   onSignOut: () => void;
   onOpenBadges: () => void;
   onOpenCertificate: () => void;
+  onOpenCredentials?: () => void;
   onOpenAdmin: () => void;
   onOpenLearnerDashboard: () => void;
   onOpenNotifications: () => void;
@@ -52,6 +54,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   onSignOut,
   onOpenBadges,
   onOpenCertificate,
+  onOpenCredentials,
   onOpenAdmin,
   onOpenLearnerDashboard,
   onOpenNotifications,
@@ -206,6 +209,19 @@ export const Navbar: React.FC<NavbarProps> = ({
             <FileCheck2 className="w-4 h-4 text-[#1E3A8A]" />
             <span className="hidden md:inline">Certificate</span>
           </button>
+
+          {/* Credentials, LOR & 360° Reports Hub Button */}
+          {onOpenCredentials && (
+            <button
+              type="button"
+              onClick={onOpenCredentials}
+              className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-gradient-to-r from-amber-400 to-amber-300 hover:from-amber-300 hover:to-amber-200 text-[#0A192F] text-xs font-black transition-all cursor-pointer shadow-xs"
+              title="Credentials, Official LOR & 360° Reports Hub (Live Previews & Downloads)"
+            >
+              <FileText className="w-4 h-4 text-[#0A192F]" />
+              <span className="hidden lg:inline">Credentials & LOR</span>
+            </button>
+          )}
 
           {/* Admin Lock Button */}
           <button

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { LearnerRecord } from '../types';
 import { fetchAllLearners, subscribeToLearners, downloadAssessmentScoresCSV } from '../utils/learnerRegistry';
 import { download360DegreeReportPDF, downloadMentorKapilLorPDF } from '../utils/reportAndLorGenerator';
+import { downloadCertificatePDF, downloadCertificatePNG } from '../utils/exportCredentials';
 import { LiveDateTime } from './LiveDateTime';
 import {
   Award,
@@ -13,6 +14,7 @@ import {
   FileText,
   Filter,
   GraduationCap,
+  Image,
   Layers,
   Lock,
   LogOut,
@@ -1068,6 +1070,70 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                   >
                     <Download className="w-3.5 h-3.5" />
                     <span>Download LOR (PDF)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const dummyProgress = {
+                        preAssessmentScores: inspectedLearner.preAssessmentScores || {},
+                        postAssessmentScores: inspectedLearner.postAssessmentScores || {},
+                        preAssessmentPassed: inspectedLearner.preAssessmentPassed || {},
+                        postAssessmentPassed: inspectedLearner.postAssessmentPassed || {},
+                        completedChallengeIds: [],
+                        readNoteIds: [],
+                        completedDays: inspectedLearner.completedDays || {},
+                        unlockedBadges: inspectedLearner.unlockedBadges || {},
+                        savedCode: {},
+                        certificateId: inspectedLearner.certificateId || null,
+                        certificateIssuedAt: inspectedLearner.certificateIssuedAt || null,
+                        aptitudeScore: inspectedLearner.aptitudeScore ?? 84,
+                        aptitudePassed: inspectedLearner.aptitudePassed ?? true,
+                        stressQuizScore: inspectedLearner.stressQuizScore ?? 22,
+                        patternQuizScore: inspectedLearner.patternQuizScore ?? 90,
+                      };
+                      downloadCertificatePDF(
+                        inspectedLearner as any,
+                        dummyProgress as any,
+                        Object.keys(inspectedLearner.unlockedBadges || {}).length || 10
+                      );
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-xs transition-colors cursor-pointer"
+                  >
+                    <Award className="w-3.5 h-3.5 text-white" />
+                    <span>Certificate (PDF)</span>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const dummyProgress = {
+                        preAssessmentScores: inspectedLearner.preAssessmentScores || {},
+                        postAssessmentScores: inspectedLearner.postAssessmentScores || {},
+                        preAssessmentPassed: inspectedLearner.preAssessmentPassed || {},
+                        postAssessmentPassed: inspectedLearner.postAssessmentPassed || {},
+                        completedChallengeIds: [],
+                        readNoteIds: [],
+                        completedDays: inspectedLearner.completedDays || {},
+                        unlockedBadges: inspectedLearner.unlockedBadges || {},
+                        savedCode: {},
+                        certificateId: inspectedLearner.certificateId || null,
+                        certificateIssuedAt: inspectedLearner.certificateIssuedAt || null,
+                        aptitudeScore: inspectedLearner.aptitudeScore ?? 84,
+                        aptitudePassed: inspectedLearner.aptitudePassed ?? true,
+                        stressQuizScore: inspectedLearner.stressQuizScore ?? 22,
+                        patternQuizScore: inspectedLearner.patternQuizScore ?? 90,
+                      };
+                      downloadCertificatePNG(
+                        inspectedLearner as any,
+                        dummyProgress as any,
+                        Object.keys(inspectedLearner.unlockedBadges || {}).length || 10
+                      );
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/20 hover:bg-white/30 text-white font-bold text-xs transition-colors cursor-pointer"
+                  >
+                    <Image className="w-3.5 h-3.5" />
+                    <span>Certificate (PNG)</span>
                   </button>
                 </div>
               </div>

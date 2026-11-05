@@ -145,6 +145,7 @@ export interface DailyBadge {
 export interface GoogleUser {
   uid: string;
   name: string;
+  displayName?: string;
   email: string;
   photoURL: string;
   signedInAt: string;
@@ -193,8 +194,10 @@ export interface UserProgress {
   interviewScenariosPassed?: boolean; // >= 80%
   interviewScenariosAttemptedAt?: string | null;
   interviewBadgeUnlockedAt?: string | null;
+  interviewReadinessBadgeUnlockedAt?: string | null;
   interviewCertificateId?: string | null;
   interviewCertificateIssuedAt?: string | null;
+  interviewReadinessCertificateIssuedAt?: string | null;
 }
 
 export interface LearnerRecord {
@@ -243,8 +246,10 @@ export interface LearnerRecord {
   interviewScenariosPassed?: boolean;
   interviewScenariosAttemptedAt?: string | null;
   interviewBadgeUnlockedAt?: string | null;
+  interviewReadinessBadgeUnlockedAt?: string | null;
   interviewCertificateId?: string | null;
   interviewCertificateIssuedAt?: string | null;
+  interviewReadinessCertificateIssuedAt?: string | null;
 }
 
 export interface InterviewTrackModule {

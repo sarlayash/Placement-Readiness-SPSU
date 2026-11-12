@@ -168,6 +168,54 @@ export function cleanForFirestore(record: LearnerRecord): Record<string, any> {
   clean.lorIssuedAt = record.lorIssuedAt ? String(record.lorIssuedAt).slice(0, 100) : null;
   clean.reportGeneratedAt = record.reportGeneratedAt ? String(record.reportGeneratedAt).slice(0, 100) : null;
 
+  // Special Edition: System Design Masterclass
+  clean.systemDesignScore = typeof record.systemDesignScore === 'number' && !isNaN(record.systemDesignScore)
+    ? Math.min(100, Math.max(0, Math.round(record.systemDesignScore)))
+    : null;
+  clean.systemDesignCorrectCount = typeof record.systemDesignCorrectCount === 'number' && !isNaN(record.systemDesignCorrectCount)
+    ? Math.min(500, Math.max(0, Math.round(record.systemDesignCorrectCount)))
+    : null;
+  clean.systemDesignPassed = typeof record.systemDesignPassed === 'boolean'
+    ? record.systemDesignPassed
+    : null;
+  clean.systemDesignAttemptedAt = record.systemDesignAttemptedAt ? String(record.systemDesignAttemptedAt).slice(0, 100) : null;
+  clean.systemDesignBadgeUnlockedAt = record.systemDesignBadgeUnlockedAt ? String(record.systemDesignBadgeUnlockedAt).slice(0, 100) : null;
+  clean.systemDesignCertificateId = record.systemDesignCertificateId ? String(record.systemDesignCertificateId).slice(0, 100) : null;
+  clean.systemDesignCertificateIssuedAt = record.systemDesignCertificateIssuedAt ? String(record.systemDesignCertificateIssuedAt).slice(0, 100) : null;
+
+  // Special Section: Interview Readiness Hub
+  clean.interviewReadinessScore = typeof record.interviewReadinessScore === 'number' && !isNaN(record.interviewReadinessScore)
+    ? Math.min(100, Math.max(0, Math.round(record.interviewReadinessScore)))
+    : null;
+  clean.interviewReadinessCorrectCount = typeof record.interviewReadinessCorrectCount === 'number' && !isNaN(record.interviewReadinessCorrectCount)
+    ? Math.min(500, Math.max(0, Math.round(record.interviewReadinessCorrectCount)))
+    : null;
+  clean.interviewReadinessPassed = typeof record.interviewReadinessPassed === 'boolean'
+    ? record.interviewReadinessPassed
+    : null;
+  clean.interviewReadinessAttemptedAt = record.interviewReadinessAttemptedAt ? String(record.interviewReadinessAttemptedAt).slice(0, 100) : null;
+
+  clean.interviewScenariosScore = typeof record.interviewScenariosScore === 'number' && !isNaN(record.interviewScenariosScore)
+    ? Math.min(100, Math.max(0, Math.round(record.interviewScenariosScore)))
+    : null;
+  clean.interviewScenariosCorrectCount = typeof record.interviewScenariosCorrectCount === 'number' && !isNaN(record.interviewScenariosCorrectCount)
+    ? Math.min(500, Math.max(0, Math.round(record.interviewScenariosCorrectCount)))
+    : null;
+  clean.interviewScenariosPassed = typeof record.interviewScenariosPassed === 'boolean'
+    ? record.interviewScenariosPassed
+    : null;
+  clean.interviewScenariosAttemptedAt = record.interviewScenariosAttemptedAt ? String(record.interviewScenariosAttemptedAt).slice(0, 100) : null;
+
+  clean.interviewBadgeUnlockedAt = record.interviewBadgeUnlockedAt || record.interviewReadinessBadgeUnlockedAt
+    ? String(record.interviewBadgeUnlockedAt || record.interviewReadinessBadgeUnlockedAt).slice(0, 100)
+    : null;
+  clean.interviewReadinessBadgeUnlockedAt = clean.interviewBadgeUnlockedAt;
+  clean.interviewCertificateId = record.interviewCertificateId ? String(record.interviewCertificateId).slice(0, 100) : null;
+  clean.interviewCertificateIssuedAt = record.interviewCertificateIssuedAt || record.interviewReadinessCertificateIssuedAt
+    ? String(record.interviewCertificateIssuedAt || record.interviewReadinessCertificateIssuedAt).slice(0, 100)
+    : null;
+  clean.interviewReadinessCertificateIssuedAt = clean.interviewCertificateIssuedAt;
+
   return clean;
 }
 
@@ -596,6 +644,28 @@ export function reconcileLearnerIntoMap(
     aptitudeAttemptedAt: incoming.aptitudeAttemptedAt || prev?.aptitudeAttemptedAt || null,
     lorIssuedAt: incoming.lorIssuedAt || prev?.lorIssuedAt || null,
     reportGeneratedAt: incoming.reportGeneratedAt || prev?.reportGeneratedAt || null,
+    // Special Edition: System Design Masterclass & 120-Assessment
+    systemDesignScore: Math.max(prev?.systemDesignScore ?? 0, incoming.systemDesignScore ?? 0),
+    systemDesignCorrectCount: Math.max(prev?.systemDesignCorrectCount ?? 0, incoming.systemDesignCorrectCount ?? 0),
+    systemDesignPassed: Boolean(prev?.systemDesignPassed || incoming.systemDesignPassed),
+    systemDesignAttemptedAt: incoming.systemDesignAttemptedAt || prev?.systemDesignAttemptedAt || null,
+    systemDesignBadgeUnlockedAt: incoming.systemDesignBadgeUnlockedAt || prev?.systemDesignBadgeUnlockedAt || null,
+    systemDesignCertificateId: incoming.systemDesignCertificateId || prev?.systemDesignCertificateId || null,
+    systemDesignCertificateIssuedAt: incoming.systemDesignCertificateIssuedAt || prev?.systemDesignCertificateIssuedAt || null,
+    // Special Section: Interview Readiness Hub (Fresher & Experienced)
+    interviewReadinessScore: Math.max(prev?.interviewReadinessScore ?? 0, incoming.interviewReadinessScore ?? 0),
+    interviewReadinessCorrectCount: Math.max(prev?.interviewReadinessCorrectCount ?? 0, incoming.interviewReadinessCorrectCount ?? 0),
+    interviewReadinessPassed: Boolean(prev?.interviewReadinessPassed || incoming.interviewReadinessPassed),
+    interviewReadinessAttemptedAt: incoming.interviewReadinessAttemptedAt || prev?.interviewReadinessAttemptedAt || null,
+    interviewScenariosScore: Math.max(prev?.interviewScenariosScore ?? 0, incoming.interviewScenariosScore ?? 0),
+    interviewScenariosCorrectCount: Math.max(prev?.interviewScenariosCorrectCount ?? 0, incoming.interviewScenariosCorrectCount ?? 0),
+    interviewScenariosPassed: Boolean(prev?.interviewScenariosPassed || incoming.interviewScenariosPassed),
+    interviewScenariosAttemptedAt: incoming.interviewScenariosAttemptedAt || prev?.interviewScenariosAttemptedAt || null,
+    interviewBadgeUnlockedAt: incoming.interviewBadgeUnlockedAt || incoming.interviewReadinessBadgeUnlockedAt || prev?.interviewBadgeUnlockedAt || prev?.interviewReadinessBadgeUnlockedAt || null,
+    interviewReadinessBadgeUnlockedAt: incoming.interviewReadinessBadgeUnlockedAt || incoming.interviewBadgeUnlockedAt || prev?.interviewReadinessBadgeUnlockedAt || prev?.interviewBadgeUnlockedAt || null,
+    interviewCertificateId: incoming.interviewCertificateId || prev?.interviewCertificateId || null,
+    interviewCertificateIssuedAt: incoming.interviewCertificateIssuedAt || incoming.interviewReadinessCertificateIssuedAt || prev?.interviewCertificateIssuedAt || prev?.interviewReadinessCertificateIssuedAt || null,
+    interviewReadinessCertificateIssuedAt: incoming.interviewReadinessCertificateIssuedAt || incoming.interviewCertificateIssuedAt || prev?.interviewReadinessCertificateIssuedAt || prev?.interviewCertificateIssuedAt || null,
   };
 
   // 4. Store under preferred key (email if available, else uid) and clean up old split key

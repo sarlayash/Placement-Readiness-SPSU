@@ -3,29 +3,33 @@ import { GoogleUser, UserProgress } from '../types';
 const USER_STORAGE_KEY = 'spsu_kapil_10day_google_user_v1';
 const PROGRESS_STORAGE_PREFIX = 'spsu_kapil_10day_progress_v1_';
 
-export const EMPTY_PROGRESS: UserProgress = {
-  preAssessmentScores: {},
-  postAssessmentScores: {},
-  preAssessmentPassed: {},
-  postAssessmentPassed: {},
-  completedChallengeIds: [],
-  readNoteIds: [],
-  completedDays: {},
-  unlockedBadges: {},
-  savedCode: {},
-  certificateId: null,
-  certificateIssuedAt: null,
-  patternQuizScore: 0,
-  patternQuizCompleted: false,
-  stressQuizScore: 0,
-  stressQuizAnswered: 0,
-  stressQuizCompleted: false,
-  aptitudeScore: 0,
-  aptitudeCorrectCount: 0,
-  aptitudePassed: false,
-  lorIssuedAt: null,
-  reportGeneratedAt: null,
-};
+export function createEmptyProgress(): UserProgress {
+  return {
+    preAssessmentScores: {},
+    postAssessmentScores: {},
+    preAssessmentPassed: {},
+    postAssessmentPassed: {},
+    completedChallengeIds: [],
+    readNoteIds: [],
+    completedDays: {},
+    unlockedBadges: {},
+    savedCode: {},
+    certificateId: null,
+    certificateIssuedAt: null,
+    patternQuizScore: 0,
+    patternQuizCompleted: false,
+    stressQuizScore: 0,
+    stressQuizAnswered: 0,
+    stressQuizCompleted: false,
+    aptitudeScore: 0,
+    aptitudeCorrectCount: 0,
+    aptitudePassed: false,
+    lorIssuedAt: null,
+    reportGeneratedAt: null,
+  };
+}
+
+export const EMPTY_PROGRESS: UserProgress = createEmptyProgress();
 
 export function loadStoredGoogleUser(): GoogleUser | null {
   try {
@@ -55,7 +59,7 @@ export function loadStoredProgress(userEmail?: string): UserProgress {
   const key = `${PROGRESS_STORAGE_PREFIX}${userEmail ? userEmail.toLowerCase() : 'anonymous'}`;
   try {
     const raw = localStorage.getItem(key);
-    if (!raw) return { ...EMPTY_PROGRESS };
+    if (!raw) return createEmptyProgress();
     const parsed = JSON.parse(raw) as Partial<UserProgress>;
     return {
       preAssessmentScores: parsed.preAssessmentScores || {},
@@ -88,9 +92,22 @@ export function loadStoredProgress(userEmail?: string): UserProgress {
       systemDesignBadgeUnlockedAt: parsed.systemDesignBadgeUnlockedAt || null,
       systemDesignCertificateId: parsed.systemDesignCertificateId || null,
       systemDesignCertificateIssuedAt: parsed.systemDesignCertificateIssuedAt || null,
+      interviewReadinessScore: parsed.interviewReadinessScore,
+      interviewReadinessCorrectCount: parsed.interviewReadinessCorrectCount,
+      interviewReadinessPassed: parsed.interviewReadinessPassed,
+      interviewReadinessAttemptedAt: parsed.interviewReadinessAttemptedAt || null,
+      interviewScenariosScore: parsed.interviewScenariosScore,
+      interviewScenariosCorrectCount: parsed.interviewScenariosCorrectCount,
+      interviewScenariosPassed: parsed.interviewScenariosPassed,
+      interviewScenariosAttemptedAt: parsed.interviewScenariosAttemptedAt || null,
+      interviewBadgeUnlockedAt: parsed.interviewBadgeUnlockedAt || parsed.interviewReadinessBadgeUnlockedAt || null,
+      interviewReadinessBadgeUnlockedAt: parsed.interviewReadinessBadgeUnlockedAt || parsed.interviewBadgeUnlockedAt || null,
+      interviewCertificateId: parsed.interviewCertificateId || null,
+      interviewCertificateIssuedAt: parsed.interviewCertificateIssuedAt || parsed.interviewReadinessCertificateIssuedAt || null,
+      interviewReadinessCertificateIssuedAt: parsed.interviewReadinessCertificateIssuedAt || parsed.interviewCertificateIssuedAt || null,
     };
   } catch {
-    return { ...EMPTY_PROGRESS };
+    return createEmptyProgress();
   }
 }
 

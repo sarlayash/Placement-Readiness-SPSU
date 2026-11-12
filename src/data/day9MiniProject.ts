@@ -3,7 +3,7 @@ import { MiniProject } from '../types';
 /**
  * Day 9 Capstone Mini-Project: Enterprise 3-Tier E-Commerce Backend & Connection Pool Gateway
  * Module 9: Development & Project Architecture Readiness
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  */
 export const DAY_9_MINI_PROJECT: MiniProject = {
   id: 'day9-mini-project-3tier-backend',
@@ -130,7 +130,7 @@ void putInCache(const UserResponseDTO* dto) {
 }
 
 // 5. DAO & Service Layer
-UserEntity mockDb = {101, "kapil_narula", "$2a$12$secureHash99", "kapil@spsu.ac.in", 1500.50};
+UserEntity mockDb = {101, "kapil_narula", "$2a$12$secureHash99", "kapil@mentorship.org", 1500.50};
 
 bool getUserProfile(int id, ConnectionPool* pool, UserResponseDTO* outDto) {
     // Check Cache-Aside first
@@ -162,7 +162,7 @@ bool getUserProfile(int id, ConnectionPool* pool, UserResponseDTO* outDto) {
 
 int main() {
     printf("=================================================================\\n");
-    printf("  SPSU Udaipur Placement Readiness Program | Mentor: Kapil\\n");
+    printf("  Placement Readiness Program | Mentor: Kapil\\n");
     printf("  Day 9 Capstone: Enterprise 3-Tier Backend & DB Gateway Engine\\n");
     printf("=================================================================\\n\\n");
 
@@ -241,7 +241,7 @@ class UserService {
 private:
     ConnectionPool& pool;
     std::unordered_map<int, UserResponseDTO> cache;
-    UserEntity mockDb{101, "kapil_narula", "$2a$12$secureHash99", "kapil@spsu.ac.in", 1500.50};
+    UserEntity mockDb{101, "kapil_narula", "$2a$12$secureHash99", "kapil@mentorship.org", 1500.50};
 public:
     UserService(ConnectionPool& p) : pool(p) {}
 
@@ -269,7 +269,7 @@ public:
 
 int main() {
     std::cout << "=================================================================\\n";
-    std::cout << "  SPSU Udaipur Placement Readiness Program | Mentor: Kapil\\n";
+    std::cout << "  Placement Readiness Program | Mentor: Kapil\\n";
     std::cout << "  Day 9 Capstone: Enterprise 3-Tier Backend & DB Gateway Engine\\n";
     std::cout << "=================================================================\\n\\n";
 
@@ -333,7 +333,7 @@ public class EnterpriseThreeTierBackend {
     static class UserService {
         private final ConnectionPool pool;
         private final Map<Integer, UserResponseDTO> cache = new HashMap<>();
-        private final UserEntity mockDb = new UserEntity(101, "kapil_narula", "$2a$12$secureHash99", "kapil@spsu.ac.in", 1500.50);
+        private final UserEntity mockDb = new UserEntity(101, "kapil_narula", "$2a$12$secureHash99", "kapil@mentorship.org", 1500.50);
 
         public UserService(ConnectionPool p) { this.pool = p; }
 
@@ -360,7 +360,7 @@ public class EnterpriseThreeTierBackend {
 
     public static void main(String[] args) {
         System.out.println("=================================================================");
-        System.out.println("  SPSU Udaipur Placement Readiness Program | Mentor: Kapil");
+        System.out.println("  Placement Readiness Program | Mentor: Kapil");
         System.out.println("  Day 9 Capstone: Enterprise 3-Tier Backend & DB Gateway Engine");
         System.out.println("=================================================================\\n");
 
@@ -430,7 +430,7 @@ class UserService:
     def __init__(self, pool: ConnectionPool):
         self.pool = pool
         self.cache: Dict[int, UserResponseDTO] = {}
-        self.mock_db = UserEntity(101, "kapil_narula", "$2a$12$secureHash99", "kapil@spsu.ac.in", 1500.50)
+        self.mock_db = UserEntity(101, "kapil_narula", "$2a$12$secureHash99", "kapil@mentorship.org", 1500.50)
 
     def get_user_profile(self, user_id: int) -> Optional[UserResponseDTO]:
         if user_id in self.cache:
@@ -452,7 +452,7 @@ class UserService:
 
 def main():
     print("=================================================================")
-    print("  SPSU Udaipur Placement Readiness Program | Mentor: Kapil")
+    print("  Placement Readiness Program | Mentor: Kapil")
     print("  Day 9 Capstone: Enterprise 3-Tier Backend & DB Gateway Engine")
     print("=================================================================\\n")
 

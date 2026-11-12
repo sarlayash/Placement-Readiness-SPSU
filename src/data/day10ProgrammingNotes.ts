@@ -3,7 +3,7 @@ import { ProgrammingNote } from '../types';
 /**
  * Day 10 Masterclass Programming Notes
  * Modules 10 & 11: AI-Assisted Software Development & Technical Interview Preparation
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  */
 export const DAY_10_PROGRAMMING_NOTES: ProgrammingNote[] = [
   {
@@ -313,7 +313,7 @@ public:
 };
 
 int main() {
-    std::string userPrompt = "Query failed for user kapil.mentor@spsu.ac.in using package express-fake-auth";
+    std::string userPrompt = "Query failed for user kapil.mentor@mentorship.org using package express-fake-auth";
     std::string clean = AiSecurityGuard::scrubPII(userPrompt);
     std::cout << "Clean Prompt: " << clean << "\\n";
     std::cout << "Package 'express-fake-auth' Whitelisted? " 
@@ -364,7 +364,7 @@ class AiSecurityGuard:
         return text
 
 if __name__ == "__main__":
-    sample = "Analyze error for test.user@spsu.ac.in: Bearer eyJhbGciOi... using hallucinated-auth-lib"
+    sample = "Analyze error for test.user@mentorship.org: Bearer eyJhbGciOi... using hallucinated-auth-lib"
     print("Scrubbed Prompt:", AiSecurityGuard.redact_secrets_and_pii(sample))
     print("Package Allowed:", AiSecurityGuard.audit_package_recommendation("hallucinated-auth-lib"))`
     }

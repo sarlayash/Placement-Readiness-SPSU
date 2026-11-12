@@ -3,7 +3,7 @@ import { ProgrammingNote } from '../types';
 /**
  * Day 6 Comprehensive Programming Notes & Solved Examples
  * Module 6: Operating Systems: Scheduling, Concurrency, Deadlocks & Paging
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  * Covers:
  * - Note 1: Processes vs Threads, PCB, Context Switching & Address Space Memory Layout
  * - Note 2: CPU Scheduling Algorithms: FCFS, SJF, SRTF, Round-Robin, Priority & MLFQ

@@ -439,7 +439,7 @@ export const InterviewReadinessWorkspace: React.FC<InterviewReadinessWorkspacePr
               <div className="bg-amber-950/30 border border-amber-600/40 rounded-xl p-4 lg:p-5">
                 <div className="flex items-center gap-2 text-amber-400 font-bold text-sm mb-2">
                   <Sparkles className="w-4 h-4 text-amber-400" />
-                  <span>Kapil Mentor Placement Guidance (SPSU Udaipur)</span>
+                  <span>Kapil Mentor Placement Guidance</span>
                 </div>
                 <ul className="space-y-1.5 text-xs lg:text-sm text-slate-200">
                   {selectedModule.kapilMentorTips.map((tip, idx) => (
@@ -1114,7 +1114,7 @@ export const InterviewReadinessWorkspace: React.FC<InterviewReadinessWorkspacePr
                           Congratulations, {user.name}!
                         </h4>
                         <p className="text-xs text-slate-300">
-                          You have met the SPSU Udaipur Placement Readiness benchmark. Your official credentials are ready for export.
+                          You have met the Placement Readiness benchmark. Your official credentials are ready for export.
                         </p>
                       </div>
                     </div>
@@ -1158,7 +1158,7 @@ export const InterviewReadinessWorkspace: React.FC<InterviewReadinessWorkspacePr
                         </span>
                         <h3 className="text-lg font-bold text-white mt-2">Placement & Lateral Credential</h3>
                         <p className="text-xs text-slate-400 mt-1">
-                          Full 1920x1080 landscape verifiable certificate with unique SPSU credential ID, course syllabus, and official seal.
+                          Full 1920x1080 landscape verifiable certificate with unique credential ID, course syllabus, and official seal.
                         </p>
                       </div>
 

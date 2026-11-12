@@ -12,7 +12,7 @@ function describeAuthError(code: string): string {
   const host = typeof window !== 'undefined' ? window.location.hostname : 'this domain';
   switch (code) {
     case 'auth/unauthorized-domain':
-      return `Google Sign-In is not yet authorised for "${host}". The portal administrator must add "${host}" in Firebase Console → Authentication → Settings → Authorized domains. Meanwhile, use the official portal at placement-readiness-spsu.web.app.`;
+      return `Google Sign-In is not yet authorised for "${host}". The portal administrator must add "${host}" in Firebase Console → Authentication → Settings → Authorized domains. Meanwhile, use the official hosted portal.`;
     case 'auth/popup-closed-by-user':
     case 'auth/cancelled-popup-request':
       return 'The Google window was closed before sign-in finished. Please click the button again and choose your Google account.';
@@ -62,7 +62,7 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({ onSuccess, onC
             </div>
             <div>
               <h2 className="text-base font-extrabold tracking-tight">Sign Up / Sign In with Google</h2>
-              <p className="text-[11px] text-[#BFDBFE]">SPSU Udaipur • Mentorship By Kapil</p>
+              <p className="text-[11px] text-[#BFDBFE]">Placement Readiness • Mentorship By Kapil</p>
             </div>
           </div>
           <button
@@ -117,9 +117,9 @@ export const GoogleAuthModal: React.FC<GoogleAuthModalProps> = ({ onSuccess, onC
             type="button"
             onClick={() => {
               const demoUser: GoogleUser = {
-                uid: 'demo-spsu-learner-2026',
-                name: 'Demo SPSU Learner',
-                email: 'demo.learner@spsu.ac.in',
+                uid: 'demo-learner-2026',
+                name: 'Demo Placement Learner',
+                email: 'demo.learner@placement.internal',
                 photoURL: '',
                 signedInAt: new Date().toISOString(),
               };

@@ -34,7 +34,7 @@ function wrapCanvasText(
 
 /**
  * Generates an uncropped 1000x1000 Canvas of a Daily Honor Badge
- * Strictly Navy Blue & White Theme — Powered by SPSU Udaipur Mentorship By Kapil
+ * Strictly Navy Blue & White Theme — Placement Mentorship By Kapil
  * Signatory: ONLY Kapil (no fake people as signatories)
  */
 export function renderBadgeCanvas(
@@ -73,7 +73,7 @@ export function renderBadgeCanvas(
   ctx.fillStyle = '#FFFFFF';
   ctx.textAlign = 'center';
   ctx.font = '800 22px "Inter", sans-serif';
-  ctx.fillText('SPSU UDAIPUR • MENTORSHIP BY KAPIL', width / 2, 95);
+  ctx.fillText('PLACEMENT READINESS • MENTORSHIP BY KAPIL', width / 2, 95);
 
   ctx.fillStyle = '#BFDBFE';
   ctx.font = '600 15px "JetBrains Mono", monospace';
@@ -197,7 +197,7 @@ export function renderBadgeCanvas(
 
   ctx.fillStyle = '#1E3A8A';
   ctx.font = '600 14px "Inter", sans-serif';
-  ctx.fillText('SPSU Udaipur Mentorship By Kapil', width - 100, 916);
+  ctx.fillText('Placement Mentorship By Kapil', width - 100, 916);
 
   return canvas;
 }
@@ -214,7 +214,7 @@ export function downloadBadgePNG(
   const dataUrl = canvas.toDataURL('image/png', 1.0);
   const link = document.createElement('a');
   const safeTitle = badge.title.replace(/[^a-zA-Z0-9]/g, '_');
-  link.download = `SPSU_Kapil_Day${badge.day}_Badge_${safeTitle}.png`;
+  link.download = `Placement_Kapil_Day${badge.day}_Badge_${safeTitle}.png`;
   link.href = dataUrl;
   document.body.appendChild(link);
   link.click();
@@ -238,12 +238,12 @@ export function downloadBadgePDF(
   });
   pdf.addImage(dataUrl, 'PNG', 0, 0, 1000, 1000, undefined, 'FAST');
   const safeTitle = badge.title.replace(/[^a-zA-Z0-9]/g, '_');
-  pdf.save(`SPSU_Kapil_Day${badge.day}_Badge_${safeTitle}.pdf`);
+  pdf.save(`Placement_Kapil_Day${badge.day}_Badge_${safeTitle}.pdf`);
 }
 
 /**
  * Generates an uncropped 1920x1080 Navy Blue & White Certificate Canvas
- * Strictly powered by SPSU Udaipur Mentorship By Kapil
+ * Placement Mentorship By Kapil
  * Sole Signatory: Kapil (Zero fake people as signatories)
  */
 export function renderCertificateCanvas(
@@ -293,7 +293,7 @@ export function renderCertificateCanvas(
   ctx.fillStyle = 'rgba(10, 25, 47, 0.012)';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-  ctx.fillText('SPSU • KAPIL', 0, 0);
+  ctx.fillText('TECHNICAL MASTERY • KAPIL', 0, 0);
   ctx.restore();
 
   // 4. Top Navy Header Banner Pill
@@ -310,7 +310,7 @@ export function renderCertificateCanvas(
   ctx.textAlign = 'center';
   ctx.font = '800 20px "Inter", sans-serif';
   ctx.fillText(
-    'SPSU UDAIPUR • MENTORSHIP BY KAPIL • 10-DAY INTENSIVE CURRICULUM',
+    'PLACEMENT READINESS • MENTORSHIP BY KAPIL • 10-DAY INTENSIVE CURRICULUM',
     width / 2,
     pillY + 33
   );
@@ -437,7 +437,7 @@ export function renderCertificateCanvas(
   ctx.textAlign = 'center';
   ctx.fillStyle = '#BFDBFE';
   ctx.font = '800 14px "Inter", sans-serif';
-  ctx.fillText('SPSU UDAIPUR', sealX, sealY - 22);
+  ctx.fillText('VERIFIED', sealX, sealY - 22);
 
   ctx.fillStyle = '#FFFFFF';
   ctx.font = '900 22px "Inter", sans-serif';
@@ -470,7 +470,7 @@ export function renderCertificateCanvas(
 
   ctx.fillStyle = '#475569';
   ctx.font = '600 14px "Inter", sans-serif';
-  ctx.fillText('SPSU Udaipur Placement Readiness Boot Camp', width - 140, 946);
+  ctx.fillText('Placement Readiness Boot Camp', width - 140, 946);
 
   return canvas;
 }
@@ -487,7 +487,7 @@ export function downloadCertificatePNG(
   const dataUrl = canvas.toDataURL('image/png', 1.0);
   const link = document.createElement('a');
   const safeName = user.name.replace(/[^a-zA-Z0-9]/g, '_');
-  link.download = `SPSU_Kapil_Certificate_${safeName}.png`;
+  link.download = `Placement_Certificate_${safeName}.png`;
   link.href = dataUrl;
   document.body.appendChild(link);
   link.click();
@@ -511,12 +511,12 @@ export function downloadCertificatePDF(
   });
   pdf.addImage(dataUrl, 'PNG', 0, 0, 1920, 1080, undefined, 'FAST');
   const safeName = user.name.replace(/[^a-zA-Z0-9]/g, '_');
-  pdf.save(`SPSU_Kapil_Certificate_${safeName}.pdf`);
+  pdf.save(`Placement_Certificate_${safeName}.pdf`);
 }
 
 /**
  * Generates an uncropped 1000x1000 Canvas of the Special Edition System Design Architect Badge
- * Deep Navy Blue & Gold Theme — Powered by SPSU Udaipur Mentorship By Kapil
+ * Deep Navy Blue & Gold Theme — Placement Mentorship By Kapil
  * Sole Signatory: Placement Mentor Kapil
  */
 export function renderSystemDesignBadgeCanvas(
@@ -555,7 +555,7 @@ export function renderSystemDesignBadgeCanvas(
   ctx.fillStyle = '#FFFFFF';
   ctx.textAlign = 'center';
   ctx.font = '800 24px "Inter", sans-serif';
-  ctx.fillText('SPSU UDAIPUR • MENTORSHIP BY KAPIL', width / 2, 95);
+  ctx.fillText('PLACEMENT READINESS • MENTORSHIP BY KAPIL', width / 2, 95);
 
   ctx.fillStyle = '#FBBF24';
   ctx.font = '700 15px "JetBrains Mono", monospace';
@@ -630,7 +630,7 @@ export function renderSystemDesignBadgeCanvas(
 
   ctx.fillStyle = '#0A192F';
   ctx.font = '800 22px "Inter", sans-serif';
-  ctx.fillText(user?.name || 'Authorized SPSU Learner', 105, boxY + 60);
+  ctx.fillText(user?.name || 'Authorized Placement Candidate', 105, boxY + 60);
 
   ctx.textAlign = 'right';
   ctx.fillStyle = '#64748B';
@@ -664,7 +664,7 @@ export function renderSystemDesignBadgeCanvas(
 
   ctx.fillStyle = '#64748B';
   ctx.font = '600 13px "Inter", sans-serif';
-  ctx.fillText('Sole Official Signatory • SPSU Udaipur Placement Readiness Boot Camp', width / 2, sigY + 54);
+  ctx.fillText('Sole Official Signatory • Placement Readiness Boot Camp', width / 2, sigY + 54);
 
   return canvas;
 }
@@ -678,7 +678,7 @@ export function downloadSystemDesignBadgePNG(
   const dataUrl = canvas.toDataURL('image/png', 1.0);
   const link = document.createElement('a');
   const safeName = (user?.name || 'Learner').replace(/[^a-zA-Z0-9]/g, '_');
-  link.download = `SPSU_System_Design_Architect_Badge_${safeName}.png`;
+  link.download = `System_Design_Architect_Badge_${safeName}.png`;
   link.href = dataUrl;
   document.body.appendChild(link);
   link.click();
@@ -699,7 +699,7 @@ export function downloadSystemDesignBadgePDF(
   });
   pdf.addImage(dataUrl, 'PNG', 0, 0, 1000, 1000, undefined, 'FAST');
   const safeName = (user?.name || 'Learner').replace(/[^a-zA-Z0-9]/g, '_');
-  pdf.save(`SPSU_System_Design_Architect_Badge_${safeName}.pdf`);
+  pdf.save(`System_Design_Architect_Badge_${safeName}.pdf`);
 }
 
 /**
@@ -748,7 +748,7 @@ export function renderSystemDesignCertificateCanvas(
   ctx.textAlign = 'center';
   ctx.font = '800 20px "Inter", sans-serif';
   ctx.fillText(
-    'SPSU UDAIPUR • MENTORSHIP BY KAPIL • SPECIAL EDITION CREDENTIAL',
+    'PLACEMENT READINESS • MENTORSHIP BY KAPIL • SPECIAL EDITION CREDENTIAL',
     width / 2,
     pillY + 34
   );
@@ -798,7 +798,7 @@ export function renderSystemDesignCertificateCanvas(
   // Body Citation
   ctx.fillStyle = '#1E293B';
   ctx.font = '500 21px "Inter", sans-serif';
-  const citation = `for outstanding technical excellence in the SPSU Placement Readiness System Design Special Edition Masterclass. The learner has demonstrated exceptional mastery over production outages (Instagram DNS, Meta BGP, WhatsApp queues, Twitter rate-limiting), Gmail end-to-end architecture (Anycast, GFE, Spanner, GCS blob storage, 30s Undo Send delay queue), Postman REST API testing, HTTP status codes (2xx, 3xx, 4xx, 5xx), Layer 4/7 load balancing, database sharding, Redis caching patterns, CI/CD zero-downtime deployments, and achieved a verified score of ${score}% (${correctCount}/120 correct) on the 60-Minute Comprehensive Assessment.`;
+  const citation = `for outstanding technical excellence in the Placement Readiness System Design Special Edition Masterclass. The learner has demonstrated exceptional mastery over production outages (Instagram DNS, Meta BGP, WhatsApp queues, Twitter rate-limiting), Gmail end-to-end architecture (Anycast, GFE, Spanner, GCS blob storage, 30s Undo Send delay queue), Postman REST API testing, HTTP status codes (2xx, 3xx, 4xx, 5xx), Layer 4/7 load balancing, database sharding, Redis caching patterns, CI/CD zero-downtime deployments, and achieved a verified score of ${score}% (${correctCount}/120 correct) on the 60-Minute Comprehensive Assessment.`;
   wrapCanvasText(ctx, citation, width / 2, 535, 1460, 34);
 
   // Bottom Section
@@ -810,7 +810,7 @@ export function renderSystemDesignCertificateCanvas(
   ctx.lineTo(width - 130, dividerY);
   ctx.stroke();
 
-  const certId = `SPSU-SD-ARCH-${Math.abs(user.email.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase()}-2026`;
+  const certId = `SD-ARCH-${Math.abs(user.email.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase()}-2026`;
   const issueDate = issuedTimestamp
     ? new Date(issuedTimestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
     : new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
@@ -892,7 +892,7 @@ export function renderSystemDesignCertificateCanvas(
 
   ctx.fillStyle = '#475569';
   ctx.font = '600 14px "Inter", sans-serif';
-  ctx.fillText('SPSU Udaipur Placement Readiness Boot Camp', width - 140, 946);
+  ctx.fillText('Placement Readiness Boot Camp', width - 140, 946);
 
   return canvas;
 }
@@ -907,7 +907,7 @@ export function downloadSystemDesignCertificatePNG(
   const dataUrl = canvas.toDataURL('image/png', 1.0);
   const link = document.createElement('a');
   const safeName = user.name.replace(/[^a-zA-Z0-9]/g, '_');
-  link.download = `SPSU_System_Design_Certificate_${safeName}.png`;
+  link.download = `System_Design_Certificate_${safeName}.png`;
   link.href = dataUrl;
   document.body.appendChild(link);
   link.click();
@@ -929,7 +929,7 @@ export function downloadSystemDesignCertificatePDF(
   });
   pdf.addImage(dataUrl, 'PNG', 0, 0, 1920, 1080, undefined, 'FAST');
   const safeName = user.name.replace(/[^a-zA-Z0-9]/g, '_');
-  pdf.save(`SPSU_System_Design_Certificate_${safeName}.pdf`);
+  pdf.save(`System_Design_Certificate_${safeName}.pdf`);
 }
 
 /**
@@ -991,7 +991,7 @@ export function renderInterviewReadinessBadgeCanvas(
   ctx.textAlign = 'center';
   ctx.font = 'bold 30px "Inter", sans-serif';
   ctx.letterSpacing = '6px';
-  ctx.fillText('★ SIR PADAMPAT SINGHANIA UNIVERSITY ★', 500, 210);
+  ctx.fillText('★ PLACEMENT READINESS BOOT CAMP ★', 500, 210);
 
   // Center Emblem Icon (Target & Laurel Ring)
   ctx.save();
@@ -1054,7 +1054,7 @@ export function renderInterviewReadinessBadgeCanvas(
 
   ctx.fillStyle = '#94a3b8';
   ctx.font = '500 18px "Inter", sans-serif';
-  ctx.fillText('Head of Corporate Training & Placements • SPSU Udaipur', 500, 885);
+  ctx.fillText('Head of Corporate Training & Placements', 500, 885);
 
   return canvas;
 }
@@ -1068,7 +1068,7 @@ export function downloadInterviewReadinessBadgePNG(
   const dataUrl = canvas.toDataURL('image/png', 1.0);
   const link = document.createElement('a');
   const safeName = (user?.name || 'Learner').replace(/[^a-zA-Z0-9]/g, '_');
-  link.download = `SPSU_Interview_Readiness_Badge_${safeName}.png`;
+  link.download = `Interview_Readiness_Badge_${safeName}.png`;
   link.href = dataUrl;
   document.body.appendChild(link);
   link.click();
@@ -1089,7 +1089,7 @@ export function downloadInterviewReadinessBadgePDF(
   });
   pdf.addImage(dataUrl, 'PNG', 0, 0, 1000, 1000, undefined, 'FAST');
   const safeName = (user?.name || 'Learner').replace(/[^a-zA-Z0-9]/g, '_');
-  pdf.save(`SPSU_Interview_Readiness_Badge_${safeName}.pdf`);
+  pdf.save(`Interview_Readiness_Badge_${safeName}.pdf`);
 }
 
 /**
@@ -1131,7 +1131,7 @@ export function renderInterviewReadinessCertificateCanvas(
   ctx.textAlign = 'center';
   ctx.font = 'bold 36px "Inter", sans-serif';
   ctx.letterSpacing = '8px';
-  ctx.fillText('SIR PADAMPAT SINGHANIA UNIVERSITY, UDAIPUR', 960, 140);
+  ctx.fillText('PLACEMENT READINESS BOOT CAMP', 960, 140);
 
   ctx.fillStyle = '#a7f3d0';
   ctx.font = '600 22px "Inter", sans-serif';
@@ -1191,7 +1191,7 @@ export function renderInterviewReadinessCertificateCanvas(
     ? new Date(issuedTimestamp).toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })
     : new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
 
-  const certId = `SPSU-IR-${Math.abs(user.email.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase()}-${new Date().getFullYear()}`;
+  const certId = `IR-${Math.abs(user.email.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase()}-${new Date().getFullYear()}`;
 
   // Left: Date & Credential ID
   ctx.textAlign = 'left';
@@ -1201,7 +1201,7 @@ export function renderInterviewReadinessCertificateCanvas(
   ctx.fillStyle = '#94a3b8';
   ctx.font = '500 20px "Inter", sans-serif';
   ctx.fillText(`Credential ID: ${certId}`, 140, 920);
-  ctx.fillText(`Verification: portal.spsu.edu.in/verify/${certId}`, 140, 950);
+  ctx.fillText(`Verification ID: ${certId}`, 140, 950);
 
   // Right: Signature
   ctx.textAlign = 'right';
@@ -1223,7 +1223,7 @@ export function renderInterviewReadinessCertificateCanvas(
   ctx.fillStyle = '#94a3b8';
   ctx.font = '500 18px "Inter", sans-serif';
   ctx.fillText('Head of Corporate Training & Placements', 1780, 950);
-  ctx.fillText('Sir Padampat Singhania University, Udaipur', 1780, 975);
+  ctx.fillText('Placement Readiness Boot Camp', 1780, 975);
 
   return canvas;
 }
@@ -1238,7 +1238,7 @@ export function downloadInterviewReadinessCertificatePNG(
   const dataUrl = canvas.toDataURL('image/png', 1.0);
   const link = document.createElement('a');
   const safeName = user.name.replace(/[^a-zA-Z0-9]/g, '_');
-  link.download = `SPSU_Interview_Readiness_Certificate_${safeName}.png`;
+  link.download = `Interview_Readiness_Certificate_${safeName}.png`;
   link.href = dataUrl;
   document.body.appendChild(link);
   link.click();
@@ -1260,5 +1260,5 @@ export function downloadInterviewReadinessCertificatePDF(
   });
   pdf.addImage(dataUrl, 'PNG', 0, 0, 1920, 1080, undefined, 'FAST');
   const safeName = user.name.replace(/[^a-zA-Z0-9]/g, '_');
-  pdf.save(`SPSU_Interview_Readiness_Certificate_${safeName}.pdf`);
+  pdf.save(`Interview_Readiness_Certificate_${safeName}.pdf`);
 }

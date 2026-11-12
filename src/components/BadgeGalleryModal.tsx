@@ -27,10 +27,10 @@ export const BadgeGalleryModal: React.FC<BadgeGalleryModalProps> = ({
   onClose,
 }) => {
   const effectiveUser: GoogleUser = user || {
-    uid: 'demo-user-spsu',
-    name: 'SPSU Placement Aspirant',
-    displayName: 'SPSU Placement Aspirant',
-    email: 'learner@spsu.ac.in',
+    uid: 'demo-user',
+    name: 'Placement Aspirant',
+    displayName: 'Placement Aspirant',
+    email: 'learner@placement.internal',
     photoURL: '',
     signedInAt: new Date().toISOString(),
   };
@@ -87,7 +87,7 @@ export const BadgeGalleryModal: React.FC<BadgeGalleryModalProps> = ({
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <span className="px-2.5 py-0.5 rounded-full bg-[#1E3A8A] text-[#BFDBFE] font-mono text-xs font-bold">
-                SPSU UDAIPUR • MENTORSHIP BY KAPIL
+                PLACEMENT READINESS • MENTORSHIP BY KAPIL
               </span>
               <span className="text-xs font-mono text-white font-extrabold">
                 {unlockedCount} / 10 Daily Badges Unlocked
@@ -124,7 +124,7 @@ export const BadgeGalleryModal: React.FC<BadgeGalleryModalProps> = ({
             <div className="flex items-center gap-2 text-[#0A192F]">
               <ShieldCheck className="w-4 h-4 text-[#1E3A8A] shrink-0" />
               <span>
-                <strong>High-Resolution Credential Export & Live Preview:</strong> Every Badge is rendered on a crisp 1000×1000 high-resolution canvas with candidate personalization (<strong>{effectiveUser.displayName || effectiveUser.name || 'SPSU Placement Aspirant'}</strong>) signed solely by <strong>Placement Mentor – Kapil</strong> and downloadable in both <strong>PNG</strong> and <strong>PDF</strong> formats.
+                <strong>High-Resolution Credential Export & Live Preview:</strong> Every Badge is rendered on a crisp 1000×1000 high-resolution canvas with candidate personalization (<strong>{effectiveUser.displayName || effectiveUser.name || 'Placement Aspirant'}</strong>) signed solely by <strong>Placement Mentor – Kapil</strong> and downloadable in both <strong>PNG</strong> and <strong>PDF</strong> formats.
               </span>
             </div>
           </div>
@@ -462,7 +462,7 @@ export const BadgeGalleryModal: React.FC<BadgeGalleryModalProps> = ({
             {/* Action buttons */}
             <div className="w-full flex items-center justify-between pt-3 border-t border-slate-200 text-xs">
               <span className="font-mono text-slate-500 text-[11px]">
-                Recipient: <strong>{effectiveUser.displayName || effectiveUser.name || 'SPSU Placement Aspirant'}</strong>
+                Recipient: <strong>{effectiveUser.displayName || effectiveUser.name || 'Placement Aspirant'}</strong>
               </span>
 
               <div className="flex items-center gap-2">

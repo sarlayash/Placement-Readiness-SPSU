@@ -34,7 +34,7 @@ export const DAY_1_PRE_ASSESSMENT_50: AssessmentQuestion[] = [
   {
     "id": "day1-pre-q3",
     "question": "What will be printed when this C code runs on a standard 32/64-bit architecture?",
-    "codeSnippet": "#include <stdio.h>\nint main() {\n    char str[] = \"SPSU\";\n    printf(\"%zu\", sizeof(str));\n    return 0;\n}",
+    "codeSnippet": "#include <stdio.h>\nint main() {\n    char str[] = \"TECH\";\n    printf(\"%zu\", sizeof(str));\n    return 0;\n}",
     "codeLanguage": "c",
     "options": [
       "6",
@@ -43,7 +43,7 @@ export const DAY_1_PRE_ASSESSMENT_50: AssessmentQuestion[] = [
       "5"
     ],
     "correctIndex": 3,
-    "explanation": "The string literal 'SPSU' contains 4 characters plus the implicit trailing null terminator '\\0', totaling 5 bytes.",
+    "explanation": "The string literal 'TECH' contains 4 characters plus the implicit trailing null terminator '\\0', totaling 5 bytes.",
     "category": "Practical Execution & Trace (70%)"
   },
   {
@@ -244,7 +244,7 @@ export const DAY_1_PRE_ASSESSMENT_50: AssessmentQuestion[] = [
   {
     "id": "day1-pre-q17",
     "question": "What is the output of this Java String comparison?",
-    "codeSnippet": "String s1 = \"SPSU\";\nString s2 = new String(\"SPSU\");\nSystem.out.println((s1 == s2) + \" \" + s1.equals(s2));",
+    "codeSnippet": "String s1 = \"TECH\";\nString s2 = new String(\"TECH\");\nSystem.out.println((s1 == s2) + \" \" + s1.equals(s2));",
     "codeLanguage": "java",
     "options": [
       "false false",
@@ -952,7 +952,7 @@ export const DAY_1_POST_ASSESSMENT_50: AssessmentQuestion[] = [
   {
     "id": "day1-post-q14",
     "question": "What will this Python try-except block output?",
-    "codeSnippet": "try:\n    x = int(\"SPSU\")\nexcept ValueError:\n    print(\"Caught\", end=\"\")",
+    "codeSnippet": "try:\n    x = int(\"CODE\")\nexcept ValueError:\n    print(\"Caught\", end=\"\")",
     "codeLanguage": "python",
     "options": [
       "Caught",
@@ -961,7 +961,7 @@ export const DAY_1_POST_ASSESSMENT_50: AssessmentQuestion[] = [
       "None"
     ],
     "correctIndex": 0,
-    "explanation": "Converting non-numeric string 'SPSU' to int raises ValueError, successfully intercepted by the except block.",
+    "explanation": "Converting non-numeric string 'CODE' to int raises ValueError, successfully intercepted by the except block.",
     "category": "Practical Execution & Trace (70%)"
   },
   {

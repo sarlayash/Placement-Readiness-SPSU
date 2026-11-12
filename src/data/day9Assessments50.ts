@@ -1,7 +1,7 @@
 import { AssessmentQuestion } from '../types';
 
 /**
- * SPSU Udaipur Placement Readiness Program
+ * Placement Readiness Program
  * Mentor: Kapil | Day 9: Full-Stack Development & Project Architecture Readiness
  * Diagnostic Pre-Assessment: Exactly 50 MCQs
  */
@@ -505,7 +505,7 @@ export const DAY_9_PRE_ASSESSMENT_50: AssessmentQuestion[] = [
   {
     id: 'd9-pre-43',
     question: 'Which of the following headers represents an HTTP request carrying a basic authorization token?',
-    options: ['Authorization: Basic YWRtaW46cGFzc3dvcmQ=', 'Content-Type: text/html', 'Accept: text/plain', 'Host: spsu.ac.in'],
+    options: ['Authorization: Basic YWRtaW46cGFzc3dvcmQ=', 'Content-Type: text/html', 'Accept: text/plain', 'Host: placement-portal.dev'],
     correctIndex: 0,
     explanation: 'Basic auth prefixes Base64-encoded `username:password` credentials with the `Basic ` keyword.',
     category: 'Practical Execution & Trace (70%)'
@@ -604,7 +604,7 @@ export const DAY_9_PRE_ASSESSMENT_50: AssessmentQuestion[] = [
 ];
 
 /**
- * SPSU Udaipur Placement Readiness Program
+ * Placement Readiness Program
  * Mentor: Kapil | Day 9: Full-Stack Development & Project Architecture Readiness
  * Verification Post-Assessment: Exactly 50 MCQs
  */

@@ -1,7 +1,7 @@
 /**
- * Daily Operating Hours Manager for SPSU Placement Readiness Portal
+ * Daily Operating Hours Manager for Placement Readiness Portal
  * Operating Window: 09:00 AM to 09:00 PM (IST) Daily
- * Mentor: Kapil (SPSU Udaipur)
+ * Mentor: Kapil
  */
 
 export const OPERATING_HOURS_START = 9;  // 09:00 AM

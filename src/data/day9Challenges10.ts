@@ -1,7 +1,7 @@
 import { PracticalChallenge } from '../types';
 
 /**
- * SPSU Udaipur Placement Readiness Program
+ * Placement Readiness Program
  * Mentor: Kapil | Day 9: Full-Stack Development & Project Architecture Readiness
  * 10 Production-Grade Coding Challenges (C, C++, Java, Python)
  */
@@ -537,7 +537,7 @@ if __name__ == "__main__":
     inputFormat: 'Three space-separated values: username email age',
     outputFormat: 'VALID_DTO or VALIDATION_FAILED',
     constraints: ['Username contains only [a-zA-Z0-9_]'],
-    sampleInput: 'kapil_n kapil@spsu.ac.in 28',
+    sampleInput: 'kapil_n kapil@mentorship.org 28',
     sampleOutput: 'VALID_DTO',
     kapilIntuition:
       'Check string lengths, ensure email contains @ and . in order, and verify 18 <= age <= 100.',
@@ -699,7 +699,7 @@ if __name__ == "__main__":
     testCases: [
       {
         id: 'tc1',
-        input: 'kapil_n kapil@spsu.ac.in 28',
+        input: 'kapil_n kapil@mentorship.org 28',
         expectedOutput: 'VALID_DTO',
         isHidden: false,
         explanation: 'All validation criteria satisfied.',
@@ -1064,14 +1064,14 @@ if __name__ == "__main__":
     difficulty: 'Medium',
     moduleTag: 'Module 9: Development & Project Readiness',
     problemStatement:
-      'Given an allowed origin `https://spsu.ac.in` and allowed methods `GET,POST,PUT`, write a security validator. Given two inputs: `requestOrigin` and `httpMethod`, print `CORS_ALLOWED` if origin equals allowed origin (or wildcard "*") AND the method is in the allowed set. Otherwise print `CORS_BLOCKED`.',
+      'Given an allowed origin `https://placement-portal.dev` and allowed methods `GET,POST,PUT`, write a security validator. Given two inputs: `requestOrigin` and `httpMethod`, print `CORS_ALLOWED` if origin equals allowed origin (or wildcard "*") AND the method is in the allowed set. Otherwise print `CORS_BLOCKED`.',
     inputFormat: 'Two space-separated strings: requestOrigin httpMethod',
     outputFormat: 'CORS_ALLOWED or CORS_BLOCKED',
     constraints: ['Origin and method strings are standard HTTP format'],
-    sampleInput: 'https://spsu.ac.in POST',
+    sampleInput: 'https://placement-portal.dev POST',
     sampleOutput: 'CORS_ALLOWED',
     kapilIntuition:
-      'Check if requestOrigin is "https://spsu.ac.in" and httpMethod is one of GET, POST, PUT.',
+      'Check if requestOrigin is "https://placement-portal.dev" and httpMethod is one of GET, POST, PUT.',
     timeComplexity: 'O(1)',
     spaceComplexity: 'O(1)',
     starterCode: {
@@ -1125,7 +1125,7 @@ if __name__ == "__main__":
 int main() {
     char origin[128], method[16];
     if (scanf("%s %s", origin, method) == 2) {
-        int originOk = (strcmp(origin, "https://spsu.ac.in") == 0);
+        int originOk = (strcmp(origin, "https://placement-portal.dev") == 0);
         int methodOk = (strcmp(method, "GET") == 0 || strcmp(method, "POST") == 0 || strcmp(method, "PUT") == 0);
 
         if (originOk && methodOk) {
@@ -1143,7 +1143,7 @@ using namespace std;
 int main() {
     string origin, method;
     if (cin >> origin >> method) {
-        bool originOk = (origin == "https://spsu.ac.in");
+        bool originOk = (origin == "https://placement-portal.dev");
         bool methodOk = (method == "GET" || method == "POST" || method == "PUT");
 
         if (originOk && methodOk) {
@@ -1163,7 +1163,7 @@ public class Solution {
         if (sc.hasNext()) {
             String origin = sc.next();
             String method = sc.next();
-            boolean originOk = "https://spsu.ac.in".equals(origin);
+            boolean originOk = "https://placement-portal.dev".equals(origin);
             boolean methodOk = Set.of("GET", "POST", "PUT").contains(method);
 
             if (originOk && methodOk) {
@@ -1181,7 +1181,7 @@ def main():
     if len(parts) >= 2:
         origin = parts[0]
         method = parts[1]
-        origin_ok = (origin == "https://spsu.ac.in")
+        origin_ok = (origin == "https://placement-portal.dev")
         method_ok = method in {"GET", "POST", "PUT"}
         if origin_ok and method_ok:
             print("CORS_ALLOWED")
@@ -1194,7 +1194,7 @@ if __name__ == "__main__":
     testCases: [
       {
         id: 'tc1',
-        input: 'https://spsu.ac.in POST',
+        input: 'https://placement-portal.dev POST',
         expectedOutput: 'CORS_ALLOWED',
         isHidden: false,
         explanation: 'Trusted origin and allowed method.',
@@ -1208,7 +1208,7 @@ if __name__ == "__main__":
       },
       {
         id: 'tc3',
-        input: 'https://spsu.ac.in DELETE',
+        input: 'https://placement-portal.dev DELETE',
         expectedOutput: 'CORS_BLOCKED',
         isHidden: true,
         explanation: 'DELETE is not in the allowed methods list.',

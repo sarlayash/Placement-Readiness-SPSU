@@ -1608,7 +1608,7 @@ export const INDUSTRY_DSA_SCENARIOS_100: IndustryScenarioQuizItem[] = [
   },
   {
     id: 100,
-    company: 'SPSU Placement Portal (Mentorship By Kapil)',
+    company: 'Placement Portal (Mentorship By Kapil)',
     domain: 'Search & Gaming',
     scenarioTitle: 'Master Placement Company Problem Pattern Identification Formula',
     scenarioDescription:

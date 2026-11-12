@@ -85,7 +85,7 @@ export const LearnerDashboardModal: React.FC<LearnerDashboardModalProps> = ({
 
   const handleTestNotification = () => {
     sendNativePushNotification(
-      '🎯 SPSU 80% Passing Score Reminder',
+      '🎯 80% Passing Score Reminder',
       'Kapil Mentor Reminder: Day 1 & Day 2 Diagnostic Pre-Assessments require 80%+ (40/50) to verify mastery.'
     );
   };
@@ -319,8 +319,8 @@ export const LearnerDashboardModal: React.FC<LearnerDashboardModalProps> = ({
                 onClick={() => {
                   const learnerUser: GoogleUser = user || {
                     uid: 'demo_user',
-                    name: 'SPSU Learner',
-                    email: 'learner@spsu.ac.in',
+                    name: 'Placement Learner',
+                    email: 'learner@placement.internal',
                     photoURL: '',
                     signedInAt: new Date().toISOString(),
                   };
@@ -346,8 +346,8 @@ export const LearnerDashboardModal: React.FC<LearnerDashboardModalProps> = ({
                 onClick={() => {
                   const learnerUser: GoogleUser = user || {
                     uid: 'demo_user',
-                    name: 'SPSU Learner',
-                    email: 'learner@spsu.ac.in',
+                    name: 'Placement Learner',
+                    email: 'learner@placement.internal',
                     photoURL: '',
                     signedInAt: new Date().toISOString(),
                   };
@@ -612,7 +612,7 @@ export const LearnerDashboardModal: React.FC<LearnerDashboardModalProps> = ({
         {/* Footer */}
         <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between gap-3">
           <span className="text-xs text-slate-500 hidden sm:inline">
-            Real-time score records are preserved in Google Cloud Firestore and verifiable by SPSU Admin.
+            Real-time score records are preserved in Google Cloud Firestore and verifiable by Placement Evaluators.
           </span>
           <button
             type="button"

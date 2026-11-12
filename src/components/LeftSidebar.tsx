@@ -85,7 +85,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 Day Navigation
               </div>
               <div className="text-[10px] text-[#93C5FD] truncate font-medium">
-                SPSU 10-Day Pathway
+                10-Day Pathway
               </div>
             </div>
           </div>

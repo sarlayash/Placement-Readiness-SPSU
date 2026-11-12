@@ -4,7 +4,7 @@ import { AssessmentQuestion } from '../types';
  * Day 10 Comprehensive Assessment Suite (100 Placement-Grade MCQs)
  * 50 Pre-Assessment MCQs + 50 Post-Assessment MCQs
  * Modules 10 & 11: AI-Assisted Software Development & Technical Interview Preparation
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  *
  * Strict Category Split:
  * Questions 1-15: 'Theory (30%)'
@@ -355,10 +355,10 @@ export const DAY_10_PRE_ASSESSMENT_50: AssessmentQuestion[] = [
   },
   {
     id: 'd10-pre-27',
-    question: 'Trace the output of this Python PII scrubber:\n\n```python\nimport re\ntext = "Contact kapil@spsu.ac.in regarding account 999"\nclean = re.sub(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}", "[EMAIL]", text)\nprint(clean)\n```',
+    question: 'Trace the output of this Python PII scrubber:\n\n```python\nimport re\ntext = "Contact kapil@mentorship.org regarding account 999"\nclean = re.sub(r"[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}", "[EMAIL]", text)\nprint(clean)\n```',
     options: [
       'Contact [EMAIL] regarding account 999',
-      'Contact kapil@spsu.ac.in regarding account 999',
+      'Contact kapil@mentorship.org regarding account 999',
       '[EMAIL]',
       'Error: Invalid Regex',
     ],
@@ -654,7 +654,7 @@ export const DAY_10_PRE_ASSESSMENT_50: AssessmentQuestion[] = [
   },
   {
     id: 'd10-pre-50',
-    question: 'Which of the following summaries best captures the overarching philosophy of the SPSU 10-Day Placement Readiness Masterclass?',
+    question: 'Which of the following summaries best captures the overarching philosophy of the 10-Day Placement Readiness Masterclass?',
     options: [
       'Memorize LeetCode solutions without understanding Big-O complexity',
       'Master the core foundational mental models (30% Theory) and cement them through rigorous polyglot coding, dry-run tracing, edge-case verification, and structured thinking aloud (70% Practical)',
@@ -1206,7 +1206,7 @@ export const DAY_10_POST_ASSESSMENT_50: AssessmentQuestion[] = [
   },
   {
     id: 'd10-post-42',
-    question: 'What is the bug in this Java snippet?\n\n```java\nString s1 = new String("SPSU");\nString s2 = new String("SPSU");\nSystem.out.println(s1 == s2);\n```',
+    question: 'What is the bug in this Java snippet?\n\n```java\nString s1 = new String("TECH");\nString s2 = new String("TECH");\nSystem.out.println(s1 == s2);\n```',
     options: [
       'It prints true',
       'It prints false because `==` compares object memory references; content comparison must use `s1.equals(s2)`',
@@ -1310,15 +1310,15 @@ export const DAY_10_POST_ASSESSMENT_50: AssessmentQuestion[] = [
   },
   {
     id: 'd10-post-50',
-    question: 'Having completed all 10 Days of the SPSU Placement Readiness Program with Kapil, what badge and credential are officially unlocked upon completing Day 10?',
+    question: 'Having completed all 10 Days of the Placement Readiness Program with Kapil, what badge and credential are officially unlocked upon completing Day 10?',
     options: [
       'Novice Coder Certificate',
-      'Official Day 10 Badge: "AI-Verified Engineer & Interview Master" and the SPSU Placement Readiness Program Verified Certificate of Excellence',
+      'Official Day 10 Badge: "AI-Verified Engineer & Interview Master" and the Placement Readiness Program Verified Certificate of Excellence',
       'Guest Viewer Pass',
       'No certificate available',
     ],
     correctIndex: 1,
-    explanation: 'Passing Day 10 marks the complete graduation of the 10-day Placement Readiness curriculum, awarding the Day 10 Badge and the verified SPSU Placement Readiness Certificate.',
+    explanation: 'Passing Day 10 marks the complete graduation of the 10-day Placement Readiness curriculum, awarding the Day 10 Badge and the verified Placement Readiness Certificate.',
     category: 'Practical Execution & Trace (70%)',
   },
 ];

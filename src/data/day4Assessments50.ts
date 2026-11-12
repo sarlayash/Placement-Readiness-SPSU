@@ -3,7 +3,7 @@ import { AssessmentQuestion } from '../types';
 /**
  * Day 4 Assessments (50 Pre-Assessment MCQs & 50 Post-Assessment MCQs = 100 Total)
  * Module 4: SQL & Relational Database Systems
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  * Coverage: SQL Logical Execution Order, Three-Valued Logic (NULLs), Joins (Hash/Merge/Nested Loop),
  * Correlated Subqueries, Common Table Expressions (Recursive CTEs), Window Functions (RANK, DENSE_RANK, LEAD/LAG),
  * Normalisation (1NF, 2NF, 3NF, BCNF, Lossless Decomposition), B+ Tree Indexing Architecture & Sargability,
@@ -816,15 +816,15 @@ export const DAY_4_POST_ASSESSMENT_50: AssessmentQuestion[] = [
   },
   {
     "id": "d4-post-10",
-    "question": "What does the query `SELECT COALESCE(NULL, NULL, 'SPSU', 'Udaipur');` return?",
+    "question": "What does the query `SELECT COALESCE(NULL, NULL, 'PLACEMENT', 'ENGINEER');` return?",
     "options": [
       "'Udaipur'",
-      "'SPSU'",
+      "'PLACEMENT'",
       "NULL",
       "Syntax error"
     ],
     "correctIndex": 1,
-    "explanation": "COALESCE scans arguments from left to right and immediately returns the first non-NULL value, which is 'SPSU'.",
+    "explanation": "COALESCE scans arguments from left to right and immediately returns the first non-NULL value, which is 'PLACEMENT'.",
     "category": "Theory (30%)"
   },
   {

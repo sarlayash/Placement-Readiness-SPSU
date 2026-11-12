@@ -1,5 +1,5 @@
 /**
- * SPSU Udaipur - Placement Readiness Portal
+ * Placement Readiness Portal
  * Push Notifications & Automatic Reminders System
  * Powered by Mentor Kapil
  */
@@ -51,14 +51,14 @@ export async function requestPushPermission(): Promise<boolean> {
       
       // Dispatch welcome push notification
       sendNativePushNotification(
-        '🔔 SPSU Placement Reminders Active',
+        '🔔 Placement Reminders Active',
         'Automatic reminders enabled! You will receive alerts for 09:00 AM Diagnostic & 02:30 PM Verification sessions (80% Passing threshold).'
       );
       
       addInAppReminder({
         id: `rem-welcome-${Date.now()}`,
         title: '🔔 Push Notifications Enabled',
-        message: 'Daily automated reminders are now active for SPSU Placement Readiness assessments.',
+        message: 'Daily automated reminders are now active for Placement Readiness assessments.',
         type: 'system',
         timestamp: new Date().toISOString(),
         read: false,
@@ -84,11 +84,14 @@ export function sendNativePushNotification(title: string, body: string, iconUrl?
   if (Notification.permission !== 'granted') return;
 
   try {
+    const defaultIcon = typeof window !== 'undefined'
+      ? `${window.location.origin}${import.meta.env.BASE_URL}mentor-kapil.jpg`
+      : '/mentor-kapil.jpg';
     const notif = new Notification(title, {
       body,
-      icon: iconUrl || 'https://sarlayash.github.io/Placement-Readiness-SPSU/mentor-kapil.jpg',
-      badge: 'https://sarlayash.github.io/Placement-Readiness-SPSU/mentor-kapil.jpg',
-      tag: 'spsu-placement-reminder',
+      icon: iconUrl || defaultIcon,
+      badge: defaultIcon,
+      tag: 'placement-reminder',
     });
 
     notif.onclick = () => {

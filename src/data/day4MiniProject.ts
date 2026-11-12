@@ -137,7 +137,7 @@ export const DAY_4_MINI_PROJECT: MiniProject = {
 #include <stdbool.h>
 
 /*
- * SPSU Udaipur - Day 4 Capstone Mini-Project
+ * Day 4 Capstone Mini-Project
  * Enterprise Hospital Management Relational Database Engine in C
  * Features: Foreign Key Validation, Hash Join, ACID Rollback & Group By
  */
@@ -169,7 +169,7 @@ int main() {
     int patient_count = 5;
 
     printf("===================================================================\\n");
-    printf("   HOSPITAL RELATIONAL DATABASE ENGINE (SPSU MENTOR KAPIL)\\n");
+    printf("   HOSPITAL RELATIONAL DATABASE ENGINE (MENTOR KAPIL)\\n");
     printf("===================================================================\\n\\n");
 
     // 1. Relational Equi-Join (Patients JOIN Departments ON dept_id)
@@ -242,7 +242,7 @@ int main() {
     };
 
     cout << "===================================================================\\n";
-    cout << "   HOSPITAL RELATIONAL DATABASE ENGINE (SPSU MENTOR KAPIL)\\n";
+    cout << "   HOSPITAL RELATIONAL DATABASE ENGINE (MENTOR KAPIL)\\n";
     cout << "===================================================================\\n\\n";
 
     // 1. Relational Hash Join
@@ -297,7 +297,7 @@ public class HospitalRelationalEngine {
         );
 
         System.out.println("===================================================================");
-        System.out.println("   HOSPITAL RELATIONAL DATABASE ENGINE (SPSU MENTOR KAPIL)");
+        System.out.println("   HOSPITAL RELATIONAL DATABASE ENGINE (MENTOR KAPIL)");
         System.out.println("===================================================================\\n");
 
         Map<Integer, String> deptMap = new HashMap<>();
@@ -338,7 +338,7 @@ public class HospitalRelationalEngine {
     ]
 
     print("=" * 67)
-    print("   HOSPITAL RELATIONAL DATABASE ENGINE (SPSU MENTOR KAPIL)")
+    print("   HOSPITAL RELATIONAL DATABASE ENGINE (MENTOR KAPIL)")
     print("=" * 67 + "\\n")
 
     # 1. Relational Hash Join

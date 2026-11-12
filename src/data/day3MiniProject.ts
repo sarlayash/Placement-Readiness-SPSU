@@ -134,7 +134,7 @@ export const DAY_3_MINI_PROJECT: MiniProject = {
     c: `/*
  * Day 3 Capstone: Placement Code Benchmark & Trade-off Evaluator
  * Language: C (C99 Standard) - Pure standard libraries
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  */
 #include <stdio.h>
 #include <stdlib.h>
@@ -201,7 +201,7 @@ bool twoPointerBench(const int arr[], int n, int target, int *outA, int *outB, l
 
 int main() {
     printf("============================================================\\n");
-    printf("   SPSU PLACEMENT CODE BENCHMARK & TRADE-OFF EVALUATOR\\n");
+    printf("   PLACEMENT CODE BENCHMARK & TRADE-OFF EVALUATOR\\n");
     printf("   Mentor: Kapil | Strict 10^8 Operations & Big-O Verification\\n");
     printf("============================================================\\n\\n");
 
@@ -248,7 +248,7 @@ int main() {
     cpp: `/*
  * Day 3 Capstone: Placement Code Benchmark & Trade-off Evaluator
  * Language: C++ (C++17) - Fast I/O & STL Vector Optimization
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  */
 #include <iostream>
 #include <vector>
@@ -305,7 +305,7 @@ int main() {
     java: `/*
  * Day 3 Capstone: Placement Code Benchmark & Trade-off Evaluator
  * Language: Java 17 - Clean OOP & Robust Exception Handling
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  */
 import java.util.Arrays;
 
@@ -349,7 +349,7 @@ public class PlacementBenchmarkLab {
     python: `"""
 Day 3 Capstone: Placement Code Benchmark & Trade-off Evaluator
 Language: Python 3.10+ - Type Hinting & High-Performance Builtins
-Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+Mentor: Kapil (Placement Readiness Program)
 """
 import time
 from typing import List, Tuple, Optional

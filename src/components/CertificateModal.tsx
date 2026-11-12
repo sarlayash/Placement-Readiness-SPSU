@@ -29,8 +29,8 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
   // Fallback for Demo User
   const effectiveUser: GoogleUser = user || {
     uid: 'demo_user',
-    name: 'SPSU Placement Aspirant',
-    email: 'learner@spsu.ac.in',
+    name: 'Placement Aspirant',
+    email: 'learner@placement.internal',
     photoURL: '',
     signedInAt: new Date().toISOString(),
   };
@@ -38,10 +38,10 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
   const unlockedBadgesCount = Object.keys(progress.unlockedBadges || {}).length || 10;
   const certId = effectiveUser
     ? progress.certificateId || generateOfficialCertificateId(effectiveUser.email)
-    : 'SPSU-KAPIL-10D-VERIFIED';
+    : 'KAPIL-10D-VERIFIED';
 
-  const systemDesignCertId = `SPSU-SD-ARCH-${Math.abs(effectiveUser.email.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase()}-2026`;
-  const interviewReadinessCertId = `SPSU-IR-SPEC-${Math.abs(effectiveUser.email.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase()}-2026`;
+  const systemDesignCertId = `SD-ARCH-${Math.abs(effectiveUser.email.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase()}-2026`;
+  const interviewReadinessCertId = `IR-SPEC-${Math.abs(effectiveUser.email.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase()}-2026`;
 
   const issueDate = progress.certificateIssuedAt
     ? new Date(progress.certificateIssuedAt).toLocaleDateString('en-IN', {
@@ -85,7 +85,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <h2 className="text-base sm:text-lg font-black">
-                  Official SPSU Udaipur Certificates • Powered By Kapil
+                  Official Placement Certificates • Powered By Kapil
                 </h2>
                 {!user && (
                   <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-400 text-[#0A192F] font-bold">
@@ -270,7 +270,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
               {/* Header */}
               <div className="text-center space-y-2 border-b-2 border-[#0A192F] pb-5 relative z-10">
                 <div className="inline-block px-4 py-1 rounded-full bg-[#0A192F] text-white font-mono text-[10px] sm:text-xs font-extrabold uppercase tracking-widest">
-                  SPSU Udaipur • Mentorship By Kapil • 10-Day Intensive Curriculum
+                  Placement Readiness • Mentorship By Kapil • 10-Day Intensive Curriculum
                 </div>
                 <h1 className="text-2xl sm:text-4xl font-black tracking-tight uppercase font-serif-title text-[#0A192F] pt-1">
                   Certificate of Technical Mastery
@@ -317,7 +317,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                 <div className="flex flex-col items-center justify-center">
                   <div className="w-20 h-20 rounded-full bg-[#0A192F] border-4 border-[#1E3A8A] text-white flex flex-col items-center justify-center p-2 shadow-md">
                     <span className="text-[8px] font-mono uppercase text-[#BFDBFE] font-bold">
-                      SPSU UDAIPUR
+                      PLACEMENT
                     </span>
                     <Award className="w-5 h-5 text-white my-0.5" />
                     <span className="text-[10px] font-black tracking-wider">KAPIL</span>
@@ -335,7 +335,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                     Placement Mentor (Independent Technical Mentor)
                   </div>
                   <div className="text-[11px] text-slate-600 font-medium">
-                    SPSU Udaipur Placement Readiness Boot Camp
+                    Placement Readiness Boot Camp
                   </div>
                 </div>
               </div>
@@ -352,7 +352,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
 
               <div className="text-center space-y-2 border-b-2 border-amber-500 pb-5 relative z-10">
                 <div className="inline-block px-4 py-1 rounded-full bg-[#0A192F] text-amber-300 font-mono text-[10px] sm:text-xs font-extrabold uppercase tracking-widest">
-                  ★ SPSU Udaipur • Mentorship By Kapil • Special Edition Credential
+                  ★ Placement Readiness • Mentorship By Kapil • Special Edition Credential
                 </div>
                 <h1 className="text-2xl sm:text-4xl font-black tracking-tight uppercase font-serif-title text-[#0A192F] pt-1">
                   Certified System Design Architect
@@ -415,7 +415,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                     Placement Mentor (Independent Technical Mentor)
                   </div>
                   <div className="text-[11px] text-slate-600 font-medium">
-                    SPSU Udaipur Placement Readiness Boot Camp
+                    Placement Readiness Boot Camp
                   </div>
                 </div>
               </div>
@@ -432,7 +432,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
 
               <div className="text-center space-y-2 border-b-2 border-emerald-600 pb-5 relative z-10">
                 <div className="inline-block px-4 py-1 rounded-full bg-[#0A192F] text-emerald-300 font-mono text-[10px] sm:text-xs font-extrabold uppercase tracking-widest">
-                  🎯 SPSU Udaipur • Mentorship By Kapil • Placement Readiness Track
+                  🎯 Placement Readiness • Mentorship By Kapil • Placement Readiness Track
                 </div>
                 <h1 className="text-2xl sm:text-4xl font-black tracking-tight uppercase font-serif-title text-[#0A192F] pt-1">
                   Certified Interview Ready Engineer
@@ -477,7 +477,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                 <div className="flex flex-col items-center justify-center">
                   <div className="w-20 h-20 rounded-full bg-[#0A192F] border-4 border-emerald-500 text-white flex flex-col items-center justify-center p-2 shadow-md">
                     <span className="text-[8px] font-mono uppercase text-emerald-300 font-bold">
-                      SPSU UDAIPUR
+                      PLACEMENT
                     </span>
                     <Target className="w-5 h-5 text-emerald-400 my-0.5" />
                     <span className="text-[10px] font-black tracking-wider text-emerald-400">READY</span>
@@ -495,7 +495,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                     Head of Corporate Training & Placements
                   </div>
                   <div className="text-[11px] text-slate-600 font-medium">
-                    Sir Padampat Singhania University, Udaipur
+                    Placement Readiness Boot Camp
                   </div>
                 </div>
               </div>

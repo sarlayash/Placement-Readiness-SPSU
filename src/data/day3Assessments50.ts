@@ -3,7 +3,7 @@ import { AssessmentQuestion } from '../types';
 /**
  * Day 3 Assessments (50 Pre-Assessment MCQs & 50 Post-Assessment MCQs = 100 Total)
  * Module 3: Company-Oriented Coding Lab & Trade-Off Benchmarking
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  * Coverage: Constraint Analysis (10^8 ops rule), Binary Search on Answer Space,
  * Prefix Sum with Hash Map, Kadane's Algorithm, Two Pointers, Monotonic Stack & Queue,
  * Greedy Interval Scheduling, Bitwise Hacks & Hidden Boundary Testing.

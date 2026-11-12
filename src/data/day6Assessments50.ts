@@ -3,7 +3,7 @@ import { AssessmentQuestion } from '../types';
 /**
  * Day 6 Assessments (50 Pre-Assessment MCQs & 50 Post-Assessment MCQs = 100 Total)
  * Module 6: Operating Systems: Scheduling, Concurrency, Deadlocks & Paging
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  * Coverage: Process vs Thread Internals, PCB & Context Switching,
  * CPU Scheduling (FCFS, SJF, SRTF, Round-Robin, Priority, MLFQ),
  * Concurrency, Critical Section, Mutex, Semaphores, Peterson's Algorithm,

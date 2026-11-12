@@ -282,7 +282,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                 <span>REAL-TIME FIRESTORE STREAM ACTIVE</span>
               </span>
               <span className="text-xs font-mono text-[#93C5FD]">
-                SPSU Udaipur Placement Readiness System
+                Placement Readiness System
               </span>
             </div>
 
@@ -743,7 +743,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                             />
                             <div className="min-w-0">
                               <div className="font-bold text-[#0A192F] truncate">
-                                {learner.name || 'SPSU Learner'}
+                                {learner.name || 'Placement Learner'}
                               </div>
                               <div className="text-[10px] text-slate-500">
                                 Reg: {learner.firstLogin ? new Date(learner.firstLogin).toLocaleDateString('en-IN') : 'N/A'}
@@ -1011,7 +1011,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                     Official Career Credentials (Self-Service & Admin)
                   </h4>
                   <p className="text-[11px] text-slate-200 mt-0.5">
-                    Generate and download authenticated PDF documents on SPSU Udaipur official letterhead.
+                    Generate and download authenticated PDF documents on official letterhead.
                   </p>
                 </div>
 

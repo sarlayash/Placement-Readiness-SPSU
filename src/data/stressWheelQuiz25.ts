@@ -391,7 +391,7 @@ export const STRESS_WHEEL_25_QUESTIONS: StressWheelQuestion[] = [
     mentorKapilWisdom: {
       hiddenMeaning: "A certificate is proof of attendance; code that passes unit tests is proof of competence. Companies hire competence.",
       engineeringTakeaway: "Your GitHub repo, your LeetCode problem count, and your working live deployment speak louder than 100 Canva badges.",
-      actionableHabit: "Restrict LinkedIn browsing to 15 minutes a day. Spend that saved time in the SPSU IDE Virtual Lab."
+      actionableHabit: "Restrict LinkedIn browsing to 15 minutes a day. Spend that saved time in the Placement IDE Virtual Lab."
     },
     funStressReliever: "If LinkedIn posts were executable code, the entire internet would crash from memory overflow!"
   },

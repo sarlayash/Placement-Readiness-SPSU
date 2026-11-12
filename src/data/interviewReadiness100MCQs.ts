@@ -1,7 +1,7 @@
 import { InterviewAssessmentQuestion } from '../types';
 
 /**
- * SPSU Udaipur Placement Readiness Program
+ * Placement Readiness Program
  * Mentor: Kapil | 100 Comprehensive Interview Readiness MCQs
  * Balanced Coverage: DSA Intuition, OOPs & Language Internals, OS, DBMS/SQL, Networks, SDLC & Behavioral
  */
@@ -373,7 +373,7 @@ export const INTERVIEW_READINESS_100_MCQS: InterviewAssessmentQuestion[] = [
   },
   {
     "id": "ir-q-21",
-    "question": "In Java, what happens in memory when you execute: String s1 = 'SPSU'; String s2 = new String('SPSU');?",
+    "question": "In Java, what happens in memory when you execute: String s1 = 'TECH'; String s2 = new String('TECH');?",
     "options": [
       "Both strings point to the same object in the String Constant Pool",
       "s1 references an object in the String Constant Pool, while s2 allocates a distinct object on the Java Heap",
@@ -1852,7 +1852,7 @@ export const INTERVIEW_READINESS_100_MCQS: InterviewAssessmentQuestion[] = [
     "track": "universal",
     "category": "HR & Behavioral",
     "companyTags": [
-      "SPSU Placement Drive 2026"
+      "Campus Placement Drive 2026"
     ]
   }
 ];

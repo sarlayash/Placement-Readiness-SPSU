@@ -3,7 +3,7 @@ import { PracticalChallenge } from '../types';
 /**
  * Day 7: 10 Comprehensive Practical Coding Challenges (70% Practical Allocation)
  * Module 7: Computer Networks, Protocols & REST Security
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  * Polyglot implementations: C (C17), C++ (C++20), Java (Java 21), Python (Python 3.12)
  * Complete with visualization steps, starter code, solutions & test cases.
  */
@@ -940,15 +940,15 @@ if __name__ == "__main__":
     inputFormat: 'First line: The name of the target header to look up (e.g. "Host"). Next lines: The HTTP request lines terminated by an empty line or EOF.',
     outputFormat: 'Print "Method: <METHOD> | Path: <PATH> | Version: <VERSION> | <HeaderName>: <HeaderValue>".',
     constraints: ['Standard HTTP/1.1 syntax', 'Header names are case-insensitive'],
-    sampleInput: 'Host\nGET /api/v1/students HTTP/1.1\nHost: portal.spsu.edu.in\nUser-Agent: Curl/7.68\nAccept: application/json',
-    sampleOutput: 'Method: GET | Path: /api/v1/students | Version: HTTP/1.1 | Host: portal.spsu.edu.in',
+    sampleInput: 'Host\nGET /api/v1/students HTTP/1.1\nHost: portal.placement.dev\nUser-Agent: Curl/7.68\nAccept: application/json',
+    sampleOutput: 'Method: GET | Path: /api/v1/students | Version: HTTP/1.1 | Host: portal.placement.dev',
     kapilIntuition:
       'Split the first line by whitespace to extract Method, Path, and Version. For subsequent lines, locate the first colon delimiter, strip whitespace from key and value, and match case-insensitively against the target header.',
     timeComplexity: 'O(L) where L is total character length',
     spaceComplexity: 'O(L)',
     visualizationSteps: [
       { step: 1, label: 'Parse Request Line', description: 'GET /api/v1/students HTTP/1.1 -> Method: GET, Path: /api/v1/students, Version: HTTP/1.1.', variables: { method: 'GET', path: '/api/v1/students' } },
-      { step: 2, label: 'Iterate Headers', description: 'Match target "Host" against "portal.spsu.edu.in".', variables: { found: true } },
+      { step: 2, label: 'Iterate Headers', description: 'Match target "Host" against "portal.placement.dev".', variables: { found: true } },
     ],
     starterCode: {
       c: `#include <stdio.h>
@@ -958,7 +958,7 @@ int main() {
     char target[64];
     if (scanf("%s\\n", target) == 1) {
         // Implement HTTP Parser
-        printf("Method: GET | Path: /api/v1/students | Version: HTTP/1.1 | Host: portal.spsu.edu.in\\n");
+        printf("Method: GET | Path: /api/v1/students | Version: HTTP/1.1 | Host: portal.placement.dev\\n");
     }
     return 0;
 }`,
@@ -971,7 +971,7 @@ int main() {
     string target;
     if (cin >> target) {
         // Implement HTTP Request Parser
-        cout << "Method: GET | Path: /api/v1/students | Version: HTTP/1.1 | Host: portal.spsu.edu.in" << endl;
+        cout << "Method: GET | Path: /api/v1/students | Version: HTTP/1.1 | Host: portal.placement.dev" << endl;
     }
     return 0;
 }`,
@@ -983,7 +983,7 @@ public class Solution {
         if (sc.hasNextLine()) {
             String target = sc.nextLine().trim();
             // Implement HTTP Parser
-            System.out.println("Method: GET | Path: /api/v1/students | Version: HTTP/1.1 | Host: portal.spsu.edu.in");
+            System.out.println("Method: GET | Path: /api/v1/students | Version: HTTP/1.1 | Host: portal.placement.dev");
         }
     }
 }`,
@@ -994,7 +994,7 @@ def solve():
     if not lines:
         return
     # Implement HTTP Parser
-    print("Method: GET | Path: /api/v1/students | Version: HTTP/1.1 | Host: portal.spsu.edu.in")
+    print("Method: GET | Path: /api/v1/students | Version: HTTP/1.1 | Host: portal.placement.dev")
 
 if __name__ == "__main__":
     solve()`,
@@ -1138,14 +1138,14 @@ if __name__ == "__main__":
     testCases: [
       {
         id: 'd7-prob5-tc1',
-        input: 'Host\nGET /api/v1/students HTTP/1.1\nHost: portal.spsu.edu.in\nUser-Agent: Curl/7.68\nAccept: application/json',
-        expectedOutput: 'Method: GET | Path: /api/v1/students | Version: HTTP/1.1 | Host: portal.spsu.edu.in',
+        input: 'Host\nGET /api/v1/students HTTP/1.1\nHost: portal.placement.dev\nUser-Agent: Curl/7.68\nAccept: application/json',
+        expectedOutput: 'Method: GET | Path: /api/v1/students | Version: HTTP/1.1 | Host: portal.placement.dev',
         isHidden: false,
         explanation: 'Parses standard HTTP GET request with Host header.',
       },
       {
         id: 'd7-prob5-tc2',
-        input: 'Authorization\nPOST /login HTTP/1.1\nHost: spsu.ac.in\nContent-Type: application/json',
+        input: 'Authorization\nPOST /login HTTP/1.1\nHost: placement.dev\nContent-Type: application/json',
         expectedOutput: 'Method: POST | Path: /login | Version: HTTP/1.1 | Authorization: NOT FOUND',
         isHidden: true,
         explanation: 'Missing Authorization header reports NOT FOUND.',
@@ -1939,8 +1939,8 @@ if __name__ == "__main__":
     inputFormat: 'A single line of ASCII text representing the payload.',
     outputFormat: 'Print "CRC-32: 0x<HEX>".',
     constraints: ['Payload length between 1 and 1000 characters', 'Standard Ethernet polynomial IEEE 802.3'],
-    sampleInput: 'SPSU Placement 2026',
-    sampleOutput: 'CRC-32: 0x8C526A18',
+    sampleInput: 'Placement Readiness 2026',
+    sampleOutput: 'CRC-32: 0x30569CE9',
     kapilIntuition:
       'CRC-32 operates as bitwise polynomial division modulo 2. For each byte, XOR into the low byte of the CRC register, then shift right 8 times; if the LSB was 1, XOR with the polynomial 0xEDB88320. At the end, invert all bits.',
     timeComplexity: 'O(N) where N is payload length',
@@ -1971,7 +1971,7 @@ int main() {
     string data;
     if (getline(cin, data)) {
         // Implement CRC-32
-        cout << "CRC-32: 0x8C526A18" << endl;
+        cout << "CRC-32: 0x30569CE9" << endl;
     }
     return 0;
 }`,
@@ -1983,7 +1983,7 @@ public class Solution {
         if (sc.hasNextLine()) {
             String data = sc.nextLine();
             // Implement CRC-32
-            System.out.println("CRC-32: 0x8C526A18");
+            System.out.println("CRC-32: 0x30569CE9");
         }
     }
 }`,
@@ -1994,7 +1994,7 @@ def solve():
     if not line:
         return
     # Implement CRC-32
-    print("CRC-32: 0x8C526A18")
+    print("CRC-32: 0x30569CE9")
 
 if __name__ == "__main__":
     solve()`,
@@ -2091,8 +2091,8 @@ if __name__ == "__main__":
     testCases: [
       {
         id: 'd7-prob10-tc1',
-        input: 'SPSU Placement 2026',
-        expectedOutput: 'CRC-32: 0x8C526A18',
+        input: 'Placement Readiness 2026',
+        expectedOutput: 'CRC-32: 0x30569CE9',
         isHidden: false,
         explanation: 'Standard IEEE 802.3 CRC-32 checksum computation for string.',
       },

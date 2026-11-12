@@ -40,7 +40,7 @@ export const AdminLoginModal: React.FC<AdminLoginModalProps> = ({ onSuccess, onC
             </div>
             <div>
               <h2 className="text-base font-extrabold tracking-tight">Admin Authentication</h2>
-              <p className="text-[11px] text-[#BFDBFE]">SPSU Placement Readiness Portal</p>
+              <p className="text-[11px] text-[#BFDBFE]">Placement Readiness Portal</p>
             </div>
           </div>
           <button

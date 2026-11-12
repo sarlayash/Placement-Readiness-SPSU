@@ -33,7 +33,7 @@ googleProvider.setCustomParameters({
 export function formatFirebaseUser(fbUser: FirebaseUser): GoogleUser {
   return {
     uid: fbUser.uid,
-    name: fbUser.displayName || (fbUser.email ? fbUser.email.split('@')[0] : 'SPSU Google Learner'),
+    name: fbUser.displayName || (fbUser.email ? fbUser.email.split('@')[0] : 'Placement Google Learner'),
     email: fbUser.email || '',
     photoURL:
       fbUser.photoURL ||

@@ -3,7 +3,7 @@ import { PracticalChallenge } from '../types';
 /**
  * Day 10 Practical Challenges (10 Placement-Grade Problems)
  * Modules 10 & 11: AI-Assisted Software Development & Technical Interview Preparation
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  */
 export const DAY_10_PRACTICAL_CHALLENGES_10: PracticalChallenge[] = [
   {
@@ -641,7 +641,7 @@ if __name__ == "__main__":
       'Time Complexity: O(N)',
       'Auxiliary Space: O(N)',
     ],
-    sampleInput: 'User email is kapil@spsu.ac.in and key is AKIA1234567890ABCDEF with Bearer tokenSecret123',
+    sampleInput: 'User email is kapil@mentorship.org and key is AKIA1234567890ABCDEF with Bearer tokenSecret123',
     sampleOutput: 'User email is [REDACTED_EMAIL] and key is [REDACTED_KEY] with Bearer [REDACTED_TOKEN]',
     kapilIntuition:
       'Token-level regex/lexical scanning before sending prompts to external APIs prevents catastrophic GDPR/HIPAA compliance violations and credential leaks.',
@@ -780,7 +780,7 @@ if __name__ == "__main__":
     testCases: [
       {
         id: 'd10-prob-4-tc1',
-        input: 'User email is kapil@spsu.ac.in and key is AKIA1234567890ABCDEF with Bearer tokenSecret123',
+        input: 'User email is kapil@mentorship.org and key is AKIA1234567890ABCDEF with Bearer tokenSecret123',
         expectedOutput: 'User email is [REDACTED_EMAIL] and key is [REDACTED_KEY] with Bearer [REDACTED_TOKEN]',
         isHidden: false,
         explanation: 'Email, AWS API key, and Bearer token are all scrubbed.',
@@ -1818,7 +1818,7 @@ if __name__ == "__main__":
       'Time Complexity: O(Q)',
       'Auxiliary Space: O(1)',
     ],
-    sampleInput: '1000 user_id\n2\nINDEX_SEEK user_id 101\nINDEX_SEEK email test@spsu.ac.in',
+    sampleInput: '1000 user_id\n2\nINDEX_SEEK user_id 101\nINDEX_SEEK email test@example.com',
     sampleOutput: '1011',
     kapilIntuition:
       'In technical interviews, query performance is explained by comparing disk I/O costs between B-Tree branch traversals (O(log N)) and sequential table heap reads (O(N)).',
@@ -1989,7 +1989,7 @@ if __name__ == "__main__":
     testCases: [
       {
         id: 'd10-prob-9-tc1',
-        input: '1000 user_id\n2\nINDEX_SEEK user_id 101\nINDEX_SEEK email test@spsu.ac.in',
+        input: '1000 user_id\n2\nINDEX_SEEK user_id 101\nINDEX_SEEK email test@example.com',
         expectedOutput: '1011',
         isHidden: false,
         explanation: 'user_id index seek costs 11 (ceil(log2(1000)) + 1 = 10 + 1 = 11). email full scan costs 1000. Total = 1011.',

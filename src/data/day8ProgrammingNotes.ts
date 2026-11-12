@@ -1,7 +1,7 @@
 import { ProgrammingNote } from '../types';
 
 /**
- * SPSU Udaipur Placement Readiness Program
+ * Placement Readiness Program
  * Mentor: Kapil | Day 8: Software Engineering, Git Workflows, Debugging & Automated Testing
  * 5 Comprehensive Masterclass Notes with Complete Polyglot Code (C, C++, Java, Python)
  */

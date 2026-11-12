@@ -66,7 +66,7 @@ export const OperatingHoursModal: React.FC<OperatingHoursModalProps> = ({
             </h2>
 
             <p className="text-xs sm:text-sm text-[#BFDBFE] max-w-lg mx-auto">
-              SPSU Udaipur Placement Readiness Program operates daily from <strong>09:00 AM to 09:00 PM IST</strong> to instill disciplined industry work habits.
+              Placement Readiness Program operates daily from <strong>09:00 AM to 09:00 PM IST</strong> to instill disciplined industry work habits.
             </p>
           </div>
         </div>
@@ -139,7 +139,7 @@ export const OperatingHoursModal: React.FC<OperatingHoursModalProps> = ({
           <div className="p-4 rounded-2xl bg-amber-50 border-2 border-amber-300 space-y-2">
             <div className="flex items-center gap-2 text-amber-900 font-bold text-xs uppercase font-mono">
               <ShieldCheck className="w-4 h-4 text-amber-700" />
-              <span>Note from Mentor Kapil (SPSU Udaipur)</span>
+              <span>Note from Mentor Kapil</span>
             </div>
             <p className="text-xs text-amber-900 leading-relaxed">
               "Dear Students, disciplined rest and evening synthesis are critical for peak cognitive performance during technical placement assessments. Review today’s notes, verify edge cases in your head, get sound sleep, and be ready at <strong>09:00 AM sharp</strong> for tomorrow's diagnostic evaluation!"

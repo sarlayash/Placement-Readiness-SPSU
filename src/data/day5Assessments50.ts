@@ -3,7 +3,7 @@ import { AssessmentQuestion } from '../types';
 /**
  * Day 5 Assessments (50 Pre-Assessment MCQs & 50 Post-Assessment MCQs = 100 Total)
  * Module 5: Object-Oriented Programming (OOP) & SOLID Design
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  * Coverage: 4 Pillars of OOP, VTable & VPtr Dynamic Dispatch, Constructors/Destructors,
  * Virtual Inheritance & Diamond Problem, Object Slicing, Copy/Move Semantics,
  * SOLID Principles (SRP, OCP, LSP, ISP, DIP), and GoF Design Patterns across C, C++, Java, and Python.
@@ -480,16 +480,16 @@ export const DAY_5_PRE_ASSESSMENT_50: AssessmentQuestion[] = [
   {
     "id": "d5-pre-34",
     "question": "What is printed by this Python dependency injection demonstration conforming to the Dependency Inversion Principle (DIP)?",
-    "codeSnippet": "class MessageService:\n    def send(self, msg: str) -> str:\n        raise NotImplementedError()\n\nclass EmailService(MessageService):\n    def send(self, msg: str) -> str:\n        return f\"Email:[{msg}]\"\n\nclass NotificationManager:\n    def __init__(self, service: MessageService):\n        self._service = service\n\n    def notify(self, text: str) -> str:\n        return self._service.send(text)\n\nmanager = NotificationManager(EmailService())\nprint(manager.notify(\"Welcome SPSU\"))",
+    "codeSnippet": "class MessageService:\n    def send(self, msg: str) -> str:\n        raise NotImplementedError()\n\nclass EmailService(MessageService):\n    def send(self, msg: str) -> str:\n        return f\"Email:[{msg}]\"\n\nclass NotificationManager:\n    def __init__(self, service: MessageService):\n        self._service = service\n\n    def notify(self, text: str) -> str:\n        return self._service.send(text)\n\nmanager = NotificationManager(EmailService())\nprint(manager.notify(\"Welcome Candidate\"))",
     "codeLanguage": "python",
     "options": [
-      "SMS:[Welcome SPSU]",
-      "Email:[Welcome SPSU]",
-      "Welcome SPSU",
-      "NotificationManager:[Welcome SPSU]"
+      "SMS:[Welcome Candidate]",
+      "Email:[Welcome Candidate]",
+      "Welcome Candidate",
+      "NotificationManager:[Welcome Candidate]"
     ],
     "correctIndex": 1,
-    "explanation": "`NotificationManager` depends on the abstraction `MessageService`, not a concrete implementation. Injecting `EmailService` causes `send` to return 'Email:[Welcome SPSU]'.",
+    "explanation": "`NotificationManager` depends on the abstraction `MessageService`, not a concrete implementation. Injecting `EmailService` causes `send` to return 'Email:[Welcome Candidate]'.",
     "category": "Practical Execution & Trace (70%)"
   },
   {
@@ -1143,16 +1143,16 @@ export const DAY_5_POST_ASSESSMENT_50: AssessmentQuestion[] = [
   {
     "id": "d5-post-30",
     "question": "Trace the execution of this Java Command Pattern implementing an undo stack:",
-    "codeSnippet": "import java.util.*;\n\ninterface Command { void execute(); void undo(); }\n\nclass TextDoc {\n    StringBuilder text = new StringBuilder();\n}\n\nclass AppendCommand implements Command {\n    private TextDoc doc;\n    private String str;\n    public AppendCommand(TextDoc d, String s) { this.doc = d; this.str = s; }\n    public void execute() { doc.text.append(str); }\n    public void undo() {\n        int len = doc.text.length();\n        doc.text.delete(len - str.length(), len);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        TextDoc doc = new TextDoc();\n        Command c1 = new AppendCommand(doc, \"Hello \");\n        Command c2 = new AppendCommand(doc, \"SPSU\");\n        c1.execute();\n        c2.execute();\n        c2.undo();\n        System.out.println(doc.text.toString());\n    }\n}",
+    "codeSnippet": "import java.util.*;\n\ninterface Command { void execute(); void undo(); }\n\nclass TextDoc {\n    StringBuilder text = new StringBuilder();\n}\n\nclass AppendCommand implements Command {\n    private TextDoc doc;\n    private String str;\n    public AppendCommand(TextDoc d, String s) { this.doc = d; this.str = s; }\n    public void execute() { doc.text.append(str); }\n    public void undo() {\n        int len = doc.text.length();\n        doc.text.delete(len - str.length(), len);\n    }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        TextDoc doc = new TextDoc();\n        Command c1 = new AppendCommand(doc, \"Hello \");\n        Command c2 = new AppendCommand(doc, \"TECH\");\n        c1.execute();\n        c2.execute();\n        c2.undo();\n        System.out.println(doc.text.toString());\n    }\n}",
     "codeLanguage": "java",
     "options": [
-      "Hello SPSU",
+      "Hello TECH",
       "Hello ",
-      "SPSU",
+      "TECH",
       "Empty String"
     ],
     "correctIndex": 1,
-    "explanation": "`c1.execute()` appends 'Hello '; `c2.execute()` appends 'SPSU' -> 'Hello SPSU'. `c2.undo()` removes the last 4 characters ('SPSU'), leaving 'Hello '.",
+    "explanation": "`c1.execute()` appends 'Hello '; `c2.execute()` appends 'TECH' -> 'Hello TECH'. `c2.undo()` removes the last 4 characters ('TECH'), leaving 'Hello '.",
     "category": "Practical Execution & Trace (70%)"
   },
   {
@@ -1413,16 +1413,16 @@ export const DAY_5_POST_ASSESSMENT_50: AssessmentQuestion[] = [
   {
     "id": "d5-post-48",
     "question": "What is printed by this Java method reference vs lambda polymorphic invocation?",
-    "codeSnippet": "import java.util.*;\nimport java.util.function.Function;\n\nclass Transformer {\n    static String upper(String s) { return s.toUpperCase(); }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Function<String, String> f = Transformer::upper;\n        System.out.println(f.apply(\"spsu\"));\n    }\n}",
+    "codeSnippet": "import java.util.*;\nimport java.util.function.Function;\n\nclass Transformer {\n    static String upper(String s) { return s.toUpperCase(); }\n}\n\npublic class Main {\n    public static void main(String[] args) {\n        Function<String, String> f = Transformer::upper;\n        System.out.println(f.apply(\"tech\"));\n    }\n}",
     "codeLanguage": "java",
     "options": [
-      "spsu",
+      "tech",
       "Transformer.upper",
       "null",
-      "SPSU"
+      "TECH"
     ],
     "correctIndex": 3,
-    "explanation": "`Transformer::upper` assigns the static method to a functional interface `Function<String, String>`. Calling `apply(\"spsu\")` executes `Transformer.upper(\"spsu\")` which returns 'SPSU'.",
+    "explanation": "`Transformer::upper` assigns the static method to a functional interface `Function<String, String>`. Calling `apply(\"tech\")` executes `Transformer.upper(\"tech\")` which returns 'TECH'.",
     "category": "Practical Execution & Trace (70%)"
   },
   {

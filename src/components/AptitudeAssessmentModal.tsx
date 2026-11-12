@@ -228,7 +228,7 @@ export const AptitudeAssessmentModal: React.FC<AptitudeAssessmentModalProps> = (
                   </h3>
                   <p className="text-xs sm:text-sm mt-1 max-w-md mx-auto opacity-90">
                     {scorePercentage >= 80
-                      ? 'Congratulations! Your score satisfies the rigorous SPSU Placement Cell 80% passing cutoff for enterprise recruitment.'
+                      ? 'Congratulations! Your score satisfies the rigorous 80% passing cutoff for enterprise recruitment.'
                       : 'Mentor Kapil mandate: You must score at least 80% (40/50 correct) to earn verification. Review the solutions below and retake.'}
                   </p>
                 </div>

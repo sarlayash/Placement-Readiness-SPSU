@@ -61,7 +61,7 @@ export const NotificationCenterModal: React.FC<NotificationCenterModalProps> = (
 
   const handleTestPush = () => {
     sendNativePushNotification(
-      '🔔 SPSU Placement Portal Reminder',
+      '🔔 Placement Portal Reminder',
       'Reminder: Both Pre & Post Assessments require strictly 80%+ passing score to verify mastery.'
     );
   };

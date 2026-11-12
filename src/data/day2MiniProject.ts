@@ -137,7 +137,7 @@ export const DAY_2_MINI_PROJECT: MiniProject = {
     c: `/*
  * Day 2 Capstone: High-Frequency Algorithmic Trading & Order-Matching Engine
  * Language: C (C99 Standard) - Pure standard libraries (<stdio.h>, <stdlib.h>, <string.h>)
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  * Features: Dual-Heap Order Matching, Sliding Window Average & Monotonic Stack Breakout
  */
 #include <stdio.h>
@@ -244,7 +244,7 @@ void nextResistanceLevels(const double prices[], int n, double nextRes[]) {
 
 int main() {
     printf("===================================================================\\n");
-    printf("   ALGORITHMIC TRADING & ORDER-MATCHING ENGINE (SPSU MENTOR KAPIL)\\n");
+    printf("   ALGORITHMIC TRADING & ORDER-MATCHING ENGINE (MENTOR KAPIL)\\n");
     printf("===================================================================\\n\\n");
 
     // 1. Dual-Heap Order Matching Simulation
@@ -306,7 +306,7 @@ int main() {
     cpp: `/*
  * Day 2 Capstone: High-Frequency Algorithmic Trading & Order-Matching Engine
  * Language: C++ (C++17) - STL Priority Queue, Deque, Stack & Modern Algorithms
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  */
 #include <iostream>
 #include <vector>
@@ -404,7 +404,7 @@ int main() {
     java: `/*
  * Day 2 Capstone: High-Frequency Algorithmic Trading & Order-Matching Engine
  * Language: Java 17 - PriorityQueue, Stack, Deque & Clean Domain Modeling
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  */
 import java.util.*;
 
@@ -478,7 +478,7 @@ public class OrderMatchingEngineApp {
     python: `"""
 Day 2 Capstone: High-Frequency Algorithmic Trading & Order-Matching Engine
 Language: Python 3.10+ - heapq, collections.deque & List Comprehensions
-Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+Mentor: Kapil (Placement Readiness Program)
 """
 import heapq
 from dataclasses import dataclass, field

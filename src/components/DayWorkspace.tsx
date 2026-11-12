@@ -90,7 +90,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
   const [ideLang, setIdeLang] = useState<SupportedLanguage>('cpp');
   const [editorCode, setEditorCode] = useState<string>('');
   const [consoleLog, setConsoleLog] = useState<string>(
-    'SPSU Kapil Multi-Language Sandbox Ready. Select C, C++, Java, or Python, write your solution, or load Kapil’s Verified Reference Solution to run test cases.'
+    'Kapil Multi-Language Sandbox Ready. Select C, C++, Java, or Python, write your solution, or load Kapil’s Verified Reference Solution to run test cases.'
   );
   const [testRunResult, setTestRunResult] = useState<{
     ran: boolean;
@@ -139,13 +139,13 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
 
     const userKey = user?.email || 'anon';
     try {
-      let preDraftRaw = localStorage.getItem(`spsu_pre_ans_d${dayPlan.day}_${userKey}`);
+      let preDraftRaw = localStorage.getItem(`bootcamp_pre_ans_d${dayPlan.day}_${userKey}`) || localStorage.getItem(`spsu_pre_ans_d${dayPlan.day}_${userKey}`);
       // Migration: If user signed in while answering as anon, preserve and migrate draft
       if (!preDraftRaw && userKey !== 'anon') {
-        const anonPre = localStorage.getItem(`spsu_pre_ans_d${dayPlan.day}_anon`);
+        const anonPre = localStorage.getItem(`bootcamp_pre_ans_d${dayPlan.day}_anon`) || localStorage.getItem(`spsu_pre_ans_d${dayPlan.day}_anon`);
         if (anonPre) {
           preDraftRaw = anonPre;
-          localStorage.setItem(`spsu_pre_ans_d${dayPlan.day}_${userKey}`, anonPre);
+          localStorage.setItem(`bootcamp_pre_ans_d${dayPlan.day}_${userKey}`, anonPre);
         }
       }
       if (preDraftRaw) {
@@ -154,12 +154,12 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
         setPreAnswers({});
       }
 
-      let postDraftRaw = localStorage.getItem(`spsu_post_ans_d${dayPlan.day}_${userKey}`);
+      let postDraftRaw = localStorage.getItem(`bootcamp_post_ans_d${dayPlan.day}_${userKey}`) || localStorage.getItem(`spsu_post_ans_d${dayPlan.day}_${userKey}`);
       if (!postDraftRaw && userKey !== 'anon') {
-        const anonPost = localStorage.getItem(`spsu_post_ans_d${dayPlan.day}_anon`);
+        const anonPost = localStorage.getItem(`bootcamp_post_ans_d${dayPlan.day}_anon`) || localStorage.getItem(`spsu_post_ans_d${dayPlan.day}_anon`);
         if (anonPost) {
           postDraftRaw = anonPost;
-          localStorage.setItem(`spsu_post_ans_d${dayPlan.day}_${userKey}`, anonPost);
+          localStorage.setItem(`bootcamp_post_ans_d${dayPlan.day}_${userKey}`, anonPost);
         }
       }
       if (postDraftRaw) {
@@ -192,7 +192,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
       const next = { ...prev, [questionId]: optionIdx };
       try {
         const userKey = user?.email || 'anon';
-        localStorage.setItem(`spsu_pre_ans_d${dayPlan.day}_${userKey}`, JSON.stringify(next));
+        localStorage.setItem(`bootcamp_pre_ans_d${dayPlan.day}_${userKey}`, JSON.stringify(next));
       } catch {
         // ignore
       }
@@ -206,7 +206,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
       const next = { ...prev, [questionId]: optionIdx };
       try {
         const userKey = user?.email || 'anon';
-        localStorage.setItem(`spsu_post_ans_d${dayPlan.day}_${userKey}`, JSON.stringify(next));
+        localStorage.setItem(`bootcamp_post_ans_d${dayPlan.day}_${userKey}`, JSON.stringify(next));
       } catch {
         // ignore
       }
@@ -220,6 +220,8 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
     setPreAnswers({});
     try {
       const userKey = user?.email || 'anon';
+      localStorage.removeItem(`bootcamp_pre_ans_d${dayPlan.day}_${userKey}`);
+      localStorage.removeItem(`bootcamp_pre_ans_d${dayPlan.day}_anon`);
       localStorage.removeItem(`spsu_pre_ans_d${dayPlan.day}_${userKey}`);
       localStorage.removeItem(`spsu_pre_ans_d${dayPlan.day}_anon`);
     } catch {
@@ -233,6 +235,8 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
     setPostAnswers({});
     try {
       const userKey = user?.email || 'anon';
+      localStorage.removeItem(`bootcamp_post_ans_d${dayPlan.day}_${userKey}`);
+      localStorage.removeItem(`bootcamp_post_ans_d${dayPlan.day}_anon`);
       localStorage.removeItem(`spsu_post_ans_d${dayPlan.day}_${userKey}`);
       localStorage.removeItem(`spsu_post_ans_d${dayPlan.day}_anon`);
     } catch {
@@ -487,7 +491,7 @@ export const DayWorkspace: React.FC<DayWorkspaceProps> = ({
                 Day {dayPlan.day} Unlocks Tomorrow at 09:00 AM IST
               </h2>
               <p className="text-sm text-slate-600 max-w-md mx-auto leading-relaxed">
-                Outstanding progress! You have completed Day {prevDay}. In accordance with <strong>Placement Mentor Kapil's</strong> pedagogy and the SPSU Placement Readiness protocol, each day's deep-dive curriculum unlocks strictly at <strong>09:00 AM IST</strong> on its scheduled training day.
+                Outstanding progress! You have completed Day {prevDay}. In accordance with <strong>Placement Mentor Kapil's</strong> pedagogy and the Placement Readiness Boot Camp protocol, each day's deep-dive curriculum unlocks strictly at <strong>09:00 AM IST</strong> on its scheduled training day.
               </p>
             </div>
 

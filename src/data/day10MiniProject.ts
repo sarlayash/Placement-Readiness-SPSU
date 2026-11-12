@@ -3,7 +3,7 @@ import { MiniProject } from '../types';
 /**
  * Day 10 Grand Capstone Mini-Project: AI Code Auditor & Technical Interview Simulation Engine
  * Modules 10 & 11: AI-Assisted Software Development & Technical Interview Preparation
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  */
 export const DAY_10_MINI_PROJECT: MiniProject = {
   id: 'day10-mini-project-ai-interview-engine',
@@ -129,7 +129,7 @@ void advanceInterviewStep(InterviewSimulator* sim, int step, const char* notes) 
 
 int main() {
     printf("=================================================================\\n");
-    printf("  SPSU Udaipur Placement Readiness Program | Mentor: Kapil\\n");
+    printf("  Placement Readiness Program | Mentor: Kapil\\n");
     printf("  Day 10 Grand Capstone: AI Code Auditor & Interview Engine\\n");
     printf("=================================================================\\n\\n");
 
@@ -242,7 +242,7 @@ public:
 
 int main() {
     std::cout << "=================================================================\\n";
-    std::cout << "  SPSU Udaipur Placement Readiness Program | Mentor: Kapil\\n";
+    std::cout << "  Placement Readiness Program | Mentor: Kapil\\n";
     std::cout << "  Day 10 Grand Capstone: AI Code Auditor & Interview Engine\\n";
     std::cout << "=================================================================\\n\\n";
 
@@ -252,7 +252,7 @@ int main() {
     std::cout << "  Ready for Production: " << (report.readyForProduction ? "YES" : "NO - REJECTED") << "\\n\\n";
 
     std::cout << "--- 2. SCRUBBING SECRETS BEFORE AI PROMPT CALL ---\\n";
-    std::string sensitive = "Analyze stack trace for user kapil@spsu.ac.in with key AKIAIOSFODNN7EXAMPLE";
+    std::string sensitive = "Analyze stack trace for user kapil@mentorship.org with key AKIAIOSFODNN7EXAMPLE";
     std::cout << "  Scrubbed: " << PromptSanitizer::scrub(sensitive) << "\\n\\n";
 
     std::cout << "--- 3. LIVE 5-STEP THINKING ALOUD INTERVIEW HARNESS ---\\n";
@@ -328,7 +328,7 @@ public class Day10CapstoneEngine {
 
     public static void main(String[] args) {
         System.out.println("=================================================================");
-        System.out.println("  SPSU Udaipur Placement Readiness Program | Mentor: Kapil");
+        System.out.println("  Placement Readiness Program | Mentor: Kapil");
         System.out.println("  Day 10 Grand Capstone: AI Code Auditor & Interview Engine");
         System.out.println("=================================================================\\n");
 
@@ -338,7 +338,7 @@ public class Day10CapstoneEngine {
         System.out.println("  Audit Outcome: " + (passed ? "ACCEPTED" : "REJECTED_FOR_SAFETY") + "\\n");
 
         System.out.println("--- 2. SCRUBBING PROMPT SECRETS ---");
-        String prompt = "Debug AKIA1234567890ABCDEF for user kapil@spsu.ac.in with Bearer secretKey123";
+        String prompt = "Debug AKIA1234567890ABCDEF for user kapil@mentorship.org with Bearer secretKey123";
         System.out.println("  Scrubbed: " + Sanitizer.scrub(prompt) + "\\n");
 
         System.out.println("--- 3. 5-STEP TECHNICAL INTERVIEW PROTOCOL ---");
@@ -400,7 +400,7 @@ class InterviewHarness:
 
 def main():
     print("=================================================================")
-    print("  SPSU Udaipur Placement Readiness Program | Mentor: Kapil")
+    print("  Placement Readiness Program | Mentor: Kapil")
     print("  Day 10 Grand Capstone: AI Code Auditor & Interview Engine")
     print("=================================================================\\n")
 
@@ -413,7 +413,7 @@ def main():
     print()
 
     print("--- 2. REDACTING SECRETS BEFORE AI PROMPTS ---")
-    raw_prompt = "Verify user test.learner@spsu.ac.in with AKIA1234567890ABCDEF and Bearer secretToken"
+    raw_prompt = "Verify user test.learner@mentorship.org with AKIA1234567890ABCDEF and Bearer secretToken"
     print("  Scrubbed Prompt:", PromptSanitizer.redact(raw_prompt))
     print()
 
@@ -479,7 +479,7 @@ if __name__ == "__main__":
       name: 'PII & Secret Redaction Pipeline',
       choice: 2,
       description: 'Process a prompt containing an email and an AWS access key.',
-      sampleInputs: ['kapil@spsu.ac.in AKIA1234567890ABCDEF'],
+      sampleInputs: ['kapil@mentorship.org AKIA1234567890ABCDEF'],
       expectedOutput: '[REDACTED_EMAIL] [REDACTED_AWS_KEY]',
       explanation: 'Sensitive credentials are scrubbed before prompt transmission.',
     },

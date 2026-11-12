@@ -261,7 +261,7 @@ export const DAYS_6_TO_10: DayPlan[] = [
       },
       {
         timeSlot: '02:30 PM – 03:00 PM',
-        activity: 'Day 10 Verification Post-Assessment, Day 10 Badge & Official SPSU Kapil Certificate Issuance',
+        activity: 'Day 10 Verification Post-Assessment, Day 10 Badge & Official Kapil Verified Certificate Issuance',
         type: 'Post-Assessment & Badge',
         duration: '30 Mins',
       },

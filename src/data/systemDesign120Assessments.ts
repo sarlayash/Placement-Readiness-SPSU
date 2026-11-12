@@ -1,6 +1,6 @@
 // 120 Unique Placement-Focused System Design Assessment MCQs
 // Aligned with the 107-Slide Masterclass on Real-World Architecture & Gmail Case Study
-// Mentorship by Kapil • SPSU Udaipur
+// Mentorship by Kapil • Placement Readiness
 
 export interface SystemDesignAssessmentQuestion {
   id: string;
@@ -1562,7 +1562,7 @@ export const SYSTEM_DESIGN_120_ASSESSMENTS: SystemDesignAssessmentQuestion[] = [
   {
     "id": "sd-q120",
     "category": "Deployments & Interviews",
-    "question": "What is the passing score benchmark for the SPSU Special Edition System Design Post-Assessment to unlock the System Design Architect Badge & Certificate?",
+    "question": "What is the passing score benchmark for the Special Edition System Design Post-Assessment to unlock the System Design Architect Badge & Certificate?",
     "options": [
       "50% (60 / 120)",
       "60% (72 / 120)",
@@ -1570,6 +1570,6 @@ export const SYSTEM_DESIGN_120_ASSESSMENTS: SystemDesignAssessmentQuestion[] = [
       "Strictly 80% (at least 96 out of 120 correct)"
     ],
     "correctIndex": 3,
-    "explanation": "The SPSU Placement Readiness curriculum enforces an 80% benchmark (96/120) to guarantee technical mastery for Tier-1 company hiring standards."
+    "explanation": "The Placement Readiness curriculum enforces an 80% benchmark (96/120) to guarantee technical mastery for Tier-1 company hiring standards."
   }
 ];

@@ -3,7 +3,7 @@ import { MiniProject } from '../types';
 /**
  * Day 7 Capstone Mini-Project: Enterprise Network Packet Sniffer, CIDR Route Analyzer & REST API Security Firewall
  * Module 7: Computer Networks, Protocols & REST Security
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  */
 export const DAY_7_MINI_PROJECT: MiniProject = {
   id: 'day7-mini-project-net-firewall',
@@ -265,7 +265,7 @@ void runScenario5() {
 
 int main() {
     printf("================================================================================\\n");
-    printf("  SPSU UDAIPUR - ENTERPRISE NETWORK PACKET SNIFFER & REST SECURITY FIREWALL\\n");
+    printf("  ENTERPRISE NETWORK PACKET SNIFFER & REST SECURITY FIREWALL\\n");
     printf("  Module 7 Capstone Engine | Placement Mentor: Kapil | Academic Year 2026\\n");
     printf("================================================================================\\n");
     runScenario1();
@@ -329,7 +329,7 @@ public:
 
 int main() {
     cout << "================================================================================" << endl;
-    cout << "  SPSU UDAIPUR - ENTERPRISE NETWORK PACKET SNIFFER & REST SECURITY FIREWALL" << endl;
+    cout << "  ENTERPRISE NETWORK PACKET SNIFFER & REST SECURITY FIREWALL" << endl;
     cout << "  Module 7 Capstone Engine (C++20) | Placement Mentor: Kapil" << endl;
     cout << "================================================================================" << endl;
 
@@ -459,7 +459,7 @@ public class EnterpriseNetworkFirewall {
 
     public static void main(String[] args) {
         System.out.println("================================================================================");
-        System.out.println("  SPSU UDAIPUR - ENTERPRISE NETWORK PACKET SNIFFER & REST SECURITY FIREWALL");
+        System.out.println("  ENTERPRISE NETWORK PACKET SNIFFER & REST SECURITY FIREWALL");
         System.out.println("  Module 7 Capstone Engine (Java 21) | Placement Mentor: Kapil");
         System.out.println("================================================================================");
 
@@ -551,7 +551,7 @@ class TokenBucket:
 
 def main():
     print("=" * 80)
-    print("  SPSU UDAIPUR - ENTERPRISE NETWORK PACKET SNIFFER & REST SECURITY FIREWALL")
+    print("  ENTERPRISE NETWORK PACKET SNIFFER & REST SECURITY FIREWALL")
     print("  Module 7 Capstone Engine (Python 3.12) | Placement Mentor: Kapil")
     print("=" * 80)
 

@@ -73,7 +73,7 @@ export function cleanForFirestore(record: LearnerRecord): Record<string, any> {
   const clean: Record<string, any> = {};
 
   clean.uid = String(record.uid || '').slice(0, 128);
-  clean.name = String(record.name || 'SPSU Learner').slice(0, 150);
+  clean.name = String(record.name || 'Placement Learner').slice(0, 150);
   clean.email = String(record.email || '').toLowerCase().slice(0, 150);
   clean.photoURL = record.photoURL ? String(record.photoURL).slice(0, 1000) : '';
   clean.firstLogin = String(record.firstLogin || new Date().toISOString()).slice(0, 50);
@@ -295,7 +295,7 @@ export async function recordUserSignIn(
 
   const updatedRecord: LearnerRecord = {
     uid: user.uid,
-    name: (user.name || existing?.name || cloudData?.name || initMatch?.name || 'SPSU Learner').slice(0, 150),
+    name: (user.name || existing?.name || cloudData?.name || initMatch?.name || 'Placement Learner').slice(0, 150),
     email: user.email.toLowerCase().slice(0, 150),
     photoURL: user.photoURL ? user.photoURL.slice(0, 1000) : (existing?.photoURL || cloudData?.photoURL || initMatch?.photoURL || ''),
     firstLogin: firstLoginToUse,
@@ -414,7 +414,7 @@ export async function syncLearnerProgress(
 
   const updatedRecord: LearnerRecord = {
     uid: user.uid,
-    name: (user.name || existing?.name || cloudData?.name || initMatch?.name || 'SPSU Learner').slice(0, 150),
+    name: (user.name || existing?.name || cloudData?.name || initMatch?.name || 'Placement Learner').slice(0, 150),
     email: user.email.toLowerCase().slice(0, 150),
     photoURL: (user.photoURL || existing?.photoURL || cloudData?.photoURL || initMatch?.photoURL || '').slice(0, 1000),
     firstLogin: firstLoginToUse,
@@ -571,7 +571,7 @@ export function reconcileLearnerIntoMap(
   // 3. Deep-merge all properties
   const mergedRecord: LearnerRecord = {
     uid: inUid || prev?.uid || '',
-    name: (incoming.name && incoming.name !== 'SPSU Learner' ? incoming.name : prev?.name || incoming.name || 'SPSU Learner').slice(0, 150),
+    name: (incoming.name && incoming.name !== 'Placement Learner' ? incoming.name : prev?.name || incoming.name || 'Placement Learner').slice(0, 150),
     email: (inEmail || prev?.email || '').slice(0, 150),
     photoURL: (incoming.photoURL || prev?.photoURL || '').slice(0, 1000),
     firstLogin: canonicalFirstLogin,
@@ -762,7 +762,7 @@ export function downloadAssessmentScoresCSV(learners: LearnerRecord[], dayFilter
     });
 
     csvContent = [headers.join(','), ...rows].join('\r\n');
-    triggerFileDownload(csvContent, `SPSU_Kapil_Day_${dayFilter}_Assessment_Scores_${nowStr}.csv`);
+    triggerFileDownload(csvContent, `Kapil_Day_${dayFilter}_Assessment_Scores_${nowStr}.csv`);
   } else {
     // Complete 10-Day Master CSV with explicit 80% passing indicator
     const headers = [
@@ -861,7 +861,7 @@ export function downloadAssessmentScoresCSV(learners: LearnerRecord[], dayFilter
     });
 
     csvContent = [headers.join(','), ...rows].join('\r\n');
-    triggerFileDownload(csvContent, `SPSU_Kapil_All_Days_Assessment_Scores_${nowStr}.csv`);
+    triggerFileDownload(csvContent, `Kapil_All_Days_Assessment_Scores_${nowStr}.csv`);
   }
 }
 

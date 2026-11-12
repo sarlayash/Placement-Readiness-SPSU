@@ -343,7 +343,7 @@ export const APTITUDE_50_QUESTIONS: AptitudeQuestion[] = [
     category: 'Logical Reasoning',
     subtopic: 'Statement and Assumptions',
     targetCompanies: ['TCS Digital', 'Infosys DSE', 'Amazon'],
-    question: 'Statement: "Join SPSU Udaipur Placement Boot Camp to guarantee high algorithmic readiness." - Mentor Kapil. Assumptions: I) Students aspire for high algorithmic readiness. II) The SPSU boot camp provides quality instruction.',
+    question: 'Statement: "Join the Placement Readiness Boot Camp to guarantee high algorithmic readiness." - Mentor Kapil. Assumptions: I) Students aspire for high algorithmic readiness. II) The boot camp provides quality instruction.',
     options: ['Both assumptions I and II are implicit', 'Only assumption I is implicit', 'Only assumption II is implicit', 'Neither is implicit'],
     correctIndex: 0,
     stepByStepSolution: 'Any advertisement or invitation assumes that the audience desires the outcome (Assumption I) and that the entity can deliver that outcome effectively (Assumption II). Both assumptions are inherently implicit in making the statement.',

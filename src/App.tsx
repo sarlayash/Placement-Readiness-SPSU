@@ -80,7 +80,7 @@ export function App() {
 
   const [isAdminAuthenticated, setIsAdminAuthenticated] = useState<boolean>(() => {
     try {
-      return sessionStorage.getItem('spsu_kapil_admin_auth_v1') === 'true';
+      return sessionStorage.getItem('kapil_admin_auth_v1') === 'true';
     } catch {
       return false;
     }
@@ -312,7 +312,7 @@ export function App() {
         if (fbUser && fbUser.email) {
           const mapped: GoogleUser = {
             uid: fbUser.uid,
-            name: fbUser.displayName || 'SPSU Google Learner',
+            name: fbUser.displayName || 'Google Learner',
             email: fbUser.email,
             photoURL:
               fbUser.photoURL ||
@@ -389,7 +389,7 @@ export function App() {
   const handleAdminSuccess = () => {
     setIsAdminAuthenticated(true);
     try {
-      sessionStorage.setItem('spsu_kapil_admin_auth_v1', 'true');
+      sessionStorage.setItem('kapil_admin_auth_v1', 'true');
     } catch {
       // ignore
     }
@@ -401,7 +401,7 @@ export function App() {
   const handleAdminSignOut = () => {
     setIsAdminAuthenticated(false);
     try {
-      sessionStorage.removeItem('spsu_kapil_admin_auth_v1');
+      sessionStorage.removeItem('kapil_admin_auth_v1');
     } catch {
       // ignore
     }
@@ -544,7 +544,7 @@ export function App() {
           ? prev.systemDesignBadgeUnlockedAt || now
           : prev.systemDesignBadgeUnlockedAt,
         systemDesignCertificateId: passed
-          ? prev.systemDesignCertificateId || (user ? generateOfficialCertificateId(user.email) : 'SPSU-SD-ARCH-2026')
+          ? prev.systemDesignCertificateId || (user ? generateOfficialCertificateId(user.email) : 'SD-ARCH-2026')
           : prev.systemDesignCertificateId,
         systemDesignCertificateIssuedAt: passed
           ? prev.systemDesignCertificateIssuedAt || now
@@ -582,7 +582,7 @@ export function App() {
           ? prev.interviewBadgeUnlockedAt || now
           : prev.interviewBadgeUnlockedAt,
         interviewCertificateId: passed
-          ? prev.interviewCertificateId || (user ? generateOfficialCertificateId(user.email) : 'SPSU-INT-READY-2026')
+          ? prev.interviewCertificateId || (user ? generateOfficialCertificateId(user.email) : 'INT-READY-2026')
           : prev.interviewCertificateId,
         interviewCertificateIssuedAt: passed
           ? prev.interviewCertificateIssuedAt || now

@@ -3,7 +3,7 @@ import { AssessmentQuestion } from '../types';
 /**
  * Day 7 Assessments (50 Pre-Assessment MCQs & 50 Post-Assessment MCQs = 100 Total)
  * Module 7: Computer Networks, Protocols & REST Security
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  * Coverage: OSI 7-Layer vs TCP/IP Stack, PDU Encapsulation,
  * TCP 3-Way Handshake, 4-Way FIN Termination, Sliding Window, Congestion Control (Reno/Tahoe),
  * IPv4 Classful vs CIDR Subnetting, Mask Calculations, Usable Hosts, RFC 1918,
@@ -1306,7 +1306,7 @@ export const DAY_7_POST_ASSESSMENT_50: AssessmentQuestion[] = [
   },
   {
     "id": "d7-post-50",
-    "question": "What is the passing score benchmark for the SPSU Day 7 Assessment to unlock the Day 7 Daily Badge and advance toward technical mastery?",
+    "question": "What is the passing score benchmark for the Day 7 Assessment to unlock the Day 7 Daily Badge and advance toward technical mastery?",
     "options": [
       "Strictly 80% (at least 40 out of 50 correct)",
       "50% (25 out of 50)",
@@ -1314,7 +1314,7 @@ export const DAY_7_POST_ASSESSMENT_50: AssessmentQuestion[] = [
       "75% (37 out of 50)"
     ],
     "correctIndex": 0,
-    "explanation": "The SPSU Placement Readiness curriculum enforces an 80% benchmark (40/50 correct) on daily post-assessments to guarantee verified technical competence.",
+    "explanation": "The Placement Readiness curriculum enforces an 80% benchmark (40/50 correct) on daily post-assessments to guarantee verified technical competence.",
     "category": "Practical Execution & Trace (70%)"
   }
 ];

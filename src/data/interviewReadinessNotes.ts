@@ -1,7 +1,7 @@
 import { InterviewTrackModule } from '../types';
 
 /**
- * SPSU Udaipur Placement Readiness Program
+ * Placement Readiness Program
  * Mentor: Kapil | Comprehensive Interview Readiness Modules
  * Dual Tracks: Fresher (Campus / Entry-Level) & Experienced (SDE-2 / Senior / Lateral)
  */
@@ -305,7 +305,7 @@ WHERE salary < (SELECT MAX(salary) FROM Employees);`,
 
 #### The 5 Essential Sections:
 1. **Header**: Name, Professional Email, Phone, LinkedIn URL, GitHub URL, Portfolio Link (No home address, photos, or marital status).
-2. **Education**: Degree, Major, University (SPSU Udaipur), Graduation Year, CGPA.
+2. **Education**: Degree, Major, University / College, Graduation Year, CGPA.
 3. **Technical Skills**:
    - *Languages*: Java, Python, C++, SQL, TypeScript
    - *Frameworks & Tools*: React, Spring Boot, Node.js, Express, Tailwind CSS
@@ -386,7 +386,7 @@ Accomplished [X] as measured by [Y], by doing [Z]
         question: 'Why should we hire you over other candidates from other universities?',
         interviewerExpectation: 'Tests self-awareness, confidence without arrogance, and clarity of value proposition.',
         idealAnswer:
-          'While many candidates have strong academic qualifications, what sets me apart is my proven discipline in writing production-ready, test-driven code. Through the SPSU 10-Day Placement Readiness Boot Camp, I have built real-world microservices with Redis caching, simulated operating system schedulers, and solved over 200 algorithmic challenges across multiple languages. I combine fundamental theoretical rigor with practical problem-solving velocity, allowing me to contribute productively to your team from week one.',
+          'While many candidates have strong academic qualifications, what sets me apart is my proven discipline in writing production-ready, test-driven code. Through the 10-Day Placement Readiness Boot Camp, I have built real-world microservices with Redis caching, simulated operating system schedulers, and solved over 200 algorithmic challenges across multiple languages. I combine fundamental theoretical rigor with practical problem-solving velocity, allowing me to contribute productively to your team from week one.',
         redFlagsToAvoid:
           'Belittling other candidates or boasting with unsupported claims.',
       },

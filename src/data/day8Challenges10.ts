@@ -1,7 +1,7 @@
 import { PracticalChallenge } from '../types';
 
 /**
- * SPSU Udaipur Placement Readiness Program
+ * Placement Readiness Program
  * Mentor: Kapil | Day 8: Software Engineering, Git Workflows, Debugging & Testing
  * 10 Production-Grade Coding Challenges (C, C++, Java, Python)
  */

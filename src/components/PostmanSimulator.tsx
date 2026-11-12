@@ -420,7 +420,7 @@ export const PostmanSimulator: React.FC = () => {
 
         <div className="text-right text-xs">
           <span className="text-slate-400">Mentorship By</span>{' '}
-          <strong className="text-white font-mono">Kapil • SPSU Udaipur</strong>
+          <strong className="text-white font-mono">Placement Mentor – Kapil</strong>
         </div>
       </div>
 

@@ -1,7 +1,7 @@
 import { ProgrammingNote } from '../types';
 
 /**
- * SPSU Udaipur Placement Readiness Program
+ * Placement Readiness Program
  * Mentor: Kapil | Day 9: Full-Stack Development & Project Architecture Readiness
  * 5 Comprehensive Masterclass Notes with Complete Polyglot Code (C, C++, Java, Python)
  */
@@ -47,7 +47,7 @@ UserResponseDTO mapToDTO(const UserEntity* entity) {
 
 int main() {
     // Simulated Database Record
-    UserEntity dbUser = {101, "kapil_narula", "$2a$12$e8e...secretHash", "kapil@spsu.ac.in", true};
+    UserEntity dbUser = {101, "kapil_narula", "$2a$12$e8e...secretHash", "kapil@mentorship.org", true};
     UserResponseDTO clientResponse = mapToDTO(&dbUser);
 
     printf("3-Tier Architecture DTO Mapping Result:\\n");
@@ -84,7 +84,7 @@ public:
 };
 
 int main() {
-    UserEntity dbUser{101, "kapil_narula", "$2a$12$e8e...secretHash", "kapil@spsu.ac.in", true};
+    UserEntity dbUser{101, "kapil_narula", "$2a$12$e8e...secretHash", "kapil@mentorship.org", true};
     UserResponseDTO response = UserService::toDTO(dbUser);
 
     std::cout << "3-Tier Architecture DTO Mapping Result:\\n";
@@ -106,7 +106,7 @@ int main() {
     }
 
     public static void main(String[] args) {
-        UserEntity dbUser = new UserEntity(101, "kapil_narula", "$2a$12$e8e...secretHash", "kapil@spsu.ac.in", true);
+        UserEntity dbUser = new UserEntity(101, "kapil_narula", "$2a$12$e8e...secretHash", "kapil@mentorship.org", true);
         UserResponseDTO response = mapToDTO(dbUser);
 
         System.out.println("3-Tier Architecture DTO Mapping Result:");
@@ -135,7 +135,7 @@ def map_to_dto(entity: UserEntity) -> UserResponseDTO:
     return UserResponseDTO(id=entity.id, username=entity.username, email=entity.email)
 
 if __name__ == "__main__":
-    db_user = UserEntity(101, "kapil_narula", "$2a$12$e8e...secretHash", "kapil@spsu.ac.in", True)
+    db_user = UserEntity(101, "kapil_narula", "$2a$12$e8e...secretHash", "kapil@mentorship.org", True)
     response = map_to_dto(db_user)
 
     print("3-Tier Architecture DTO Mapping Result:")
@@ -538,11 +538,11 @@ bool validateCorsHeaders(const CorsConfig* config, const char* requestOrigin) {
 }
 
 int main() {
-    CorsConfig secureConfig = {"https://spsu.ac.in", true};
+    CorsConfig secureConfig = {"https://placement-portal.dev", true};
     CorsConfig insecureConfig = {"*", true};
 
     printf("Validating CORS Security Policies:\\n");
-    validateCorsHeaders(&secureConfig, "https://spsu.ac.in");
+    validateCorsHeaders(&secureConfig, "https://placement-portal.dev");
     validateCorsHeaders(&secureConfig, "https://malicious-site.com");
     validateCorsHeaders(&insecureConfig, "https://any.com");
     return 0;
@@ -572,11 +572,11 @@ public:
 };
 
 int main() {
-    CorsConfig secure{"https://spsu.ac.in", true};
+    CorsConfig secure{"https://placement-portal.dev", true};
     CorsConfig insecure{"*", true};
 
     std::cout << "Validating CORS Security Policies:\\n";
-    SecurityEngine::validateCors(secure, "https://spsu.ac.in");
+    SecurityEngine::validateCors(secure, "https://placement-portal.dev");
     SecurityEngine::validateCors(secure, "https://malicious-site.com");
     SecurityEngine::validateCors(insecure, "https://any.com");
     return 0;
@@ -598,11 +598,11 @@ int main() {
     }
 
     public static void main(String[] args) {
-        CorsConfig secure = new CorsConfig("https://spsu.ac.in", true);
+        CorsConfig secure = new CorsConfig("https://placement-portal.dev", true);
         CorsConfig insecure = new CorsConfig("*", true);
 
         System.out.println("Validating CORS Security Policies:");
-        validateCors(secure, "https://spsu.ac.in");
+        validateCors(secure, "https://placement-portal.dev");
         validateCors(secure, "https://malicious-site.com");
         validateCors(insecure, "https://any.com");
     }
@@ -625,11 +625,11 @@ def validate_cors(config: CorsConfig, request_origin: str) -> bool:
     return False
 
 if __name__ == "__main__":
-    secure = CorsConfig("https://spsu.ac.in", True)
+    secure = CorsConfig("https://placement-portal.dev", True)
     insecure = CorsConfig("*", True)
 
     print("Validating CORS Security Policies:")
-    validate_cors(secure, "https://spsu.ac.in")
+    validate_cors(secure, "https://placement-portal.dev")
     validate_cors(secure, "https://malicious-site.com")
     validate_cors(insecure, "https://any.com")`,
     },

@@ -156,7 +156,7 @@ export const IndustryPatternQuizModal: React.FC<IndustryPatternQuizModalProps> =
                 <span>100 INDUSTRY SCENARIOS • DSA PATTERN QUIZ</span>
               </span>
               <span className="text-xs font-mono text-[#93C5FD]">
-                Mentorship By Kapil • SPSU Udaipur
+                Mentorship By Kapil
               </span>
             </div>
             <h2 className="text-lg sm:text-2xl font-black text-white tracking-tight">

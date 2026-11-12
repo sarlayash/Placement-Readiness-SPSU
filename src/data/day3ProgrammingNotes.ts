@@ -3,7 +3,7 @@ import { ProgrammingNote } from '../types';
 /**
  * Day 3 Comprehensive Programming Notes & Solved Examples
  * Module 3: Company-Oriented Coding Lab & Trade-Off Benchmarking
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  * Covers: Constraint analysis, Binary Search on Answer, Prefix Sums, Kadane's Algorithm,
  * Two Pointers, Monotonic Stack, Greedy Intervals, Bitwise Hacks & Defensive Coding.
  */

@@ -3,7 +3,7 @@ import { ProgrammingNote } from '../types';
 /**
  * Day 7 Comprehensive Programming Notes & Solved Examples
  * Module 7: Computer Networks, Protocols & REST Security
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  * Covers:
  * - Note 1: OSI 7-Layer vs TCP/IP Stack, PDU Encapsulation & Wire Flow
  * - Note 2: TCP 3-Way Handshake, Sliding Window Flow Control & 4-Way Teardown
@@ -95,7 +95,7 @@ int main() {
         String dstIp = "142.250.190.46";
         int srcPort = 58210;
         int dstPort = 443;
-        String httpPayload = "GET /search?q=SPSU HTTP/1.1";
+        String httpPayload = "GET /search?q=placement HTTP/1.1";
 
         System.out.println("[L3] Packet Header: " + srcIp + " -> " + dstIp);
         System.out.println("[L4] Segment Header: Port " + srcPort + " -> Port " + dstPort);

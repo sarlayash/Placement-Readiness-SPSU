@@ -1,7 +1,7 @@
 import { InterviewScenarioQuestion } from '../types';
 
 /**
- * SPSU Udaipur Placement Readiness Program
+ * Placement Readiness Program
  * Mentor: Kapil | 100 Real Engineering Scenario & Case Study MCQs
  * Comprehensive Industry Coverage:
  * - Production Outage Triage & Incident Management (20 Scenarios)
@@ -344,7 +344,7 @@ export const INTERVIEW_SCENARIOS_100_MCQS: InterviewScenarioQuestion[] = [
   },
   {
     "id": "ir-sc-23",
-    "scenarioContext": "A query uses 'WHERE UPPER(email) = 'STUDENT@SPSU.EDU.IN''. Despite having a standard B-Tree index on the 'email' column, the database performs a full table scan.",
+    "scenarioContext": "A query uses 'WHERE UPPER(email) = 'STUDENT@EXAMPLE.COM''. Despite having a standard B-Tree index on the 'email' column, the database performs a full table scan.",
     "question": "Why did the database ignore the index?",
     "options": [
       "The email string is too long",
@@ -1499,8 +1499,8 @@ export const INTERVIEW_SCENARIOS_100_MCQS: InterviewScenarioQuestion[] = [
   },
   {
     "id": "ir-sc-100",
-    "scenarioContext": "What is the core principle Placement Mentor Kapil teaches to SPSU Udaipur students regarding engineering ethics and professionalism throughout their careers?",
-    "question": "What is the core principle Placement Mentor Kapil teaches to SPSU Udaipur students regarding engineering ethics and professionalism throughout their careers?",
+    "scenarioContext": "What is the core principle Placement Mentor Kapil teaches to placement candidates regarding engineering ethics and professionalism throughout their careers?",
+    "question": "What is the core principle Placement Mentor Kapil teaches to placement candidates regarding engineering ethics and professionalism throughout their careers?",
     "options": [
       "Write code solely for the paycheck and cut corners whenever unsupervised",
       "Craft software with relentless integrity, treat colleagues with respect, write maintainable and battle-tested code you are proud to sign your name to, and commit to continuous lifelong learning",

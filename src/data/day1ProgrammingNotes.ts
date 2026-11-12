@@ -555,7 +555,7 @@ bool isPalindrome(const char *s) {
 
 int main() {
     char word1[] = "racecar";
-    char word2[] = "spsu";
+    char word2[] = "code";
     printf("'%s' is palindrome: %s\\n", word1, isPalindrome(word1) ? "YES" : "NO");
     printf("'%s' is palindrome: %s\\n", word2, isPalindrome(word2) ? "YES" : "NO");
     return 0;
@@ -603,7 +603,7 @@ int main() {
 
     public static void main(String[] args) {
         System.out.println("Palindrome test: " + isPalindrome("level"));
-        System.out.println("Pattern length: " + buildRepeatedPattern("SPSU", 5).length());
+        System.out.println("Pattern length: " + buildRepeatedPattern("CODE", 5).length());
     }
 }`,
       python: `def strings_demo():
@@ -614,7 +614,7 @@ int main() {
         return cleaned == cleaned[::-1]
 
     # Efficient string building: O(N) using join
-    tokens = ["SPSU", "Placement", "Mentorship", "By", "Kapil"]
+    tokens = ["Placement", "Readiness", "Mentorship", "By", "Kapil"]
     result = " • ".join(tokens)
     
     print("Is 'Was it a car or a cat I saw?' palindrome:", is_palindrome("Was it a car or a cat I saw?"))

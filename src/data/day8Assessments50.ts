@@ -1,7 +1,7 @@
 import { AssessmentQuestion } from '../types';
 
 /**
- * SPSU Udaipur Placement Readiness Program
+ * Placement Readiness Program
  * Mentor: Kapil | Day 8: Software Engineering, Git Workflows, Debugging & Testing
  * Diagnostic Pre-Assessment: Exactly 50 MCQs
  */
@@ -614,7 +614,7 @@ export const DAY_8_PRE_ASSESSMENT_50: AssessmentQuestion[] = [
 ];
 
 /**
- * SPSU Udaipur Placement Readiness Program
+ * Placement Readiness Program
  * Mentor: Kapil | Day 8: Software Engineering, Git Workflows, Debugging & Testing
  * Verification Post-Assessment: Exactly 50 MCQs
  */

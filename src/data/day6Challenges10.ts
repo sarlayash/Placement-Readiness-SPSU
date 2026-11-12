@@ -3,7 +3,7 @@ import { PracticalChallenge } from '../types';
 /**
  * Day 6: 10 Comprehensive Practical Coding Challenges (70% Practical Allocation)
  * Module 6: Operating Systems: Scheduling, Concurrency, Deadlocks & Paging
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  * Polyglot implementations: C (C17), C++ (C++20), Java (Java 21), Python (Python 3.12)
  * Complete with visualization steps, starter code, solutions & test cases.
  */

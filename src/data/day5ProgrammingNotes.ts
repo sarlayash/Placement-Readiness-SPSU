@@ -3,7 +3,7 @@ import { ProgrammingNote } from '../types';
 /**
  * Day 5 Comprehensive Programming Notes & Solved Examples
  * Module 5: Object-Oriented Programming (OOP) & SOLID Design
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  * Covers: 4 Pillars of OOP, VTable / VPtr Dynamic Dispatch Internals,
  * Constructors/Destructors, Copy vs Move Semantics, Deep vs Shallow Copy,
  * Diamond Problem & Virtual Inheritance, Interface vs Abstract Class,
@@ -387,7 +387,7 @@ void doc_serialize(void* obj) {
 }
 
 int main() {
-    Document doc = { "SPSU Placement Roadmap", { doc_print }, { doc_serialize } };
+    Document doc = { "Placement Roadmap", { doc_print }, { doc_serialize } };
     doc.printable.print(&doc);
     doc.serializable.serialize(&doc);
     return 0;
@@ -688,7 +688,7 @@ using namespace std;
 class ConfigurationManager {
 private:
     string appEnvironment;
-    ConfigurationManager() : appEnvironment("PRODUCTION_SPSU") {
+    ConfigurationManager() : appEnvironment("PRODUCTION_SYSTEM") {
         cout << "ConfigurationManager initialized once." << endl;
     }
 public:
@@ -744,7 +744,7 @@ public class PatternDemo {
 
 class DatabasePool(metaclass=SingletonMeta):
     def __init__(self) -> None:
-        self.endpoint = "db.spsu.internal:5432"
+        self.endpoint = "db.internal:5432"
 
 if __name__ == "__main__":
     p1 = DatabasePool()

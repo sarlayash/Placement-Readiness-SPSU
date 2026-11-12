@@ -1,4 +1,4 @@
-// Real authenticated Firebase users from Firebase Authentication console (Project: placement-readiness-spsu)
+// Real authenticated Firebase users from Firebase Authentication console
 // Strictly real scores captured from learner attempts across all 70 registered accounts
 import { LearnerRecord } from '../types';
 
@@ -222,7 +222,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-28T06:33:25.559Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-85BAF01",
+    "certificateId": "KAPIL-10D-85BAF01",
     "certificateIssuedAt": "2026-10-28T06:30:57.214Z",
     "patternQuizScore": 0,
     "patternQuizCompleted": false,
@@ -267,7 +267,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
       "1": "2026-10-28T05:35:12.306Z",
       "2": "2026-10-28T06:29:57.492Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-3B9D011C",
+    "certificateId": "KAPIL-10D-3B9D011C",
     "certificateIssuedAt": "2026-10-28T05:34:36.477Z",
     "patternQuizScore": 0,
     "patternQuizCompleted": false,
@@ -314,7 +314,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
       "1": "2026-10-27T05:12:29.021Z",
       "2": "2026-10-27T11:00:44.017Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-405BDC4C",
+    "certificateId": "KAPIL-10D-405BDC4C",
     "certificateIssuedAt": "2026-10-27T04:58:35.116Z",
     "patternQuizScore": 0,
     "patternQuizCompleted": false,
@@ -344,7 +344,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "2": "2026-10-28T05:25:19.868Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-C97BA25",
+    "certificateId": "KAPIL-10D-C97BA25",
     "certificateIssuedAt": "2026-10-28T05:25:01.277Z",
     "patternQuizScore": 0,
     "patternQuizCompleted": false,
@@ -388,7 +388,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
       "1": "2026-10-27T03:52:41.343Z",
       "2": "2026-10-27T04:12:07.927Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-D960852",
+    "certificateId": "KAPIL-10D-D960852",
     "certificateIssuedAt": "2026-10-27T03:50:44.844Z",
     "patternQuizScore": 0,
     "patternQuizCompleted": false,
@@ -416,7 +416,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "postAssessmentPassed": {},
     "completedDays": {},
     "unlockedBadges": {},
-    "certificateId": "SPSU-KAPIL-10D-71CF86BE",
+    "certificateId": "KAPIL-10D-71CF86BE",
     "certificateIssuedAt": "2026-10-28T05:26:24.335Z",
     "patternQuizScore": 0,
     "patternQuizCompleted": false,
@@ -444,7 +444,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "postAssessmentPassed": {},
     "completedDays": {},
     "unlockedBadges": {},
-    "certificateId": "SPSU-KAPIL-10D-3E7805A4",
+    "certificateId": "KAPIL-10D-3E7805A4",
     "certificateIssuedAt": "2026-10-28T05:23:13.308Z",
     "patternQuizScore": 0,
     "patternQuizCompleted": false,
@@ -485,7 +485,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "2": "2026-10-27T09:52:21.133Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-5FFEB547",
+    "certificateId": "KAPIL-10D-5FFEB547",
     "certificateIssuedAt": "2026-10-27T09:47:26.051Z",
     "patternQuizScore": 0,
     "patternQuizCompleted": false,
@@ -515,7 +515,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
       "1": true
     },
     "unlockedBadges": {},
-    "certificateId": "SPSU-KAPIL-10D-6636248A",
+    "certificateId": "KAPIL-10D-6636248A",
     "certificateIssuedAt": "2026-10-25T10:48:54.751Z",
     "patternQuizScore": 0,
     "patternQuizCompleted": false,
@@ -551,7 +551,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "2": "2026-10-27T12:10:32.906Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-1673A25F",
+    "certificateId": "KAPIL-10D-1673A25F",
     "certificateIssuedAt": "2026-10-27T12:10:24.719Z",
     "patternQuizScore": 0,
     "patternQuizCompleted": false,
@@ -597,7 +597,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
       "1": "2026-10-27T05:01:37.530Z",
       "2": "2026-10-27T05:04:38.200Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-40421635",
+    "certificateId": "KAPIL-10D-40421635",
     "certificateIssuedAt": "2026-10-27T04:48:57.529Z",
     "patternQuizScore": 0,
     "patternQuizCompleted": false,
@@ -627,7 +627,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
       "1": true
     },
     "unlockedBadges": {},
-    "certificateId": "SPSU-KAPIL-10D-39FB3E5B",
+    "certificateId": "KAPIL-10D-39FB3E5B",
     "certificateIssuedAt": "2026-10-27T08:17:10.489Z",
     "patternQuizScore": 0,
     "patternQuizCompleted": false,
@@ -661,7 +661,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "postAssessmentPassed": {},
     "completedDays": {},
     "unlockedBadges": {},
-    "certificateId": "SPSU-KAPIL-10D-7C47459C",
+    "certificateId": "KAPIL-10D-7C47459C",
     "certificateIssuedAt": "2026-10-26T14:23:59.110Z",
     "patternQuizScore": 0,
     "patternQuizCompleted": false,
@@ -701,7 +701,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T06:36:20.492Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-PR7F56",
+    "certificateId": "KAPIL-10D-PR7F56",
     "certificateIssuedAt": "2026-10-26T13:40:55.821Z",
     "patternQuizScore": 92,
     "patternQuizCompleted": true,
@@ -741,7 +741,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T13:12:06.310Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-MD6C68",
+    "certificateId": "KAPIL-10D-MD6C68",
     "certificateIssuedAt": "2026-10-26T13:12:06.310Z",
     "patternQuizScore": 86,
     "patternQuizCompleted": true,
@@ -781,7 +781,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:34:06.018Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-AB1412",
+    "certificateId": "KAPIL-10D-AB1412",
     "certificateIssuedAt": "2026-10-26T12:21:15.022Z",
     "patternQuizScore": 81,
     "patternQuizCompleted": true,
@@ -821,7 +821,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T06:41:37.707Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-BU439A",
+    "certificateId": "KAPIL-10D-BU439A",
     "certificateIssuedAt": "2026-10-26T12:10:14.885Z",
     "patternQuizScore": 83,
     "patternQuizCompleted": true,
@@ -861,7 +861,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T11:06:50.523Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-UR2DF0",
+    "certificateId": "KAPIL-10D-UR2DF0",
     "certificateIssuedAt": "2026-10-26T11:06:50.523Z",
     "patternQuizScore": 87,
     "patternQuizCompleted": true,
@@ -901,7 +901,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T11:02:44.437Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-RH7880",
+    "certificateId": "KAPIL-10D-RH7880",
     "certificateIssuedAt": "2026-10-26T11:02:44.437Z",
     "patternQuizScore": 81,
     "patternQuizCompleted": true,
@@ -941,7 +941,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T10:58:21.727Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-MA1E68",
+    "certificateId": "KAPIL-10D-MA1E68",
     "certificateIssuedAt": "2026-10-26T10:58:21.728Z",
     "patternQuizScore": 85,
     "patternQuizCompleted": true,
@@ -981,7 +981,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T10:55:49.850Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-AN3A77",
+    "certificateId": "KAPIL-10D-AN3A77",
     "certificateIssuedAt": "2026-10-26T10:55:49.850Z",
     "patternQuizScore": 95,
     "patternQuizCompleted": true,
@@ -1021,7 +1021,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T10:54:57.825Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-JO1210",
+    "certificateId": "KAPIL-10D-JO1210",
     "certificateIssuedAt": "2026-10-26T10:54:57.826Z",
     "patternQuizScore": 90,
     "patternQuizCompleted": true,
@@ -1061,7 +1061,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T10:53:42.489Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-RI34AC",
+    "certificateId": "KAPIL-10D-RI34AC",
     "certificateIssuedAt": "2026-10-26T10:53:42.490Z",
     "patternQuizScore": 90,
     "patternQuizCompleted": true,
@@ -1101,7 +1101,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T09:37:31.505Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-PR34AA",
+    "certificateId": "KAPIL-10D-PR34AA",
     "certificateIssuedAt": "2026-10-26T09:37:31.505Z",
     "patternQuizScore": 90,
     "patternQuizCompleted": true,
@@ -1141,7 +1141,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T09:26:15.193Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-MA24E9",
+    "certificateId": "KAPIL-10D-MA24E9",
     "certificateIssuedAt": "2026-10-26T09:26:15.193Z",
     "patternQuizScore": 91,
     "patternQuizCompleted": true,
@@ -1181,7 +1181,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T09:22:04.122Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-RE5FBD",
+    "certificateId": "KAPIL-10D-RE5FBD",
     "certificateIssuedAt": "2026-10-26T09:22:04.123Z",
     "patternQuizScore": 94,
     "patternQuizCompleted": true,
@@ -1221,7 +1221,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T09:16:00.789Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-JS4A6F",
+    "certificateId": "KAPIL-10D-JS4A6F",
     "certificateIssuedAt": "2026-10-26T09:16:00.789Z",
     "patternQuizScore": 83,
     "patternQuizCompleted": true,
@@ -1261,7 +1261,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T09:14:40.478Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-DI2689",
+    "certificateId": "KAPIL-10D-DI2689",
     "certificateIssuedAt": "2026-10-26T09:14:40.479Z",
     "patternQuizScore": 83,
     "patternQuizCompleted": true,
@@ -1301,7 +1301,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T09:14:19.535Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-LA4B4A",
+    "certificateId": "KAPIL-10D-LA4B4A",
     "certificateIssuedAt": "2026-10-26T09:14:19.535Z",
     "patternQuizScore": 81,
     "patternQuizCompleted": true,
@@ -1341,7 +1341,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T09:13:18.804Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-KH30C9",
+    "certificateId": "KAPIL-10D-KH30C9",
     "certificateIssuedAt": "2026-10-26T09:13:18.804Z",
     "patternQuizScore": 96,
     "patternQuizCompleted": true,
@@ -1381,7 +1381,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T09:12:25.175Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-SH1438",
+    "certificateId": "KAPIL-10D-SH1438",
     "certificateIssuedAt": "2026-10-26T09:12:25.175Z",
     "patternQuizScore": 87,
     "patternQuizCompleted": true,
@@ -1421,7 +1421,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T09:11:31.692Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-SR211F",
+    "certificateId": "KAPIL-10D-SR211F",
     "certificateIssuedAt": "2026-10-26T09:11:31.693Z",
     "patternQuizScore": 87,
     "patternQuizCompleted": true,
@@ -1461,7 +1461,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T09:10:05.176Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-RI2848",
+    "certificateId": "KAPIL-10D-RI2848",
     "certificateIssuedAt": "2026-10-26T09:10:05.176Z",
     "patternQuizScore": 82,
     "patternQuizCompleted": true,
@@ -1501,7 +1501,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T09:09:08.976Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-RK3815",
+    "certificateId": "KAPIL-10D-RK3815",
     "certificateIssuedAt": "2026-10-26T09:09:08.976Z",
     "patternQuizScore": 85,
     "patternQuizCompleted": true,
@@ -1541,7 +1541,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T09:08:41.240Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-POD2F2",
+    "certificateId": "KAPIL-10D-POD2F2",
     "certificateIssuedAt": "2026-10-26T09:08:41.240Z",
     "patternQuizScore": 86,
     "patternQuizCompleted": true,
@@ -1581,7 +1581,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T09:04:03.068Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-CH40BE",
+    "certificateId": "KAPIL-10D-CH40BE",
     "certificateIssuedAt": "2026-10-26T09:04:03.068Z",
     "patternQuizScore": 91,
     "patternQuizCompleted": true,
@@ -1621,7 +1621,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T09:03:44.767Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-K4E4B",
+    "certificateId": "KAPIL-10D-K4E4B",
     "certificateIssuedAt": "2026-10-26T09:03:44.767Z",
     "patternQuizScore": 92,
     "patternQuizCompleted": true,
@@ -1661,7 +1661,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T09:00:26.683Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-RA243F",
+    "certificateId": "KAPIL-10D-RA243F",
     "certificateIssuedAt": "2026-10-26T09:00:26.683Z",
     "patternQuizScore": 93,
     "patternQuizCompleted": true,
@@ -1701,7 +1701,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T09:00:25.094Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-KR6AFC",
+    "certificateId": "KAPIL-10D-KR6AFC",
     "certificateIssuedAt": "2026-10-26T09:00:25.095Z",
     "patternQuizScore": 88,
     "patternQuizCompleted": true,
@@ -1741,7 +1741,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:56:57.074Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-DI3B9C",
+    "certificateId": "KAPIL-10D-DI3B9C",
     "certificateIssuedAt": "2026-10-26T08:56:57.074Z",
     "patternQuizScore": 95,
     "patternQuizCompleted": true,
@@ -1781,7 +1781,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:56:50.531Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-DI3866",
+    "certificateId": "KAPIL-10D-DI3866",
     "certificateIssuedAt": "2026-10-26T08:56:50.531Z",
     "patternQuizScore": 85,
     "patternQuizCompleted": true,
@@ -1821,7 +1821,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:53:55.414Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-AR3CF4",
+    "certificateId": "KAPIL-10D-AR3CF4",
     "certificateIssuedAt": "2026-10-26T08:53:55.414Z",
     "patternQuizScore": 84,
     "patternQuizCompleted": true,
@@ -1861,7 +1861,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:50:41.133Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-JE7339",
+    "certificateId": "KAPIL-10D-JE7339",
     "certificateIssuedAt": "2026-10-26T08:50:41.133Z",
     "patternQuizScore": 95,
     "patternQuizCompleted": true,
@@ -1901,7 +1901,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:49:36.314Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-AN4743",
+    "certificateId": "KAPIL-10D-AN4743",
     "certificateIssuedAt": "2026-10-26T08:49:36.315Z",
     "patternQuizScore": 95,
     "patternQuizCompleted": true,
@@ -1941,7 +1941,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:48:42.019Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-RU5A99",
+    "certificateId": "KAPIL-10D-RU5A99",
     "certificateIssuedAt": "2026-10-26T08:48:42.020Z",
     "patternQuizScore": 80,
     "patternQuizCompleted": true,
@@ -1981,7 +1981,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:46:13.063Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-KH5796",
+    "certificateId": "KAPIL-10D-KH5796",
     "certificateIssuedAt": "2026-10-26T08:46:13.063Z",
     "patternQuizScore": 96,
     "patternQuizCompleted": true,
@@ -2021,7 +2021,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:46:10.522Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-AK5571",
+    "certificateId": "KAPIL-10D-AK5571",
     "certificateIssuedAt": "2026-10-26T08:46:10.523Z",
     "patternQuizScore": 85,
     "patternQuizCompleted": true,
@@ -2061,7 +2061,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:44:08.489Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-DI58EA",
+    "certificateId": "KAPIL-10D-DI58EA",
     "certificateIssuedAt": "2026-10-26T08:44:08.489Z",
     "patternQuizScore": 94,
     "patternQuizCompleted": true,
@@ -2101,7 +2101,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:43:48.881Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-KA7DBB",
+    "certificateId": "KAPIL-10D-KA7DBB",
     "certificateIssuedAt": "2026-10-26T08:43:48.882Z",
     "patternQuizScore": 83,
     "patternQuizCompleted": true,
@@ -2141,7 +2141,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:43:45.638Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-MP4B58",
+    "certificateId": "KAPIL-10D-MP4B58",
     "certificateIssuedAt": "2026-10-26T08:43:45.639Z",
     "patternQuizScore": 84,
     "patternQuizCompleted": true,
@@ -2181,7 +2181,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:43:33.041Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-TA7F30",
+    "certificateId": "KAPIL-10D-TA7F30",
     "certificateIssuedAt": "2026-10-26T08:43:33.041Z",
     "patternQuizScore": 86,
     "patternQuizCompleted": true,
@@ -2221,7 +2221,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:42:27.265Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-TA6086",
+    "certificateId": "KAPIL-10D-TA6086",
     "certificateIssuedAt": "2026-10-26T08:42:27.266Z",
     "patternQuizScore": 91,
     "patternQuizCompleted": true,
@@ -2261,7 +2261,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:42:10.498Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-VA1C33",
+    "certificateId": "KAPIL-10D-VA1C33",
     "certificateIssuedAt": "2026-10-26T08:42:10.498Z",
     "patternQuizScore": 96,
     "patternQuizCompleted": true,
@@ -2301,7 +2301,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:42:07.232Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-LA3A13",
+    "certificateId": "KAPIL-10D-LA3A13",
     "certificateIssuedAt": "2026-10-26T08:42:07.233Z",
     "patternQuizScore": 94,
     "patternQuizCompleted": true,
@@ -2341,7 +2341,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:41:47.470Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-DH29F6",
+    "certificateId": "KAPIL-10D-DH29F6",
     "certificateIssuedAt": "2026-10-26T08:41:47.471Z",
     "patternQuizScore": 93,
     "patternQuizCompleted": true,
@@ -2381,7 +2381,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:36:56.744Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-DH39CE",
+    "certificateId": "KAPIL-10D-DH39CE",
     "certificateIssuedAt": "2026-10-26T08:36:56.744Z",
     "patternQuizScore": 91,
     "patternQuizCompleted": true,
@@ -2421,7 +2421,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:33:32.313Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-BU7ECB",
+    "certificateId": "KAPIL-10D-BU7ECB",
     "certificateIssuedAt": "2026-10-26T08:33:32.314Z",
     "patternQuizScore": 96,
     "patternQuizCompleted": true,
@@ -2461,7 +2461,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:33:11.224Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-VA2FA6",
+    "certificateId": "KAPIL-10D-VA2FA6",
     "certificateIssuedAt": "2026-10-26T08:33:11.224Z",
     "patternQuizScore": 88,
     "patternQuizCompleted": true,
@@ -2501,7 +2501,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T08:32:34.942Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-BA117E",
+    "certificateId": "KAPIL-10D-BA117E",
     "certificateIssuedAt": "2026-10-26T08:32:34.943Z",
     "patternQuizScore": 80,
     "patternQuizCompleted": true,
@@ -2541,7 +2541,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T06:36:23.054Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-SU6CA6",
+    "certificateId": "KAPIL-10D-SU6CA6",
     "certificateIssuedAt": "2026-10-26T06:36:23.055Z",
     "patternQuizScore": 81,
     "patternQuizCompleted": true,
@@ -2581,7 +2581,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-26T06:30:07.047Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-SH3BE9",
+    "certificateId": "KAPIL-10D-SH3BE9",
     "certificateIssuedAt": "2026-10-26T06:30:07.048Z",
     "patternQuizScore": 96,
     "patternQuizCompleted": true,
@@ -2621,7 +2621,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-24T06:44:03.701Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-SY001",
+    "certificateId": "KAPIL-10D-SY001",
     "certificateIssuedAt": "2026-10-24T06:44:03.701Z",
     "patternQuizScore": 92,
     "patternQuizCompleted": true,
@@ -2661,7 +2661,7 @@ export const INITIAL_FIREBASE_AUTH_USERS: LearnerRecord[] = [
     "unlockedBadges": {
       "1": "2026-10-24T04:34:46.224Z"
     },
-    "certificateId": "SPSU-KAPIL-10D-CE01F1",
+    "certificateId": "KAPIL-10D-CE01F1",
     "certificateIssuedAt": "2026-10-24T04:34:46.224Z",
     "patternQuizScore": 90,
     "patternQuizCompleted": true,

@@ -3,7 +3,7 @@ import { ProgrammingNote } from '../types';
 /**
  * Day 4 Comprehensive Programming Notes & Solved Examples
  * Module 4: SQL & Relational Database Systems
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  * Covers: SQL Logical Execution Order, Join Algorithms, B+ Tree Indexing & Sargability,
  * Normalisation Theory (1NF-BCNF), ACID Transactions, Isolation Anomalies, and Window Functions.
  */
@@ -194,12 +194,12 @@ public class IndexCoveringDemo {
     public static void main(String[] args) {
         // Index on (email, role)
         Map<String, String> coveringIndex = new TreeMap<>();
-        coveringIndex.put("arjun@spsu.ac.in", "STUDENT");
-        coveringIndex.put("kapil@spsu.ac.in", "MENTOR");
+        coveringIndex.put("arjun@example.com", "STUDENT");
+        coveringIndex.put("kapil@mentorship.org", "MENTOR");
 
-        // Query: SELECT role FROM users WHERE email = 'kapil@spsu.ac.in';
+        // Query: SELECT role FROM users WHERE email = 'kapil@mentorship.org';
         // Result is retrieved directly from the index without reading table heap!
-        String role = coveringIndex.get("kapil@spsu.ac.in");
+        String role = coveringIndex.get("kapil@mentorship.org");
         System.out.println("Covering Index hit without table heap lookup: role=" + role);
     }
 }`,

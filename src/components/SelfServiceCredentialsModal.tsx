@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GoogleUser, UserProgress } from '../types';
 import { COMPLETE_10_DAY_PLAN } from '../data/curriculum10Days';
-import spsuPortalBannerImg from '../assets/spsu-kapil-portal-banner.png';
 import {
   download360DegreeReportPDF,
   downloadMentorKapilLorPDF,
@@ -73,7 +72,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
   const [downloadingDoc, setDownloadingDoc] = useState<string | null>(null);
 
   // Demo user candidate name customization
-  const [demoCandidateName, setDemoCandidateName] = useState<string>('SPSU Placement Aspirant');
+  const [demoCandidateName, setDemoCandidateName] = useState<string>('Placement Aspirant');
 
   // Interactive Certificate preview selector
   const [previewCertType, setPreviewCertType] = useState<'curriculum' | 'system-design' | 'interview-readiness'>('curriculum');
@@ -87,14 +86,14 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
   if (!isOpen) return null;
 
   const candidateName = user
-    ? (user.displayName || user.name || 'SPSU Placement Aspirant')
-    : (demoCandidateName.trim() || 'SPSU Placement Aspirant');
+    ? (user.displayName || user.name || 'Placement Aspirant')
+    : (demoCandidateName.trim() || 'Placement Aspirant');
 
   const learnerUser: GoogleUser = user || {
     uid: 'demo_user',
     name: candidateName,
     displayName: candidateName,
-    email: 'learner@spsu.ac.in',
+    email: 'learner@placement.internal',
     photoURL: '',
     signedInAt: new Date().toISOString(),
   };
@@ -228,7 +227,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                 </span>
               </div>
               <p className="text-xs text-[#BFDBFE]">
-                Sir Padampat Singhania University (SPSU) Udaipur • Evaluated solely by Placement Mentor – Kapil (Independent Technical Mentor)
+                10-Day Placement Readiness Boot Camp • Evaluated solely by Placement Mentor – Kapil (Independent Technical Mentor)
               </p>
             </div>
           </div>
@@ -444,7 +443,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                         <GraduationCap className="w-6 h-6 text-amber-600" />
                       </span>
                       <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-100 text-amber-800 font-bold">
-                        Official SPSU Letterhead
+                        Official Placement Letterhead
                       </span>
                     </div>
 
@@ -509,7 +508,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                     <div className="text-[11px] font-mono text-slate-500 space-y-1 bg-slate-50 p-3 rounded-xl border border-slate-100">
                       <div>• Signatory: <strong>Kapil (Independent Technical Mentor)</strong></div>
                       <div>• Resolution: <strong>1920×1080 Landscape Vector Quality</strong></div>
-                      <div>• Verification ID: <strong className="text-slate-800">{progress.certificateId || 'SPSU-KAPIL-10D-VERIFIED'}</strong></div>
+                      <div>• Verification ID: <strong className="text-slate-800">{progress.certificateId || 'KAPIL-10D-VERIFIED'}</strong></div>
                     </div>
                   </div>
 
@@ -754,49 +753,6 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                       Preview Interview Readiness Certificate →
                     </button>
                   </div>
-                </div>
-
-                {/* 7. Institutional Keepsake Banner */}
-                <div className="md:col-span-2 p-5 rounded-3xl bg-gradient-to-r from-[#0A192F] via-[#112240] to-[#0A192F] text-white border-2 border-[#1E3A8A] transition-all shadow-md flex flex-col sm:flex-row items-center justify-between gap-5">
-                  <div className="flex flex-col sm:flex-row items-center gap-4 max-w-2xl">
-                    <div className="w-40 sm:w-56 rounded-xl overflow-hidden border border-white/20 shadow-lg shrink-0">
-                      <img
-                        src={spsuPortalBannerImg}
-                        alt="SPSU Udaipur Mentor Kapil Commemorative Banner"
-                        className="w-full h-auto object-cover"
-                      />
-                    </div>
-                    <div className="space-y-1 text-center sm:text-left">
-                      <div className="flex items-center justify-center sm:justify-start gap-2">
-                        <span className="text-[10px] font-mono px-2 py-0.5 rounded-full bg-amber-400 text-[#0A192F] font-black uppercase">
-                          Official Commemorative Keepsake
-                        </span>
-                        <span className="text-[10px] text-[#BFDBFE] font-mono">High-Res PNG</span>
-                      </div>
-                      <h4 className="text-base font-black text-white">
-                        SPSU Udaipur × Placement Mentorship by Kapil
-                      </h4>
-                      <p className="text-xs text-slate-300 leading-relaxed">
-                        Features verified accreditations (QS I-GAUGE Gold, Ranked #3 in Rajasthan), Udaipur Lake Palace, Mentor Kapil & students, and the 7 core career pillars.
-                      </p>
-                    </div>
-                  </div>
-
-                  <button
-                    type="button"
-                    onClick={() => {
-                      const link = document.createElement('a');
-                      link.href = spsuPortalBannerImg;
-                      link.download = 'SPSU-Udaipur-Mentor-Kapil-Placement-Banner.png';
-                      document.body.appendChild(link);
-                      link.click();
-                      document.body.removeChild(link);
-                    }}
-                    className="px-5 py-3 rounded-2xl bg-amber-400 hover:bg-amber-300 text-[#0A192F] text-xs font-black transition-all shadow-md cursor-pointer flex items-center justify-center gap-2 shrink-0 hover:scale-[1.02]"
-                  >
-                    <Download className="w-4 h-4" />
-                    <span>Download Keepsake Banner</span>
-                  </button>
                 </div>
               </div>
             </div>
@@ -1098,10 +1054,10 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                 {/* Official Letterhead Header */}
                 <div className="text-center border-b-2 border-[#0A192F] pb-4 space-y-1 font-sans">
                   <div className="text-xs font-bold tracking-widest text-[#1E3A8A] uppercase">
-                    Sir Padampat Singhania University (SPSU), Udaipur
+                    10-DAY INTENSIVE PLACEMENT READINESS BOOT CAMP
                   </div>
                   <h3 className="text-lg sm:text-xl font-black text-[#0A192F] tracking-tight">
-                    10-DAY INTENSIVE PLACEMENT READINESS BOOT CAMP
+                    TECHNICAL MASTERY & CAREER READINESS
                   </h3>
                   <div className="text-xs text-slate-600">
                     Conducted by Placement Mentor – Kapil (Independent Technical Mentor)
@@ -1113,7 +1069,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
 
                 {/* Reference and Date */}
                 <div className="flex flex-col sm:flex-row justify-between text-xs font-mono text-slate-500 pt-2 font-sans gap-1">
-                  <span>REF NO: MENTOR-KAPIL/LOR/SPSU-2026/{generateVerificationHash(learnerUser.email, 'LOR').substring(7)}</span>
+                  <span>REF NO: MENTOR-KAPIL/LOR/2026/{generateVerificationHash(learnerUser.email, 'LOR').substring(7)}</span>
                   <span>DATE: {new Date().toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' })}</span>
                 </div>
 
@@ -1144,7 +1100,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                     <div className="text-xs font-black text-[#0A192F]">PLACEMENT MENTOR – KAPIL</div>
                     <div className="text-[11px] text-slate-600">Placement Mentor (Independent Technical Mentor)</div>
                     <div className="text-[11px] text-slate-500">Lead Evaluator • 10-Day Placement Readiness Boot Camp</div>
-                    <div className="text-[11px] text-slate-500">Conducted for Sir Padampat Singhania University (SPSU), Udaipur</div>
+                    <div className="text-[11px] text-slate-500">Conducted by Placement Mentor – Kapil</div>
                   </div>
 
                   {/* Stamp */}
@@ -1454,7 +1410,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
         {/* Footer */}
         <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between shrink-0">
           <span className="text-xs text-slate-500 hidden sm:inline">
-            All downloaded documents bear official SPSU Placement Boot Camp verification and accreditation by Placement Mentor – Kapil (Independent Entity).
+            All downloaded documents bear official Placement Boot Camp verification and accreditation by Placement Mentor – Kapil (Independent Entity).
           </span>
           <button
             type="button"

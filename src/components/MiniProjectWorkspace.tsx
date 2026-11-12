@@ -71,7 +71,7 @@ export const MiniProjectWorkspace: React.FC<MiniProjectWorkspaceProps> = ({
       setSimOutput(
         `===================================================================\n` +
         `   ${miniProject.title.toUpperCase()}\n` +
-        `   MODULE ${miniProject.day} CAPSTONE • SPSU PLACEMENT READINESS PROGRAM\n` +
+        `   MODULE ${miniProject.day} CAPSTONE • PLACEMENT READINESS PROGRAM\n` +
         `===================================================================\n` +
         `Interactive Execution Sandbox ready. Click any scenario button below to simulate the execution trace in real time.`
       );
@@ -86,7 +86,7 @@ export const MiniProjectWorkspace: React.FC<MiniProjectWorkspaceProps> = ({
     let out = '';
     out += `===================================================================\n`;
     out += `   ${miniProject.title.toUpperCase()}\n`;
-    out += `   MODULE ${miniProject.day} CAPSTONE • SPSU PLACEMENT READINESS PROGRAM\n`;
+    out += `   MODULE ${miniProject.day} CAPSTONE • PLACEMENT READINESS PROGRAM\n`;
     out += `===================================================================\n\n`;
     out += `[ACTIVE SCENARIO #${scIdx + 1}] ${sc.name}\n`;
     out += `-------------------------------------------------------------------\n`;

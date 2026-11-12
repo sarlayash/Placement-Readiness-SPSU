@@ -95,7 +95,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div>
               <div className="flex items-center gap-2 flex-wrap">
                 <span className="font-black text-base sm:text-lg tracking-tight text-white">
-                  SPSU Udaipur
+                  Placement Readiness
                 </span>
                 <span className="text-[10px] font-mono uppercase px-2 py-0.5 rounded-full bg-[#1E3A8A] text-white border border-[#93C5FD]/40 font-bold">
                   Mentorship By Kapil

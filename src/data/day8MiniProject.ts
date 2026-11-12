@@ -3,7 +3,7 @@ import { MiniProject } from '../types';
 /**
  * Day 8 Capstone Mini-Project: Enterprise CI/CD Pipeline, Git DAG Engine & Automated Test Runner
  * Module 8: Software Engineering, Git Workflows, Debugging & Testing
- * Mentor: Kapil (SPSU Udaipur Placement Readiness Program)
+ * Mentor: Kapil (Placement Readiness Program)
  */
 export const DAY_8_MINI_PROJECT: MiniProject = {
   id: 'day8-mini-project-git-cicd',
@@ -132,7 +132,7 @@ void schedulePipeline(TaskNode tasks[], int taskCount) {
 
 int main() {
     printf("=================================================================\\n");
-    printf("  SPSU Udaipur Placement Readiness Program | Mentor: Kapil\\n");
+    printf("  Placement Readiness Program | Mentor: Kapil\\n");
     printf("  Day 8 Capstone: CI/CD Pipeline & Git DAG Execution Engine\\n");
     printf("=================================================================\\n\\n");
 
@@ -252,7 +252,7 @@ public:
 
 int main() {
     std::cout << "=================================================================\\n";
-    std::cout << "  SPSU Udaipur Placement Readiness Program | Mentor: Kapil\\n";
+    std::cout << "  Placement Readiness Program | Mentor: Kapil\\n";
     std::cout << "  Day 8 Capstone: CI/CD Pipeline & Git DAG Execution Engine\\n";
     std::cout << "=================================================================\\n\\n";
 
@@ -325,7 +325,7 @@ public class EnterpriseCicdEngine {
 
     public static void main(String[] args) {
         System.out.println("=================================================================");
-        System.out.println("  SPSU Udaipur Placement Readiness Program | Mentor: Kapil");
+        System.out.println("  Placement Readiness Program | Mentor: Kapil");
         System.out.println("  Day 8 Capstone: CI/CD Pipeline & Git DAG Execution Engine");
         System.out.println("=================================================================\\n");
 
@@ -414,7 +414,7 @@ class UnitTester:
 
 def main():
     print("=================================================================")
-    print("  SPSU Udaipur Placement Readiness Program | Mentor: Kapil")
+    print("  Placement Readiness Program | Mentor: Kapil")
     print("  Day 8 Capstone: CI/CD Pipeline & Git DAG Execution Engine")
     print("=================================================================\\n")
 

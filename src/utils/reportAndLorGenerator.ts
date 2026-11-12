@@ -6,7 +6,7 @@ import { COMPLETE_10_DAY_PLAN } from '../data/curriculum10Days';
  * Computes a deterministic verification hash for certificates, LORs, and reports.
  */
 export function generateVerificationHash(email: string, docType: string): string {
-  const seed = `${email.toLowerCase()}-${docType}-SPSU-KAPIL-2026`;
+  const seed = `${email.toLowerCase()}-${docType}-KAPIL-2026`;
   let hash = 0;
   for (let i = 0; i < seed.length; i++) {
     hash = (hash << 5) - hash + seed.charCodeAt(i);
@@ -71,8 +71,8 @@ export function getPersonalizedLearnerProfile(
   learner: GoogleUser | LearnerRecord,
   progress: UserProgress
 ): LearnerPersona {
-  const learnerName = (learner.name || 'SPSU Learner').trim();
-  const learnerEmail = (learner.email || 'learner@spsu.ac.in').trim();
+  const learnerName = (learner.name || 'Placement Learner').trim();
+  const learnerEmail = (learner.email || 'learner@placement.internal').trim();
 
   // 1. Quantitative metric consolidation with robust baselines
   const aptScore = progress.aptitudeScore !== undefined ? progress.aptitudeScore : 84;
@@ -107,13 +107,13 @@ export function getPersonalizedLearnerProfile(
 
   // Grade & Percentile calculation
   let overallGrade = 'A+ (Placement Ready)';
-  let percentileRank = 'Top 5% of SPSU Cohort';
+  let percentileRank = 'Top 5% of Candidate Cohort';
   if (overallAverage >= 92) {
     overallGrade = 'O (Outstanding Honors)';
-    percentileRank = 'Top 2.5% of SPSU Cohort';
+    percentileRank = 'Top 2.5% of Candidate Cohort';
   } else if (overallAverage < 84) {
     overallGrade = 'A (Placement Competent)';
-    percentileRank = 'Top 12% of SPSU Cohort';
+    percentileRank = 'Top 12% of Candidate Cohort';
   }
 
   // Determine Archetype
@@ -203,7 +203,7 @@ export function getPersonalizedLearnerProfile(
   const lorNarrative = {
     subject: `OFFICIAL RECOMMENDATION FOR ${learnerName.toUpperCase()} (${learnerEmail})`,
     salutation: 'TO WHOMSOEVER IT MAY CONCERN / CAMPUS RECRUITMENT PANELS & ADMISSIONS COMMITTEES',
-    p1Intro: `It is with immense pleasure, deep professional conviction, and unreserved enthusiasm that I write this official Letter of Recommendation in support of ${learnerName}. As an independent Placement Mentor conducting the intensive 10-Day Placement Readiness Boot Camp in collaboration with Sir Padampat Singhania University (SPSU), Udaipur, I have closely evaluated ${learnerName}'s technical intellect, algorithmic intuition, and execution speed throughout our rigorous curriculum. ${learnerName} distinguishes themselves not merely as a diligent student, but as an authentic engineer who approaches software architecture with precision, curiosity, and professional maturity.`,
+    p1Intro: `It is with immense pleasure, deep professional conviction, and unreserved enthusiasm that I write this official Letter of Recommendation in support of ${learnerName}. As an independent Placement Mentor conducting the intensive 10-Day Placement Readiness Boot Camp as lead evaluator of the Placement Readiness Program, I have closely evaluated ${learnerName}'s technical intellect, algorithmic intuition, and execution speed throughout our rigorous curriculum. ${learnerName} distinguishes themselves not merely as a diligent student, but as an authentic engineer who approaches software architecture with precision, curiosity, and professional maturity.`,
     p2Technical: `Our curriculum simulates top-tier technical placement standards (Amazon, Microsoft, TCS Digital, Infosys DSE, Cognizant GenC Elevate, and Goldman Sachs). Candidates are mandated to uphold a strict 80% passing benchmark across daily 50-MCQ Pre-Assessments and 50-MCQ Post-Assessments while operating strictly within a disciplined 09:00 AM to 09:00 PM IST daily window. ${learnerName} consistently cleared our benchmarks, achieving an exceptional ${patternScore}% in our 100 Real-Time Industry Problem Pattern Identification Evaluation, an outstanding ${aptScore}% (${aptCorrect}/50) in our Comprehensive Placement Aptitude Assessment, and successfully validated ${labChallenges} full company-grade coding challenges in our Virtual Lab IDE across C, C++, Java, and Python with optimal O(N) time and space complexities.`,
     p3EmotionalEQ: `Beyond purely mathematical and algorithmic acuity, what truly elevates ${learnerName} is mental composure under high-pressure debugging environments. In our 25-scenario placement resilience evaluation, ${learnerName} achieved a score of ${stressScore}/25 (${stressPct}%), demonstrating high emotional intelligence, systematic boundary condition checking, and zero reliance on superficial trial-and-error shortcuts. During technical discussions, ${learnerName} systematically formulates invariants, handles edge cases (empty collections, large integers, duplicate keys) with natural foresight, and communicates trade-offs with commendable clarity.`,
     p4ValueAdd: `In my career mentoring engineering graduates for Tier-1 corporate placements, I rarely encounter candidates who harmonize technical depth with practical humility as seamlessly as ${learnerName}. Whether optimizing complex sliding window pointers or architecting multi-language implementations, ${learnerName} exhibits the engineering discipline, rapid learnability, and collaborative spirit demanded by modern high-velocity engineering organizations.`,
@@ -253,8 +253,8 @@ export function download360DegreeReportPDF(
 
   const pageWidth = doc.internal.pageSize.getWidth(); // 210mm
   const pageHeight = doc.internal.pageSize.getHeight(); // 297mm
-  const learnerName = (learner.name || 'SPSU Learner').trim();
-  const learnerEmail = (learner.email || 'learner@spsu.ac.in').trim();
+  const learnerName = (learner.name || 'Placement Learner').trim();
+  const learnerEmail = (learner.email || 'learner@placement.internal').trim();
   const today = new Date().toLocaleDateString('en-IN', {
     day: 'numeric',
     month: 'long',
@@ -274,7 +274,7 @@ export function download360DegreeReportPDF(
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(15);
-  doc.text('SIR PADAMPAT SINGHANIA UNIVERSITY (SPSU), UDAIPUR', pageWidth / 2, 12, { align: 'center' });
+  doc.text('INTENSIVE PLACEMENT READINESS BOOT CAMP', pageWidth / 2, 12, { align: 'center' });
 
   doc.setFontSize(9);
   doc.setFont('helvetica', 'normal');
@@ -417,7 +417,7 @@ export function download360DegreeReportPDF(
   doc.setTextColor(30, 41, 59);
   doc.text('• Daily Operating Hours Compliance: 100% adherence to the mandatory 09:00 AM to 09:00 PM active portal window.', 18, y + 14);
   doc.text('• Automated Attendance Verification: Daily 09:00 AM diagnostic assessment notifications confirmed and submitted.', 18, y + 18.5);
-  doc.text('• Code Execution Integrity: Real-time execution in SPSU Virtual Lab with 0 plagiarism detected and verified unit tests.', 18, y + 23);
+  doc.text('• Code Execution Integrity: Real-time execution in Interactive Virtual Lab with 0 plagiarism detected and verified unit tests.', 18, y + 23);
 
   // Footer of Page 1
   doc.setFontSize(7.5);
@@ -435,7 +435,7 @@ export function download360DegreeReportPDF(
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
-  doc.text('SPSU UDAIPUR • 360° COMPREHENSIVE SWOT ANALYSIS & CAREER TRAJECTORY', pageWidth / 2, 12, { align: 'center' });
+  doc.text('360° COMPREHENSIVE SWOT ANALYSIS & CAREER TRAJECTORY', pageWidth / 2, 12, { align: 'center' });
 
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(10.5);
@@ -601,7 +601,7 @@ export function download360DegreeReportPDF(
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
-  doc.text('SPSU UDAIPUR • 10-DAY DAY-BY-DAY AUDIT & VERIFIED ENDORSEMENT', pageWidth / 2, 12, { align: 'center' });
+  doc.text('10-DAY DAY-BY-DAY AUDIT & VERIFIED ENDORSEMENT', pageWidth / 2, 12, { align: 'center' });
 
   // Table Title
   doc.setFont('helvetica', 'bold');
@@ -692,7 +692,7 @@ export function download360DegreeReportPDF(
 
   tableY += 43;
 
-  // Signatures & Official SPSU Verification Seal Box (Strictly bounded so text does not cross borders)
+  // Signatures & Official Verification Seal Box (Strictly bounded so text does not cross borders)
   const sigBoxY = tableY;
   doc.setDrawColor(10, 25, 47);
   doc.setFillColor(255, 255, 255);
@@ -714,8 +714,8 @@ export function download360DegreeReportPDF(
   doc.setFont('helvetica', 'normal');
   doc.setFontSize(6.8);
   doc.setTextColor(100, 116, 139);
-  doc.text('Scan or verify this document against SPSU Placement', 18, sigBoxY + 30);
-  doc.text('Cloud Registry at spsu.ac.in/placement-verification', 18, sigBoxY + 34);
+  doc.text('Scan or verify this document against Official Placement', 18, sigBoxY + 30);
+  doc.text('Cloud Verification Registry (80%+ Pass Required)', 18, sigBoxY + 34);
 
   // Right side: Mentor Kapil Signature (strictly bounded inside right border)
   const sigX = 132; // starts at 132mm, max text width ~55mm -> ends at 187mm, safe inside 196mm
@@ -739,7 +739,7 @@ export function download360DegreeReportPDF(
   doc.setTextColor(71, 85, 105);
   doc.text('Placement Mentor (Independent Technical Mentor)', sigX, sigBoxY + 27);
   doc.text('Lead Evaluator • 10-Day Placement Boot Camp', sigX, sigBoxY + 31);
-  doc.text('Conducted for SPSU Udaipur (Rajasthan)', sigX, sigBoxY + 35);
+  doc.text('Conducted by Placement Mentor – Kapil', sigX, sigBoxY + 35);
 
   // Footer of Page 3
   doc.setFontSize(7.5);
@@ -748,7 +748,7 @@ export function download360DegreeReportPDF(
 
   // Save the document
   const safeName = learnerName.replace(/[^a-zA-Z0-9]/g, '_');
-  doc.save(`SPSU_360_Degree_Placement_Report_${safeName}.pdf`);
+  doc.save(`360_Degree_Placement_Report_${safeName}.pdf`);
 }
 
 /**
@@ -768,8 +768,8 @@ export function downloadMentorKapilLorPDF(
 
   const pageWidth = doc.internal.pageSize.getWidth(); // 210mm
   const pageHeight = doc.internal.pageSize.getHeight(); // 297mm
-  const learnerName = (learner.name || 'SPSU Learner').trim();
-  const learnerEmail = (learner.email || 'learner@spsu.ac.in').trim();
+  const learnerName = (learner.name || 'Placement Learner').trim();
+  const learnerEmail = (learner.email || 'learner@placement.internal').trim();
   const today = new Date().toLocaleDateString('en-IN', {
     day: 'numeric',
     month: 'long',
@@ -785,7 +785,7 @@ export function downloadMentorKapilLorPDF(
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(14);
-  doc.text('SIR PADAMPAT SINGHANIA UNIVERSITY (SPSU), UDAIPUR', pageWidth / 2, 11, { align: 'center' });
+  doc.text('INTENSIVE PLACEMENT READINESS BOOT CAMP', pageWidth / 2, 11, { align: 'center' });
 
   doc.setFontSize(8);
   doc.setFont('helvetica', 'normal');
@@ -803,7 +803,7 @@ export function downloadMentorKapilLorPDF(
   doc.setFontSize(8);
   doc.setFont('courier', 'bold');
   doc.setTextColor(71, 85, 105);
-  doc.text(`REF NO: MENTOR-KAPIL/LOR/SPSU-2026/${refHash}`, 16, y);
+  doc.text(`REF NO: MENTOR-KAPIL/LOR/2026/${refHash}`, 16, y);
   doc.setFont('helvetica', 'normal');
   doc.text(`DATE: ${today}`, pageWidth - 16, y, { align: 'right' });
 
@@ -876,7 +876,7 @@ export function downloadMentorKapilLorPDF(
   y += 3.5;
   doc.text('Lead Evaluator • 10-Day Placement Readiness Boot Camp', 16, y);
   y += 3.5;
-  doc.text('Conducted for Sir Padampat Singhania University (SPSU), Udaipur (Rajasthan)', 16, y);
+  doc.text('Lead Evaluator • 10-Day Placement Readiness Boot Camp', 16, y);
   y += 3.5;
   doc.text('Independent Technical Mentorship Program', 16, y);
 
@@ -915,7 +915,7 @@ export function downloadMentorKapilLorPDF(
 
   // Save the document
   const safeName = learnerName.replace(/[^a-zA-Z0-9]/g, '_');
-  doc.save(`SPSU_Mentor_Kapil_Official_LOR_${safeName}.pdf`);
+  doc.save(`Mentor_Kapil_Official_LOR_${safeName}.pdf`);
 }
 
 /**
@@ -955,7 +955,7 @@ export function downloadBadgeCardImage(
   ctx.fillStyle = '#BFDBFE';
   ctx.font = 'bold 16px Arial';
   ctx.textAlign = 'center';
-  ctx.fillText('SIR PADAMPAT SINGHANIA UNIVERSITY (SPSU), UDAIPUR', 400, 70);
+  ctx.fillText('INTENSIVE PLACEMENT READINESS BOOT CAMP', 400, 70);
 
   ctx.fillStyle = '#FFFFFF';
   ctx.font = 'bold 22px Arial';
@@ -990,17 +990,17 @@ export function downloadBadgeCardImage(
   // Candidate Name
   ctx.fillStyle = '#6EE7B7';
   ctx.font = 'bold 20px Arial';
-  const cleanLearner = (learnerName || 'SPSU Learner').length > 38 ? (learnerName || 'SPSU Learner').substring(0, 38) + '...' : (learnerName || 'SPSU Learner');
+  const cleanLearner = (learnerName || 'Placement Learner').length > 38 ? (learnerName || 'Placement Learner').substring(0, 38) + '...' : (learnerName || 'Placement Learner');
   ctx.fillText(`Awarded To: ${cleanLearner}`, 400, 385);
 
   // Footer
   ctx.fillStyle = '#94A3B8';
   ctx.font = 'normal 13px Arial';
-  ctx.fillText('Placement Mentor – Kapil (Independent Entity) • 10-Day SPSU Placement Boot Camp', 400, 435);
+  ctx.fillText('Placement Mentor – Kapil (Independent Entity) • 10-Day Placement Boot Camp', 400, 435);
 
   // Trigger Download
   const link = document.createElement('a');
-  link.download = `SPSU_Day_${dayNum}_Excellence_Badge.png`;
+  link.download = `Placement_Day_${dayNum}_Excellence_Badge.png`;
   link.href = canvas.toDataURL('image/png');
   link.click();
 }

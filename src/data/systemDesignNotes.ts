@@ -1,6 +1,6 @@
 // Comprehensive System Design Placement Notes
 // Aligned with the 107-Slide Masterclass on Real-World Architecture & Gmail Case Study
-// Mentorship by Kapil • SPSU Udaipur
+// Mentorship by Kapil • Placement Readiness
 
 export interface SystemDesignSection {
   id: string;

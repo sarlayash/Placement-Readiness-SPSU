@@ -41,7 +41,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBadges, onOpenCertificate,
                 K
               </div>
               <div>
-                <div className="font-extrabold text-sm text-white">SPSU Udaipur</div>
+                <div className="font-extrabold text-sm text-white">Placement Readiness</div>
                 <div className="text-[11px] font-mono font-bold text-[#93C5FD]">
                   Mentorship By Kapil
                 </div>
@@ -126,7 +126,7 @@ export const Footer: React.FC<FooterProps> = ({ onOpenBadges, onOpenCertificate,
         {/* Bottom Copyright & Policy Strip */}
         <div className="pt-6 border-t border-[#1E3A8A] flex flex-col sm:flex-row items-center justify-between gap-3 text-[11px] text-[#BFDBFE]">
           <div className="flex items-center gap-2">
-            <span>© 2026 SPSU Udaipur Placement Readiness</span>
+            <span>© 2026 Placement Readiness Portal</span>
             <span>•</span>
             <span className="text-white font-bold">Mentorship By Kapil</span>
           </div>

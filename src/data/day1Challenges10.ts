@@ -659,8 +659,8 @@ export const DAY_1_PRACTICAL_CHALLENGES_10: PracticalChallenge[] = [
       "1 <= S.length <= 10^5",
       "S contains only lowercase English alphabetic characters."
     ],
-    "sampleInput": "spsuudaipur",
-    "sampleOutput": "6 5",
+    "sampleInput": "engineering",
+    "sampleOutput": "5 6",
     "kapilIntuition": "Mentorship By Kapil: Iterate through each character in the string. If character is \"a\", \"e\", \"i\", \"o\", or \"u\", increment vowel counter; else increment consonant counter. This is a single pass O(N) time and O(1) space solution.",
     "timeComplexity": "O(N)",
     "spaceComplexity": "O(1)",
@@ -679,10 +679,10 @@ export const DAY_1_PRACTICAL_CHALLENGES_10: PracticalChallenge[] = [
     "testCases": [
       {
         "id": "tc-1",
-        "input": "spsuudaipur",
-        "expectedOutput": "6 5",
+        "input": "engineering",
+        "expectedOutput": "5 6",
         "isHidden": false,
-        "explanation": "s,p,s,u,u,d,a,i,p,u,r has vowels u,u,a,i,u (5 vowels, wait: s, p, s, u, u, d, a, i, p, u, r -> u, u, a, i, u = 5? Let us check: s(c), p(c), s(c), u(v), u(v), d(c), a(v), i(v), p(c), u(v), r(c) -> 5 vowels, 6 consonants)."
+        "explanation": "engineering has vowels e,i,e,e,i (5 vowels) and consonants n,g,n,r,n,g (6 consonants) -> 5 6."
       },
       {
         "id": "tc-2",

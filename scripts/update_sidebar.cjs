@@ -1,0 +1,10 @@
+const fs = require('fs');
+const path = require('path');
+const file = path.join(__dirname, '../src/components/LeftSidebar.tsx');
+let s = fs.readFileSync(file, 'utf8');
+s = s.replace('10-Day Pathway', '12-Day FAANG Pathway');
+s = s.replace('{unlockedBadgesCount}/10 Done', '{unlockedBadgesCount}/{days.length} Done');
+s = s.replace('Complete 10-Day Planner Overview', 'Complete 12-Day Pathway Planner Overview');
+s = s.replace('>10-Day Planner<', '>12-Day Planner<');
+fs.writeFileSync(file, s, 'utf8');
+console.log('Successfully updated LeftSidebar.tsx');

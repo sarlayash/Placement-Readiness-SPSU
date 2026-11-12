@@ -99,4 +99,22 @@ export const SYLLABUS_MODULES: CurriculumModule[] = [
       'Communicate a structured approach, solve problems aloud and respond to technical follow-up questions.',
     alignedDay: 10,
   },
+  {
+    id: 12,
+    title: '12. Advanced Graph Theory & Network Flow',
+    coverage:
+      'Topological Sort (Kahn / DFS), Dijkstra & 0-1 BFS, Disjoint Set Union (DSU) with Path Compression & Union by Rank, Tarjan / Kosaraju SCC & Bridges, Bidirectional BFS, Ford-Fulkerson & Dinic Max Flow, A* Heuristic Search.',
+    learningOutcomes:
+      'Master complex non-linear graphs, cycles, network flows, and shortest paths in distributed graphs under strict FAANG performance limits.',
+    alignedDay: 11,
+  },
+  {
+    id: 13,
+    title: '13. Hard Dynamic Programming & State-Space Optimization',
+    coverage:
+      'State Machine DP, Bitmask DP (Hamiltonian / TSP), Tree DP & Re-rooting techniques, Monotonic Deque & Convex Hull DP Optimization, Interval & MCM DP, Digit DP.',
+    learningOutcomes:
+      'Deconstruct complex exponential search spaces into subproblems, formulate multi-dimensional states, and reduce asymptotic runtimes using advanced DP optimizations.',
+    alignedDay: 12,
+  },
 ];

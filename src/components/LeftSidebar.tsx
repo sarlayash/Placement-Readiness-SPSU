@@ -85,7 +85,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 Day Navigation
               </div>
               <div className="text-[10px] text-[#93C5FD] truncate font-medium">
-                10-Day Pathway
+                12-Day FAANG Pathway
               </div>
             </div>
           </div>
@@ -122,7 +122,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
               ? 'bg-white text-[#0A192F] shadow-sm font-extrabold'
               : 'text-[#BFDBFE] hover:bg-[#112240] hover:text-white'
           }`}
-          title="Complete 10-Day Planner Overview"
+          title="Complete 12-Day Pathway Planner Overview"
         >
           <div
             className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
@@ -135,7 +135,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           </div>
           {!isCollapsed && (
             <div className="truncate">
-              <div className="truncate">10-Day Planner</div>
+              <div className="truncate">12-Day Planner</div>
               <div
                 className={`text-[10px] truncate ${
                   activeView === 'planner' ? 'text-slate-600' : 'text-[#93C5FD]'
@@ -390,7 +390,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           <div className="px-2 pt-3 pb-1 text-[10px] uppercase font-bold tracking-wider text-[#93C5FD]/80 flex items-center justify-between">
             <span>Daily Modules</span>
             <span className="font-mono text-[9px] bg-[#112240] px-1.5 py-0.5 rounded text-[#BFDBFE]">
-              {unlockedBadgesCount}/10 Done
+              {unlockedBadgesCount}/{days.length} Done
             </span>
           </div>
         )}

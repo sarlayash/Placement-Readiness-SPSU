@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { GoogleUser, UserProgress } from '../types';
 import { COMPLETE_10_DAY_PLAN } from '../data/curriculum10Days';
+import { getCompletedDaysCount } from '../utils/dayLocking';
 import {
   download360DegreeReportPDF,
   downloadMentorKapilLorPDF,
@@ -74,6 +75,12 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
   // Demo user candidate name customization
   const [demoCandidateName, setDemoCandidateName] = useState<string>('Placement Aspirant');
 
+  // Milestone Days Selector for Tiered Certificate
+  const actualCompletedDays = getCompletedDaysCount(progress, 15);
+  const [selectedCertMilestoneDays, setSelectedCertMilestoneDays] = useState<number>(
+    actualCompletedDays > 0 ? actualCompletedDays : 15
+  );
+
   // Interactive Certificate preview selector
   const [previewCertType, setPreviewCertType] = useState<'curriculum' | 'system-design' | 'interview-readiness'>('curriculum');
   const certCanvasContainerRef = useRef<HTMLDivElement>(null);
@@ -125,13 +132,14 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
       canvas = renderCertificateCanvas(
         learnerUser,
         progress,
-        unlockedBadgesCount || 10
+        unlockedBadgesCount || (actualCompletedDays > 0 ? actualCompletedDays : 15),
+        selectedCertMilestoneDays
       );
     }
 
     canvas.className = 'w-full h-auto max-h-[55vh] object-contain rounded-2xl shadow-xl border-2 border-[#1E3A8A]';
     certCanvasContainerRef.current.appendChild(canvas);
-  }, [activeTab, previewCertType, learnerUser, progress, unlockedBadgesCount]);
+  }, [activeTab, previewCertType, learnerUser, progress, unlockedBadgesCount, selectedCertMilestoneDays, actualCompletedDays]);
 
   // Live Badge Canvas renderer for 'badges' tab
   useEffect(() => {
@@ -1157,7 +1165,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                           : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                       }`}
                     >
-                      10-Day Curriculum
+                      15-Day Tiered Curriculum
                     </button>
 
                     <button
@@ -1185,6 +1193,70 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                     </button>
                   </div>
                 </div>
+
+                {/* Milestone Selector for Curriculum Certificate */}
+                {previewCertType === 'curriculum' && (
+                  <div className="bg-slate-50 border border-slate-200 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs">
+                    <div className="flex items-center gap-2">
+                      <Sparkles className="w-4 h-4 text-[#1E3A8A]" />
+                      <span className="font-bold text-[#0A192F]">Curriculum Milestone Tier:</span>
+                      <span className="text-slate-600">
+                        (Actual completed: <strong>{actualCompletedDays} of 15 Days</strong>)
+                      </span>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 flex-wrap">
+                      {[
+                        { days: 15, label: '15D (FAANG Grandmaster)' },
+                        { days: 12, label: '12D (Advanced)' },
+                        { days: 10, label: '10D (Core Graduate)' },
+                        { days: 5, label: '5D (DSA Associate)' },
+                      ].map((tier) => (
+                        <button
+                          key={tier.days}
+                          type="button"
+                          onClick={() => setSelectedCertMilestoneDays(tier.days)}
+                          className={`px-2.5 py-1 rounded-lg font-bold text-xs transition-all cursor-pointer ${
+                            selectedCertMilestoneDays === tier.days
+                              ? 'bg-[#0A192F] text-white shadow-xs'
+                              : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
+                          }`}
+                        >
+                          {tier.label}
+                        </button>
+                      ))}
+
+                      {actualCompletedDays > 0 && ![15, 12, 10, 5].includes(actualCompletedDays) && (
+                        <button
+                          type="button"
+                          onClick={() => setSelectedCertMilestoneDays(actualCompletedDays)}
+                          className={`px-2.5 py-1 rounded-lg font-bold text-xs transition-all cursor-pointer ${
+                            selectedCertMilestoneDays === actualCompletedDays
+                              ? 'bg-[#0A192F] text-white shadow-xs'
+                              : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
+                          }`}
+                        >
+                          {actualCompletedDays}D (My Progress)
+                        </button>
+                      )}
+
+                      <div className="flex items-center gap-1 pl-2 border-l border-slate-300">
+                        <label className="text-slate-500 font-semibold text-[11px]">Day:</label>
+                        <select
+                          value={selectedCertMilestoneDays}
+                          onChange={(e) => setSelectedCertMilestoneDays(Number(e.target.value))}
+                          className="bg-white border border-slate-300 rounded-md px-1.5 py-0.5 text-xs font-bold text-[#0A192F]"
+                        >
+                          {Array.from({ length: 15 }, (_, i) => i + 1).map((d) => (
+                            <option key={d} value={d}>
+                              Day {d}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+                )}
 
                 {/* Rendered Canvas Container */}
                 <div
@@ -1217,7 +1289,12 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                             (progress.interviewReadinessCertificateIssuedAt || progress.interviewCertificateIssuedAt) || undefined
                           );
                         } else {
-                          downloadCertificatePNG(learnerUser, progress, unlockedBadgesCount || 10);
+                          downloadCertificatePNG(
+                            learnerUser,
+                            progress,
+                            unlockedBadgesCount || (actualCompletedDays > 0 ? actualCompletedDays : 15),
+                            selectedCertMilestoneDays
+                          );
                         }
                       }}
                       className="px-4 py-2 rounded-xl border-2 border-[#0A192F] bg-white hover:bg-[#0A192F] hover:text-white text-[#0A192F] font-bold transition-all cursor-pointer flex items-center gap-1.5"
@@ -1244,7 +1321,12 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                             (progress.interviewReadinessCertificateIssuedAt || progress.interviewCertificateIssuedAt) || undefined
                           );
                         } else {
-                          downloadCertificatePDF(learnerUser, progress, unlockedBadgesCount || 10);
+                          downloadCertificatePDF(
+                            learnerUser,
+                            progress,
+                            unlockedBadgesCount || (actualCompletedDays > 0 ? actualCompletedDays : 15),
+                            selectedCertMilestoneDays
+                          );
                         }
                       }}
                       className="px-4 py-2 rounded-xl bg-[#0A192F] hover:bg-[#1E3A8A] text-white font-bold transition-all cursor-pointer flex items-center gap-1.5 shadow-md"
@@ -1286,7 +1368,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                           : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                       }`}
                     >
-                      10 Daily Badges
+                      15 Daily Badges
                     </button>
 
                     <button

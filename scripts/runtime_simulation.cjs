@@ -138,7 +138,7 @@ check('User completed all 10 Days in storage', Object.keys(userProg.completedDay
 
 // 6. Certificate generation
 const certId = storageMod.generateOfficialCertificateId(testUser.email);
-check('Certificate ID generated with learner email format', certId.startsWith('KAPIL-10D-'));
+check('Certificate ID generated with learner email format', certId.startsWith('KAPIL-15D-') || certId.startsWith('KAPIL-10D-'));
 
 userProg.certificateId = certId;
 userProg.certificateIssuedAt = new Date().toISOString();

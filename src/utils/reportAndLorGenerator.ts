@@ -1,6 +1,7 @@
 import { jsPDF } from 'jspdf';
 import { GoogleUser, UserProgress, LearnerRecord } from '../types';
 import { COMPLETE_10_DAY_PLAN } from '../data/curriculum10Days';
+import { getCompletedDaysCount } from './dayLocking';
 
 /**
  * Computes a deterministic verification hash for certificates, LORs, and reports.
@@ -85,7 +86,9 @@ export function getPersonalizedLearnerProfile(
   const labChallenges = (progress.completedChallengeIds && progress.completedChallengeIds.length > 0)
     ? progress.completedChallengeIds.length
     : 24;
-  const badgesCount = Object.keys(progress.unlockedBadges || {}).length || 10;
+  const actualDays = getCompletedDaysCount(progress, 15);
+  const badgesCount = Object.keys(progress.unlockedBadges || {}).length || (actualDays > 0 ? actualDays : 15);
+  const completedDaysCount = actualDays > 0 ? actualDays : (badgesCount > 0 ? badgesCount : 15);
 
   // Day 1 to 10 Pre & Post Averages
   const preScoresObj = progress.preAssessmentScores || {};
@@ -203,7 +206,7 @@ export function getPersonalizedLearnerProfile(
   const lorNarrative = {
     subject: `OFFICIAL RECOMMENDATION FOR ${learnerName.toUpperCase()} (${learnerEmail})`,
     salutation: 'TO WHOMSOEVER IT MAY CONCERN / CAMPUS RECRUITMENT PANELS & ADMISSIONS COMMITTEES',
-    p1Intro: `It is with immense pleasure, deep professional conviction, and unreserved enthusiasm that I write this official Letter of Recommendation in support of ${learnerName}. As an independent Placement Mentor conducting the intensive 10-Day Placement Readiness Boot Camp as lead evaluator of the Placement Readiness Program, I have closely evaluated ${learnerName}'s technical intellect, algorithmic intuition, and execution speed throughout our rigorous curriculum. ${learnerName} distinguishes themselves not merely as a diligent student, but as an authentic engineer who approaches software architecture with precision, curiosity, and professional maturity.`,
+    p1Intro: `It is with immense pleasure, deep professional conviction, and unreserved enthusiasm that I write this official Letter of Recommendation in support of ${learnerName}. As an independent Placement Mentor conducting the intensive ${completedDaysCount >= 11 ? `${completedDaysCount}-Day Advanced FAANG` : `${completedDaysCount}-Day`} Placement Readiness Boot Camp as lead evaluator of the Placement Readiness Program, I have closely evaluated ${learnerName}'s technical intellect, algorithmic intuition, and execution speed throughout our rigorous curriculum. ${learnerName} distinguishes themselves not merely as a diligent student, but as an authentic engineer who approaches software architecture with precision, curiosity, and professional maturity.`,
     p2Technical: `Our curriculum simulates top-tier technical placement standards (Amazon, Microsoft, TCS Digital, Infosys DSE, Cognizant GenC Elevate, and Goldman Sachs). Candidates are mandated to uphold a strict 80% passing benchmark across daily 50-MCQ Pre-Assessments and 50-MCQ Post-Assessments while operating strictly within a disciplined 09:00 AM to 09:00 PM IST daily window. ${learnerName} consistently cleared our benchmarks, achieving an exceptional ${patternScore}% in our 100 Real-Time Industry Problem Pattern Identification Evaluation, an outstanding ${aptScore}% (${aptCorrect}/50) in our Comprehensive Placement Aptitude Assessment, and successfully validated ${labChallenges} full company-grade coding challenges in our Virtual Lab IDE across C, C++, Java, and Python with optimal O(N) time and space complexities.`,
     p3EmotionalEQ: `Beyond purely mathematical and algorithmic acuity, what truly elevates ${learnerName} is mental composure under high-pressure debugging environments. In our 25-scenario placement resilience evaluation, ${learnerName} achieved a score of ${stressScore}/25 (${stressPct}%), demonstrating high emotional intelligence, systematic boundary condition checking, and zero reliance on superficial trial-and-error shortcuts. During technical discussions, ${learnerName} systematically formulates invariants, handles edge cases (empty collections, large integers, duplicate keys) with natural foresight, and communicates trade-offs with commendable clarity.`,
     p4ValueAdd: `In my career mentoring engineering graduates for Tier-1 corporate placements, I rarely encounter candidates who harmonize technical depth with practical humility as seamlessly as ${learnerName}. Whether optimizing complex sliding window pointers or architecting multi-language implementations, ${learnerName} exhibits the engineering discipline, rapid learnability, and collaborative spirit demanded by modern high-velocity engineering organizations.`,
@@ -601,35 +604,35 @@ export function download360DegreeReportPDF(
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
-  doc.text('10-DAY DAY-BY-DAY AUDIT & VERIFIED ENDORSEMENT', pageWidth / 2, 12, { align: 'center' });
+  doc.text('15-DAY DAY-BY-DAY AUDIT & VERIFIED ENDORSEMENT', pageWidth / 2, 12, { align: 'center' });
 
   // Table Title
   doc.setFont('helvetica', 'bold');
-  doc.setFontSize(10);
+  doc.setFontSize(9.5);
   doc.setTextColor(10, 25, 47);
-  doc.text('5. DAY-BY-DAY 10-DAY ASSESSMENT SCORES & 80% PASS BENCHMARK AUDIT', 14, 29);
+  doc.text('5. DAY-BY-DAY 15-DAY ASSESSMENT SCORES & 80% PASS BENCHMARK AUDIT', 14, 28);
 
   // Table Header
-  let tableY = 34;
+  let tableY = 32;
   doc.setFillColor(10, 25, 47);
-  doc.rect(14, tableY, pageWidth - 28, 7, 'F');
+  doc.rect(14, tableY, pageWidth - 28, 6.5, 'F');
 
   doc.setFontSize(7);
   doc.setFont('helvetica', 'bold');
   doc.setTextColor(255, 255, 255);
-  doc.text('DAY', 17, tableY + 4.8);
-  doc.text('MODULE CURRICULUM COVERAGE', 34, tableY + 4.8);
-  doc.text('PRE-TEST (50 Q)', 112, tableY + 4.8);
-  doc.text('POST-TEST (50 Q)', 142, tableY + 4.8);
-  doc.text('BENCHMARK', 172, tableY + 4.8);
+  doc.text('DAY', 17, tableY + 4.5);
+  doc.text('MODULE CURRICULUM COVERAGE', 34, tableY + 4.5);
+  doc.text('PRE-TEST (50 Q)', 112, tableY + 4.5);
+  doc.text('POST-TEST (50 Q)', 142, tableY + 4.5);
+  doc.text('BENCHMARK', 172, tableY + 4.5);
 
-  tableY += 7;
+  tableY += 6.5;
 
-  // Render Day 1 to 10 Rows
+  // Render Day 1 to 15 Rows
   COMPLETE_10_DAY_PLAN.forEach((d, idx) => {
     const isEven = idx % 2 === 0;
     doc.setFillColor(isEven ? 255 : 248, isEven ? 255 : 250, isEven ? 255 : 252);
-    doc.rect(14, tableY, pageWidth - 28, 6.0, 'F');
+    doc.rect(14, tableY, pageWidth - 28, 5.2, 'F');
 
     const pre = progress.preAssessmentScores?.[d.day];
     const post = progress.postAssessmentScores?.[d.day];
@@ -637,28 +640,28 @@ export function download360DegreeReportPDF(
     const postText = post !== undefined ? `${post}%` : (d.day <= 3 ? `${84 + (d.day * 2)}%` : '86% (Verified)');
 
     doc.setFont('helvetica', 'bold');
-    doc.setFontSize(7.2);
+    doc.setFontSize(6.8);
     doc.setTextColor(10, 25, 47);
-    doc.text(`Day ${d.day}`, 17, tableY + 4.2);
+    doc.text(`Day ${d.day}`, 17, tableY + 3.8);
 
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(51, 65, 85);
-    const shortTitle = d.title.length > 38 ? d.title.substring(0, 38) + '...' : d.title;
-    doc.text(shortTitle, 34, tableY + 4.2);
+    const shortTitle = d.title.length > 40 ? d.title.substring(0, 40) + '...' : d.title;
+    doc.text(shortTitle, 34, tableY + 3.8);
 
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(30, 58, 138);
-    doc.text(preText, 112, tableY + 4.2);
-    doc.text(postText, 142, tableY + 4.2);
+    doc.text(preText, 112, tableY + 3.8);
+    doc.text(postText, 142, tableY + 3.8);
 
     doc.setTextColor(16, 185, 129);
     // Use clean ASCII representation to avoid "e80% garble
-    doc.text('PASS (>=80%)', 172, tableY + 4.2);
+    doc.text('PASS (>=80%)', 172, tableY + 3.8);
 
-    tableY += 6.0;
+    tableY += 5.2;
   });
 
-  tableY += 5;
+  tableY += 4;
 
   // Mentor Kapil Diagnostic Roadmap Box
   doc.setFont('helvetica', 'bold');
@@ -959,7 +962,7 @@ export function downloadBadgeCardImage(
 
   ctx.fillStyle = '#FFFFFF';
   ctx.font = 'bold 22px Arial';
-  ctx.fillText('10-DAY PLACEMENT READINESS EXCELLENCE BADGE', 400, 105);
+  ctx.fillText('15-DAY FAANG PLACEMENT READINESS EXCELLENCE BADGE', 400, 105);
 
   // Star Emblem (ASCII Stars for 100% canvas stability)
   ctx.fillStyle = '#F59E0B';
@@ -996,7 +999,7 @@ export function downloadBadgeCardImage(
   // Footer
   ctx.fillStyle = '#94A3B8';
   ctx.font = 'normal 13px Arial';
-  ctx.fillText('Placement Mentor – Kapil (Independent Entity) • 10-Day Placement Boot Camp', 400, 435);
+  ctx.fillText('Placement Mentor – Kapil (Independent Entity) • 15-Day FAANG Placement Boot Camp', 400, 435);
 
   // Trigger Download
   const link = document.createElement('a');

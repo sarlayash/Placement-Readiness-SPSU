@@ -120,3 +120,18 @@ export function formatDayCountdown(totalSeconds: number): {
     seconds: String(s).padStart(2, '0'),
   };
 }
+
+/**
+ * Calculates the total number of completed days (1..maxDays) for a learner.
+ */
+export function getCompletedDaysCount(progress?: UserProgress | null, maxDays: number = 15): number {
+  if (!progress) return 0;
+  let count = 0;
+  for (let d = 1; d <= maxDays; d++) {
+    if (isDayCompleted(d, progress)) {
+      count++;
+    }
+  }
+  return count;
+}
+

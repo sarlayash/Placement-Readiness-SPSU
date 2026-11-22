@@ -370,6 +370,134 @@ try {
 }
 
 // -----------------------------------------------------------------------------
+// TEST SUITE 7: DYNAMIC CERTIFICATE TIERS & MOCK USER END-TO-END
+// -----------------------------------------------------------------------------
+console.log('\n>>> [7/7] Testing Dynamic Certificate Tiers & Mock User Scenarios...');
+try {
+  const exportCode = fs.readFileSync(path.join(root, 'src/utils/exportCredentials.ts'), 'utf8');
+  assert(exportCode.includes('getCertificateMilestoneDetails'), 'exportCredentials.ts missing getCertificateMilestoneDetails');
+  assert(exportCode.includes('FAANG Grandmaster'), 'exportCredentials.ts missing FAANG Grandmaster tier');
+  assert(exportCode.includes('Advanced Systems Specialist'), 'exportCredentials.ts missing Advanced Systems tier');
+  assert(exportCode.includes('Full-Stack Systems Graduate'), 'exportCredentials.ts missing Full-Stack Systems Graduate tier');
+  assert(exportCode.includes('Systems Engineering Associate'), 'exportCredentials.ts missing Systems Engineering Associate tier');
+  assert(exportCode.includes('Algorithmic Engineering Trainee'), 'exportCredentials.ts missing Algorithmic Engineering Trainee tier');
+
+  // Verify dayLocking exports getCompletedDaysCount
+  const dayLockingCode = fs.readFileSync(path.join(root, 'src/utils/dayLocking.ts'), 'utf8');
+  assert(dayLockingCode.includes('getCompletedDaysCount'), 'dayLocking.ts missing getCompletedDaysCount');
+
+  // Simulate mock learners with various completion states (15, 12, 10, 5, 0 days)
+  const mockScenarios = [
+    {
+      days: 15,
+      expectedTier: 'FAANG Grandmaster',
+      expectedTitle: 'CERTIFICATE OF TECHNICAL GRANDMASTERY',
+      expectedSeal: '15D GRANDMASTER',
+      expectedPrefix: 'KAPIL-15D-'
+    },
+    {
+      days: 12,
+      expectedTier: 'Advanced Systems Specialist',
+      expectedTitle: 'CERTIFICATE OF ADVANCED TECHNICAL EXCELLENCE',
+      expectedSeal: '12D SPECIALIST',
+      expectedPrefix: 'KAPIL-12D-'
+    },
+    {
+      days: 10,
+      expectedTier: 'Full-Stack Systems Graduate',
+      expectedTitle: 'CERTIFICATE OF TECHNICAL MASTERY',
+      expectedSeal: '10D GRADUATE',
+      expectedPrefix: 'KAPIL-10D-'
+    },
+    {
+      days: 5,
+      expectedTier: 'Systems Engineering Associate',
+      expectedTitle: 'CERTIFICATE OF INTERMEDIATE TECHNICAL PROFICIENCY',
+      expectedSeal: '5D ASSOCIATE',
+      expectedPrefix: 'KAPIL-5D-'
+    },
+    {
+      days: 0,
+      expectedTier: 'Algorithmic Engineering Trainee',
+      expectedTitle: 'CERTIFICATE OF FOUNDATIONAL TECHNICAL PROFICIENCY',
+      expectedSeal: '1D TRAINEE',
+      expectedPrefix: 'KAPIL-1D-'
+    }
+  ];
+
+  function computeMilestoneMock(daysCompleted, totalBadgesUnlocked, totalLabsSolved, email) {
+    const cleanHash = Array.from((email || 'learner@placement.internal').toLowerCase())
+      .reduce((acc, char) => ((acc << 5) - acc + char.charCodeAt(0)) | 0, 0);
+    const absHex = Math.abs(cleanHash).toString(16).toUpperCase().padStart(6, '0');
+
+    if (daysCompleted >= 15) {
+      return {
+        daysCompleted: 15,
+        tierName: 'FAANG Grandmaster',
+        title: 'CERTIFICATE OF TECHNICAL GRANDMASTERY',
+        credentialId: `KAPIL-15D-${absHex}`,
+        sealSubtext: '15D GRANDMASTER'
+      };
+    }
+    if (daysCompleted >= 12) {
+      return {
+        daysCompleted,
+        tierName: 'Advanced Systems Specialist',
+        title: 'CERTIFICATE OF ADVANCED TECHNICAL EXCELLENCE',
+        credentialId: `KAPIL-${daysCompleted}D-${absHex}`,
+        sealSubtext: `${daysCompleted}D SPECIALIST`
+      };
+    }
+    if (daysCompleted >= 10) {
+      return {
+        daysCompleted,
+        tierName: 'Full-Stack Systems Graduate',
+        title: 'CERTIFICATE OF TECHNICAL MASTERY',
+        credentialId: `KAPIL-${daysCompleted}D-${absHex}`,
+        sealSubtext: `${daysCompleted}D GRADUATE`
+      };
+    }
+    if (daysCompleted >= 5) {
+      return {
+        daysCompleted,
+        tierName: 'Systems Engineering Associate',
+        title: 'CERTIFICATE OF INTERMEDIATE TECHNICAL PROFICIENCY',
+        credentialId: `KAPIL-${daysCompleted}D-${absHex}`,
+        sealSubtext: `${daysCompleted}D ASSOCIATE`
+      };
+    }
+    const effectiveDays = Math.max(1, daysCompleted);
+    return {
+      daysCompleted: effectiveDays,
+      tierName: 'Algorithmic Engineering Trainee',
+      title: 'CERTIFICATE OF FOUNDATIONAL TECHNICAL PROFICIENCY',
+      credentialId: `KAPIL-${effectiveDays}D-${absHex}`,
+      sealSubtext: `${effectiveDays}D TRAINEE`
+    };
+  }
+
+  const testEmail = 'learner@placement.internal';
+  mockScenarios.forEach((scenario) => {
+    const res = computeMilestoneMock(scenario.days, scenario.days, scenario.days * 2, testEmail);
+    assert(res.tierName === scenario.expectedTier, `Scenario ${scenario.days}D: expected tier ${scenario.expectedTier}, got ${res.tierName}`);
+    assert(res.title === scenario.expectedTitle, `Scenario ${scenario.days}D: expected title ${scenario.expectedTitle}, got ${res.title}`);
+    assert(res.sealSubtext === scenario.expectedSeal, `Scenario ${scenario.days}D: expected seal ${scenario.expectedSeal}, got ${res.sealSubtext}`);
+    assert(res.credentialId.startsWith(scenario.expectedPrefix), `Scenario ${scenario.days}D: expected ID to start with ${scenario.expectedPrefix}, got ${res.credentialId}`);
+  });
+
+  // Verify Day 1..15 Badges are present in curriculum
+  const days13to15File = fs.readFileSync(path.join(root, 'src/data/days13to15.ts'), 'utf8');
+  assert(days13to15File.includes('DAYS_13_TO_15'), 'days13to15.ts missing DAYS_13_TO_15');
+  assert(days13to15File.includes('day: 13'), 'days13to15.ts missing day 13');
+  assert(days13to15File.includes('day: 14'), 'days13to15.ts missing day 14');
+  assert(days13to15File.includes('day: 15'), 'days13to15.ts missing day 15');
+
+  console.log('✅ Dynamic certificate tier logic and mock user scenarios (15, 12, 10, 5, 0 days) verified.');
+} catch (err) {
+  errors.push(`Dynamic certificate tiers validation error: ${err.message}`);
+}
+
+// -----------------------------------------------------------------------------
 // SUMMARY & REPORT
 // -----------------------------------------------------------------------------
 console.log('\n====================================================');

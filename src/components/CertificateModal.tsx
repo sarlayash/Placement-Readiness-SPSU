@@ -8,8 +8,10 @@ import {
   downloadSystemDesignCertificatePDF,
   downloadInterviewReadinessCertificatePNG,
   downloadInterviewReadinessCertificatePDF,
+  getCertificateMilestoneDetails,
 } from '../utils/exportCredentials';
 import { generateOfficialCertificateId } from '../utils/storage';
+import { getCompletedDaysCount } from '../utils/dayLocking';
 
 interface CertificateModalProps {
   user: GoogleUser | null;
@@ -35,10 +37,26 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
     signedInAt: new Date().toISOString(),
   };
 
-  const unlockedBadgesCount = Object.keys(progress.unlockedBadges || {}).length || 10;
+  const actualCompletedDays = getCompletedDaysCount(progress, 15);
+  const [selectedDays, setSelectedDays] = useState<number>(
+    actualCompletedDays > 0 ? actualCompletedDays : 15
+  );
+
+  const unlockedBadgesCount =
+    Object.keys(progress.unlockedBadges || {}).length ||
+    (actualCompletedDays > 0 ? actualCompletedDays : 15);
+  const totalLabs = progress.completedChallengeIds?.length || 0;
+
+  const milestone = getCertificateMilestoneDetails(
+    selectedDays,
+    unlockedBadgesCount,
+    totalLabs,
+    effectiveUser.email
+  );
+
   const certId = effectiveUser
-    ? progress.certificateId || generateOfficialCertificateId(effectiveUser.email)
-    : 'KAPIL-10D-VERIFIED';
+    ? progress.certificateId || milestone.credentialId
+    : 'KAPIL-15D-VERIFIED';
 
   const systemDesignCertId = `SD-ARCH-${Math.abs(effectiveUser.email.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase()}-2026`;
   const interviewReadinessCertId = `IR-SPEC-${Math.abs(effectiveUser.email.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase()}-2026`;
@@ -105,19 +123,19 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
               <>
                 <button
                   type="button"
-                  onClick={() => downloadCertificatePNG(effectiveUser, progress, unlockedBadgesCount)}
+                  onClick={() => downloadCertificatePNG(effectiveUser, progress, unlockedBadgesCount, selectedDays)}
                   className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-white hover:bg-[#EFF6FF] text-[#0A192F] text-xs font-extrabold transition-colors cursor-pointer shadow-xs"
                 >
                   <Image className="w-3.5 h-3.5 text-[#1E3A8A]" />
-                  <span>Download PNG</span>
+                  <span>Download PNG ({selectedDays}D)</span>
                 </button>
                 <button
                   type="button"
-                  onClick={() => downloadCertificatePDF(effectiveUser, progress, unlockedBadgesCount)}
+                  onClick={() => downloadCertificatePDF(effectiveUser, progress, unlockedBadgesCount, selectedDays)}
                   className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-[#1E3A8A] hover:bg-[#2563EB] border border-white/30 text-white text-xs font-extrabold transition-colors cursor-pointer shadow-xs"
                 >
                   <FileText className="w-3.5 h-3.5" />
-                  <span>Download PDF</span>
+                  <span>Download PDF ({selectedDays}D)</span>
                 </button>
               </>
             )}
@@ -226,7 +244,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
             }`}
           >
             <Award className="w-3.5 h-3.5" />
-            <span>10-Day Technical Mastery Certificate</span>
+            <span>15-Day Curriculum Certificate (Tiered by Days)</span>
           </button>
 
           <button
@@ -259,83 +277,147 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
         {/* Certificate Preview Canvas Card */}
         <div className="p-5 sm:p-8">
           {activeCertType === 'curriculum' && (
-            <div className="rounded-2xl border-8 border-double border-[#0A192F] bg-white p-6 sm:p-10 shadow-lg relative overflow-hidden">
-              {/* Watermark */}
-              <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none">
-                <span className="text-7xl sm:text-9xl font-black tracking-widest text-[#0A192F]">
-                  KAPIL
-                </span>
+            <div>
+              {/* Milestone Days Selector */}
+              <div className="mb-4 bg-slate-50 border border-slate-200 rounded-2xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-4 h-4 text-[#1E3A8A]" />
+                  <span className="font-bold text-[#0A192F]">Curriculum Milestone Tier:</span>
+                  <span className="text-slate-600">
+                    (Actual completed: <strong>{actualCompletedDays} of 15 Days</strong>)
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-1.5 flex-wrap">
+                  {[
+                    { days: 15, label: '15D (FAANG Grandmaster)' },
+                    { days: 12, label: '12D (Advanced)' },
+                    { days: 10, label: '10D (Core Graduate)' },
+                    { days: 5, label: '5D (DSA Associate)' },
+                  ].map((tier) => (
+                    <button
+                      key={tier.days}
+                      type="button"
+                      onClick={() => setSelectedDays(tier.days)}
+                      className={`px-2.5 py-1 rounded-lg font-bold text-xs transition-all cursor-pointer ${
+                        selectedDays === tier.days
+                          ? 'bg-[#0A192F] text-white shadow-xs'
+                          : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
+                      }`}
+                    >
+                      {tier.label}
+                    </button>
+                  ))}
+
+                  {actualCompletedDays > 0 && ![15, 12, 10, 5].includes(actualCompletedDays) && (
+                    <button
+                      type="button"
+                      onClick={() => setSelectedDays(actualCompletedDays)}
+                      className={`px-2.5 py-1 rounded-lg font-bold text-xs transition-all cursor-pointer ${
+                        selectedDays === actualCompletedDays
+                          ? 'bg-[#0A192F] text-white shadow-xs'
+                          : 'bg-white border border-slate-300 text-slate-700 hover:bg-slate-100'
+                      }`}
+                    >
+                      {actualCompletedDays}D (My Progress)
+                    </button>
+                  )}
+
+                  <div className="flex items-center gap-1 pl-2 border-l border-slate-300">
+                    <label className="text-slate-500 font-semibold text-[11px]">Day:</label>
+                    <select
+                      value={selectedDays}
+                      onChange={(e) => setSelectedDays(Number(e.target.value))}
+                      className="bg-white border border-slate-300 rounded-md px-1.5 py-0.5 text-xs font-bold text-[#0A192F]"
+                    >
+                      {Array.from({ length: 15 }, (_, i) => i + 1).map((d) => (
+                        <option key={d} value={d}>
+                          Day {d}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
               </div>
 
-              {/* Header */}
-              <div className="text-center space-y-2 border-b-2 border-[#0A192F] pb-5 relative z-10">
-                <div className="inline-block px-4 py-1 rounded-full bg-[#0A192F] text-white font-mono text-[10px] sm:text-xs font-extrabold uppercase tracking-widest">
-                  Placement Readiness • Mentorship By Kapil • 10-Day Intensive Curriculum
-                </div>
-                <h1 className="text-2xl sm:text-4xl font-black tracking-tight uppercase font-serif-title text-[#0A192F] pt-1">
-                  Certificate of Technical Mastery
-                </h1>
-                <p className="text-xs sm:text-sm font-bold text-[#1E3A8A]">
-                  Powered by Kapil • 30% Conceptual Theory & 70% Practical IDE Execution (C, C++, Java, Python)
-                </p>
-              </div>
-
-              {/* Body */}
-              <div className="my-6 text-center space-y-3 relative z-10">
-                <p className="text-xs uppercase tracking-widest font-bold text-slate-500">
-                  This official credential is proudly presented to
-                </p>
-
-                <div className="text-2xl sm:text-4xl font-black text-[#0A192F] border-b-2 border-[#0A192F] inline-block px-8 pb-1">
-                  {effectiveUser.name}
+              <div className="rounded-2xl border-8 border-double border-[#0A192F] bg-white p-6 sm:p-10 shadow-lg relative overflow-hidden">
+                {/* Watermark */}
+                <div className="absolute inset-0 flex items-center justify-center opacity-[0.03] pointer-events-none select-none">
+                  <span className="text-7xl sm:text-9xl font-black tracking-widest text-[#0A192F]">
+                    KAPIL
+                  </span>
                 </div>
 
-                <div className="text-xs font-mono font-bold text-[#1E3A8A]">
-                  {effectiveUser.email}
+                {/* Header */}
+                <div className="text-center space-y-2 border-b-2 border-[#0A192F] pb-5 relative z-10">
+                  <div className="inline-block px-4 py-1 rounded-full bg-[#0A192F] text-white font-mono text-[10px] sm:text-xs font-extrabold uppercase tracking-widest">
+                    {milestone.headerPill}
+                  </div>
+                  <h1 className="text-2xl sm:text-3xl font-black tracking-tight uppercase font-serif-title text-[#0A192F] pt-1">
+                    {milestone.title}
+                  </h1>
+                  <p className="text-xs sm:text-sm font-bold text-[#1E3A8A]">
+                    {milestone.subtitle} across C, C++, Java & Python
+                  </p>
                 </div>
 
-                <p className="text-xs sm:text-sm text-slate-700 leading-relaxed max-w-2xl mx-auto pt-1">
-                  for completing the <strong className="text-[#0A192F]">10-Day Placement & Assessment Curriculum</strong> aligned with all <strong className="text-[#0A192F]">11 Core Syllabus Modules</strong> (Programming Fundamentals, Data Structures & Algorithms, Company-oriented Coding Lab, SQL & Database Systems, OOP, Operating Systems, Computer Networks, Software Engineering & Developer Tools, Development & Project Readiness, AI-assisted Software Development, and Technical Interview Preparation).
-                </p>
-              </div>
+                {/* Body */}
+                <div className="my-6 text-center space-y-3 relative z-10">
+                  <p className="text-xs uppercase tracking-widest font-bold text-slate-500">
+                    This official credential is proudly presented to
+                  </p>
 
-              {/* Footer: Sole Signatory Kapil */}
-              <div className="pt-6 border-t-2 border-[#0A192F] grid grid-cols-1 sm:grid-cols-3 gap-6 items-end relative z-10">
-                <div className="text-left space-y-1 text-xs">
-                  <div className="text-[10px] font-mono uppercase text-slate-500 font-bold">
-                    Date of Issuance
+                  <div className="text-2xl sm:text-4xl font-black text-[#0A192F] border-b-2 border-[#0A192F] inline-block px-8 pb-1">
+                    {effectiveUser.name}
                   </div>
-                  <div className="font-extrabold text-[#0A192F]">{issueDate}</div>
-                  <div className="text-[11px] font-mono text-[#1E3A8A] font-bold pt-1">
-                    ID: {certId}
+
+                  <div className="text-xs font-mono font-bold text-[#1E3A8A]">
+                    {effectiveUser.email}
                   </div>
-                  <div className="text-[11px] font-bold text-[#0A192F]">
-                    Verified Progress: {unlockedBadgesCount}/10 Badges • {progress.completedChallengeIds?.length || 10} Labs
-                  </div>
+
+                  <p className="text-xs sm:text-sm text-slate-700 leading-relaxed max-w-2xl mx-auto pt-1">
+                    {milestone.citation}
+                  </p>
                 </div>
 
-                <div className="flex flex-col items-center justify-center">
-                  <div className="w-20 h-20 rounded-full bg-[#0A192F] border-4 border-[#1E3A8A] text-white flex flex-col items-center justify-center p-2 shadow-md">
-                    <span className="text-[8px] font-mono uppercase text-[#BFDBFE] font-bold">
-                      PLACEMENT
-                    </span>
-                    <Award className="w-5 h-5 text-white my-0.5" />
-                    <span className="text-[10px] font-black tracking-wider">KAPIL</span>
+                {/* Footer: Sole Signatory Kapil */}
+                <div className="pt-6 border-t-2 border-[#0A192F] grid grid-cols-1 sm:grid-cols-3 gap-6 items-end relative z-10">
+                  <div className="text-left space-y-1 text-xs">
+                    <div className="text-[10px] font-mono uppercase text-slate-500 font-bold">
+                      Date of Issuance
+                    </div>
+                    <div className="font-extrabold text-[#0A192F]">{issueDate}</div>
+                    <div className="text-[11px] font-mono text-[#1E3A8A] font-bold pt-1">
+                      ID: {certId}
+                    </div>
+                    <div className="text-[11px] font-bold text-[#0A192F]">
+                      {milestone.progressSummary}
+                    </div>
                   </div>
-                </div>
 
-                <div className="text-right space-y-1">
-                  <div className="font-serif italic text-2xl font-bold text-[#1E3A8A] border-b-2 border-[#0A192F] inline-block px-4 pb-1">
-                    Mentor Kapil
+                  <div className="flex flex-col items-center justify-center">
+                    <div className="w-20 h-20 rounded-full bg-[#0A192F] border-4 border-[#1E3A8A] text-white flex flex-col items-center justify-center p-2 shadow-md">
+                      <span className="text-[8px] font-mono uppercase text-[#BFDBFE] font-bold">
+                        PLACEMENT
+                      </span>
+                      <Award className="w-5 h-5 text-white my-0.5" />
+                      <span className="text-[9px] font-black tracking-wider text-center">{milestone.sealSubtext}</span>
+                    </div>
                   </div>
-                  <div className="text-xs font-black text-[#0A192F] uppercase tracking-wider">
-                    PLACEMENT MENTOR – KAPIL
-                  </div>
-                  <div className="text-xs font-bold text-[#1E3A8A]">
-                    Placement Mentor (Independent Technical Mentor)
-                  </div>
-                  <div className="text-[11px] text-slate-600 font-medium">
-                    Placement Readiness Boot Camp
+
+                  <div className="text-right space-y-1">
+                    <div className="font-serif italic text-2xl font-bold text-[#1E3A8A] border-b-2 border-[#0A192F] inline-block px-4 pb-1">
+                      Mentor Kapil
+                    </div>
+                    <div className="text-xs font-black text-[#0A192F] uppercase tracking-wider">
+                      PLACEMENT MENTOR – KAPIL
+                    </div>
+                    <div className="text-xs font-bold text-[#1E3A8A]">
+                      Placement Mentor (Independent Technical Mentor)
+                    </div>
+                    <div className="text-[11px] text-slate-600 font-medium">
+                      Placement Readiness Boot Camp
+                    </div>
                   </div>
                 </div>
               </div>

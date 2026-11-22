@@ -87,10 +87,10 @@ export const BadgeGalleryModal: React.FC<BadgeGalleryModalProps> = ({
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <span className="px-2.5 py-0.5 rounded-full bg-[#1E3A8A] text-[#BFDBFE] font-mono text-xs font-bold">
-                PLACEMENT READINESS • MENTORSHIP BY KAPIL
+                15-DAY FAANG CURRICULUM • MENTORSHIP BY KAPIL
               </span>
               <span className="text-xs font-mono text-white font-extrabold">
-                {unlockedCount} / 10 Daily Badges Unlocked
+                {unlockedCount} / {badges.length || 15} Daily Badges Unlocked
               </span>
               {progress.systemDesignPassed && (
                 <span className="text-xs font-mono text-amber-300 font-extrabold">
@@ -127,6 +127,42 @@ export const BadgeGalleryModal: React.FC<BadgeGalleryModalProps> = ({
                 <strong>High-Resolution Credential Export & Live Preview:</strong> Every Badge is rendered on a crisp 1000×1000 high-resolution canvas with candidate personalization (<strong>{effectiveUser.displayName || effectiveUser.name || 'Placement Aspirant'}</strong>) signed solely by <strong>Placement Mentor – Kapil</strong> and downloadable in both <strong>PNG</strong> and <strong>PDF</strong> formats.
               </span>
             </div>
+          </div>
+
+          {/* Curriculum Milestones Ribbon */}
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+            {[
+              { milestone: 5, label: 'DSA Associate', required: 5 },
+              { milestone: 10, label: 'Core Graduate', required: 10 },
+              { milestone: 12, label: 'Systems Specialist', required: 12 },
+              { milestone: 15, label: 'FAANG Grandmaster', required: 15 },
+            ].map((m) => {
+              const reached = unlockedCount >= m.required;
+              return (
+                <div
+                  key={m.milestone}
+                  className={`rounded-xl border p-2.5 flex items-center gap-2.5 transition-all ${
+                    reached
+                      ? 'border-[#0A192F] bg-[#0A192F] text-white shadow-xs'
+                      : 'border-slate-200 bg-slate-50 text-slate-500'
+                  }`}
+                >
+                  <div
+                    className={`w-7 h-7 rounded-lg flex items-center justify-center font-black text-xs ${
+                      reached ? 'bg-amber-400 text-[#0A192F]' : 'bg-slate-200 text-slate-500'
+                    }`}
+                  >
+                    {m.milestone}D
+                  </div>
+                  <div className="min-w-0">
+                    <div className="text-[11px] font-bold truncate leading-tight">{m.label}</div>
+                    <div className="text-[10px] font-mono opacity-80">
+                      {reached ? 'Reached' : `${m.required - unlockedCount} more`}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

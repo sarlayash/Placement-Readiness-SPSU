@@ -1,6 +1,7 @@
 import { jsPDF } from 'jspdf';
 import { DailyBadge, GoogleUser, UserProgress } from '../types';
 import { generateOfficialCertificateId } from './storage';
+import { getCompletedDaysCount } from './dayLocking';
 
 /**
  * Safe multi-line text wrapper for HTML5 2D Canvas
@@ -77,7 +78,7 @@ export function renderBadgeCanvas(
 
   ctx.fillStyle = '#BFDBFE';
   ctx.font = '600 15px "JetBrains Mono", monospace';
-  ctx.fillText('10-DAY PLACEMENT & TECHNICAL ASSESSMENT ARCHITECTURE (30% THEORY | 70% PRACTICAL)', width / 2, 130);
+  ctx.fillText('15-DAY FAANG PLACEMENT & TECHNICAL ASSESSMENT ARCHITECTURE (30% THEORY | 70% PRACTICAL)', width / 2, 130);
 
   // Central Navy Blue Medallion Shield
   const centerX = width / 2;
@@ -105,7 +106,7 @@ export function renderBadgeCanvas(
   // Day Number Emblem inside Shield
   ctx.fillStyle = '#BFDBFE';
   ctx.font = '800 22px "JetBrains Mono", monospace';
-  ctx.fillText(`DAY ${badge.day} OF 10`, centerX, centerY - 45);
+  ctx.fillText(`DAY ${badge.day} OF 15`, centerX, centerY - 45);
 
   ctx.fillStyle = '#FFFFFF';
   ctx.font = '900 68px "Inter", sans-serif';
@@ -241,15 +242,117 @@ export function downloadBadgePDF(
   pdf.save(`Placement_Kapil_Day${badge.day}_Badge_${safeTitle}.pdf`);
 }
 
+export interface CertificateMilestoneDetails {
+  daysCompleted: number;
+  tierName: string;
+  headerPill: string;
+  title: string;
+  subtitle: string;
+  citation: string;
+  credentialId: string;
+  sealSubtext: string;
+  progressSummary: string;
+}
+
+/**
+ * Returns dynamic certificate milestone details based on completed days count (1..15)
+ */
+export function getCertificateMilestoneDetails(
+  daysCompleted: number,
+  totalBadgesUnlocked: number,
+  totalLabsSolved: number,
+  email: string
+): CertificateMilestoneDetails {
+  const cleanHash = Array.from((email || 'learner@placement.internal').toLowerCase())
+    .reduce((acc, char) => ((acc << 5) - acc + char.charCodeAt(0)) | 0, 0);
+  const absHex = Math.abs(cleanHash).toString(16).toUpperCase().padStart(6, '0');
+
+  if (daysCompleted >= 15) {
+    return {
+      daysCompleted: 15,
+      tierName: 'FAANG Grandmaster',
+      headerPill: 'PLACEMENT READINESS • MENTORSHIP BY KAPIL • 15-DAY FAANG MASTER CURRICULUM',
+      title: 'CERTIFICATE OF TECHNICAL GRANDMASTERY',
+      subtitle: 'FAANG Grandmaster & Placement Ready Principal Candidate • 30% Theory & 70% Practical IDE Execution',
+      citation:
+        'for successfully completing the 15-Day Advanced FAANG Placement & Software Engineering Assessment Curriculum covering all 16 Modules: (1) Programming Fundamentals, (2) Data Structures & Algorithms, (3) Company-oriented Coding Lab, (4) SQL & Database Systems, (5) Object-Oriented Programming, (6) Operating Systems, (7) Computer Networks, (8) Software Engineering & Developer Tools, (9) Development & Project Readiness, (10) AI-assisted Software Development, (11) Technical Interview Preparation, (12) Advanced DP & Distributed Scalability, (13) Concurrency & Cache Protocols, (14) Distributed Systems & High-Throughput Engines, (15) Cloud Infrastructure, and (16) Microservices & Real-Time Resiliency, with daily Pre-Assessments, Post-Assessments, and Hands-on IDE verification.',
+      credentialId: `KAPIL-15D-${absHex}`,
+      sealSubtext: '15D GRANDMASTER',
+      progressSummary: `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 15 Daily Badges Unlocked • ${totalLabsSolved} Practical Labs Solved`,
+    };
+  }
+
+  if (daysCompleted >= 12) {
+    return {
+      daysCompleted,
+      tierName: 'Advanced Systems Specialist',
+      headerPill: `PLACEMENT READINESS • MENTORSHIP BY KAPIL • ${daysCompleted}-DAY ADVANCED CURRICULUM`,
+      title: 'CERTIFICATE OF ADVANCED TECHNICAL EXCELLENCE',
+      subtitle: 'Advanced Systems & Algorithmic Optimization Specialist • 30% Theory & 70% Practical IDE Execution',
+      citation:
+        `for successfully completing ${daysCompleted} Days of the Advanced Placement & Software Engineering Assessment Curriculum covering 13+ Modules including Advanced Dynamic Programming, Graph Theory, System Architecture, and Concurrency, with daily Pre-Assessments, Post-Assessments, and Hands-on IDE verification.`,
+      credentialId: `KAPIL-${daysCompleted}D-${absHex}`,
+      sealSubtext: `${daysCompleted}D SPECIALIST`,
+      progressSummary: `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 15 Daily Badges Unlocked • ${totalLabsSolved} Practical Labs Solved`,
+    };
+  }
+
+  if (daysCompleted >= 10) {
+    return {
+      daysCompleted,
+      tierName: 'Full-Stack Systems Graduate',
+      headerPill: `PLACEMENT READINESS • MENTORSHIP BY KAPIL • ${daysCompleted}-DAY INTENSIVE CURRICULUM`,
+      title: 'CERTIFICATE OF TECHNICAL MASTERY',
+      subtitle: 'Full-Stack Systems & Algorithmic Engineering Graduate • 30% Theory & 70% Practical IDE Execution',
+      citation:
+        `for successfully completing the ${daysCompleted}-Day Placement & Software Engineering Assessment Curriculum covering the Core 11 Modules: (1) Programming Fundamentals, (2) Data Structures & Algorithms, (3) Company-oriented Coding Lab, (4) SQL & Database Systems, (5) Object-Oriented Programming, (6) Operating Systems, (7) Computer Networks, (8) Software Engineering & Developer Tools, (9) Development & Project Readiness, (10) AI-assisted Software Development, and (11) Technical Interview Preparation, with daily Pre-Assessments, Post-Assessments, and Hands-on IDE verification.`,
+      credentialId: `KAPIL-${daysCompleted}D-${absHex}`,
+      sealSubtext: `${daysCompleted}D GRADUATE`,
+      progressSummary: `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 15 Daily Badges Unlocked • ${totalLabsSolved} Practical Labs Solved`,
+    };
+  }
+
+  if (daysCompleted >= 5) {
+    return {
+      daysCompleted,
+      tierName: 'Systems Engineering Associate',
+      headerPill: `PLACEMENT READINESS • MENTORSHIP BY KAPIL • ${daysCompleted}-DAY INTERMEDIATE CURRICULUM`,
+      title: 'CERTIFICATE OF INTERMEDIATE TECHNICAL PROFICIENCY',
+      subtitle: 'Data Structures & Systems Engineering Associate • 30% Theory & 70% Practical IDE Execution',
+      citation:
+        `for successfully completing ${daysCompleted} Days of the Placement & Software Engineering Assessment Curriculum covering Core Programming Fundamentals, Data Structures & Algorithms, SQL & Database Systems, and Object-Oriented Architecture, with daily Pre-Assessments, Post-Assessments, and Hands-on IDE verification.`,
+      credentialId: `KAPIL-${daysCompleted}D-${absHex}`,
+      sealSubtext: `${daysCompleted}D ASSOCIATE`,
+      progressSummary: `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 15 Daily Badges Unlocked • ${totalLabsSolved} Practical Labs Solved`,
+    };
+  }
+
+  const effectiveDays = Math.max(1, daysCompleted);
+  return {
+    daysCompleted: effectiveDays,
+    tierName: 'Algorithmic Engineering Trainee',
+    headerPill: `PLACEMENT READINESS • MENTORSHIP BY KAPIL • ${effectiveDays}-DAY FOUNDATIONAL CURRICULUM`,
+    title: 'CERTIFICATE OF FOUNDATIONAL TECHNICAL PROFICIENCY',
+    subtitle: 'Foundational Algorithmic Engineering Trainee • 30% Theory & 70% Practical IDE Execution',
+    citation:
+      `for active participation and completion of ${effectiveDays} Day${effectiveDays > 1 ? 's' : ''} of the Intensive Placement Engineering Curriculum covering algorithmic problem solving, code traces, and hands-on IDE lab execution.`,
+    credentialId: `KAPIL-${effectiveDays}D-${absHex}`,
+    sealSubtext: `${effectiveDays}D TRAINEE`,
+    progressSummary: `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 15 Daily Badges Unlocked • ${totalLabsSolved} Practical Labs Solved`,
+  };
+}
+
 /**
  * Generates an uncropped 1920x1080 Navy Blue & White Certificate Canvas
  * Placement Mentorship By Kapil
  * Sole Signatory: Kapil (Zero fake people as signatories)
+ * Dynamically tailored based on days completed (1..15)
  */
 export function renderCertificateCanvas(
   user: GoogleUser,
   progress: UserProgress,
-  totalBadgesUnlocked: number
+  totalBadgesUnlocked: number,
+  overrideDaysCompleted?: number
 ): HTMLCanvasElement {
   const canvas = document.createElement('canvas');
   canvas.width = 1920;
@@ -259,6 +362,20 @@ export function renderCertificateCanvas(
 
   const width = canvas.width;
   const height = canvas.height;
+
+  // Determine completed days count
+  const actualDays = getCompletedDaysCount(progress, 15);
+  const effectiveDays = overrideDaysCompleted !== undefined
+    ? overrideDaysCompleted
+    : (actualDays > 0 ? actualDays : (totalBadgesUnlocked > 0 ? Math.min(15, totalBadgesUnlocked) : 15));
+
+  const totalLabsSolved = progress.completedChallengeIds?.length || 0;
+  const milestone = getCertificateMilestoneDetails(
+    effectiveDays,
+    totalBadgesUnlocked,
+    totalLabsSolved,
+    user.email
+  );
 
   // 1. Crisp White Background
   ctx.fillStyle = '#FFFFFF';
@@ -297,7 +414,7 @@ export function renderCertificateCanvas(
   ctx.restore();
 
   // 4. Top Navy Header Banner Pill
-  const pillW = 860;
+  const pillW = 940;
   const pillH = 52;
   const pillX = (width - pillW) / 2;
   const pillY = 105;
@@ -308,22 +425,18 @@ export function renderCertificateCanvas(
 
   ctx.fillStyle = '#FFFFFF';
   ctx.textAlign = 'center';
-  ctx.font = '800 20px "Inter", sans-serif';
-  ctx.fillText(
-    'PLACEMENT READINESS • MENTORSHIP BY KAPIL • 10-DAY INTENSIVE CURRICULUM',
-    width / 2,
-    pillY + 33
-  );
+  ctx.font = '800 19px "Inter", sans-serif';
+  ctx.fillText(milestone.headerPill, width / 2, pillY + 33);
 
   // 5. Certificate Main Heading
   ctx.fillStyle = '#0A192F';
-  ctx.font = '800 58px "Cinzel", Georgia, serif';
-  ctx.fillText('CERTIFICATE OF TECHNICAL MASTERY', width / 2, 235);
+  ctx.font = '800 56px "Cinzel", Georgia, serif';
+  ctx.fillText(milestone.title, width / 2, 235);
 
   ctx.fillStyle = '#1E3A8A';
-  ctx.font = '700 22px "Inter", sans-serif';
+  ctx.font = '700 21px "Inter", sans-serif';
   ctx.fillText(
-    'Powered by Kapil • 30% Conceptual Theory & 70% Practical IDE Execution across C, C++, Java & Python',
+    `${milestone.subtitle} across C, C++, Java & Python`,
     width / 2,
     280
   );
@@ -363,9 +476,7 @@ export function renderCertificateCanvas(
   // 7. Curriculum Citation Body
   ctx.fillStyle = '#1E293B';
   ctx.font = '500 22px "Inter", sans-serif';
-  const citation =
-    'for successfully completing the 10-Day Placement & Software Engineering Assessment Curriculum covering all 11 Core Modules: (1) Programming Fundamentals, (2) Data Structures & Algorithms, (3) Company-oriented Coding Lab, (4) SQL & Database Systems, (5) Object-Oriented Programming, (6) Operating Systems, (7) Computer Networks, (8) Software Engineering & Developer Tools, (9) Development & Project Readiness, (10) AI-assisted Software Development, and (11) Technical Interview Preparation, with daily Pre-Assessments, Post-Assessments, and Hands-on IDE verification.';
-  wrapCanvasText(ctx, citation, width / 2, 555, 1480, 36);
+  wrapCanvasText(ctx, milestone.citation, width / 2, 555, 1480, 36);
 
   // 8. Bottom Verification & Sole Signatory Section
   const dividerY = 760;
@@ -376,7 +487,7 @@ export function renderCertificateCanvas(
   ctx.lineTo(width - 130, dividerY);
   ctx.stroke();
 
-  const certId = progress.certificateId || generateOfficialCertificateId(user.email);
+  const certId = progress.certificateId || milestone.credentialId;
   const issueDate = progress.certificateIssuedAt
     ? new Date(progress.certificateIssuedAt).toLocaleDateString('en-IN', {
         day: 'numeric',
@@ -389,7 +500,7 @@ export function renderCertificateCanvas(
         year: 'numeric',
       });
 
-  // Left Column: Real User Audit Metrics (No fake stats)
+  // Left Column: Real User Audit Metrics
   ctx.textAlign = 'left';
   ctx.fillStyle = '#475569';
   ctx.font = '700 15px "Inter", sans-serif';
@@ -407,11 +518,7 @@ export function renderCertificateCanvas(
 
   ctx.fillStyle = '#0A192F';
   ctx.font = '700 16px "Inter", sans-serif';
-  ctx.fillText(
-    `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 10 Daily Badges Unlocked • ${progress.completedChallengeIds?.length || 0} Practical Labs Solved`,
-    140,
-    955
-  );
+  ctx.fillText(milestone.progressSummary, 140, 955);
 
   // Center Column: Official Navy Blue Seal
   const sealX = width / 2;
@@ -445,7 +552,7 @@ export function renderCertificateCanvas(
 
   ctx.fillStyle = '#93C5FD';
   ctx.font = '700 12px "JetBrains Mono", monospace';
-  ctx.fillText('VERIFIED SEAL', sealX, sealY + 32);
+  ctx.fillText(milestone.sealSubtext, sealX, sealY + 32);
 
   // Right Column: Sole Signatory — Placement Mentor Kapil (Independent Technical Mentor)
   ctx.textAlign = 'right';
@@ -481,9 +588,10 @@ export function renderCertificateCanvas(
 export function downloadCertificatePNG(
   user: GoogleUser,
   progress: UserProgress,
-  totalBadgesUnlocked: number
+  totalBadgesUnlocked: number,
+  overrideDaysCompleted?: number
 ): void {
-  const canvas = renderCertificateCanvas(user, progress, totalBadgesUnlocked);
+  const canvas = renderCertificateCanvas(user, progress, totalBadgesUnlocked, overrideDaysCompleted);
   const dataUrl = canvas.toDataURL('image/png', 1.0);
   const link = document.createElement('a');
   const safeName = user.name.replace(/[^a-zA-Z0-9]/g, '_');
@@ -500,9 +608,10 @@ export function downloadCertificatePNG(
 export function downloadCertificatePDF(
   user: GoogleUser,
   progress: UserProgress,
-  totalBadgesUnlocked: number
+  totalBadgesUnlocked: number,
+  overrideDaysCompleted?: number
 ): void {
-  const canvas = renderCertificateCanvas(user, progress, totalBadgesUnlocked);
+  const canvas = renderCertificateCanvas(user, progress, totalBadgesUnlocked, overrideDaysCompleted);
   const dataUrl = canvas.toDataURL('image/png', 1.0);
   const pdf = new jsPDF({
     orientation: 'landscape',

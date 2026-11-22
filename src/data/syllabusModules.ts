@@ -117,4 +117,31 @@ export const SYLLABUS_MODULES: CurriculumModule[] = [
       'Deconstruct complex exponential search spaces into subproblems, formulate multi-dimensional states, and reduce asymptotic runtimes using advanced DP optimizations.',
     alignedDay: 12,
   },
+  {
+    id: 14,
+    title: '14. Advanced Range Query Data Structures & String Algorithms',
+    coverage:
+      'Segment Trees with Lazy Propagation, Fenwick Trees / Binary Indexed Trees (BIT), Sparse Table RMQ, Knuth-Morris-Pratt (KMP) prefix automaton, Z-Algorithm, Bitwise XOR Tries, Suffix Arrays & LCP.',
+    learningOutcomes:
+      'Execute logarithmic point and range updates over dynamic streams, achieve O(1) static range minimum queries, and linearize complex string pattern matching under strict FAANG interview benchmarks.',
+    alignedDay: 13,
+  },
+  {
+    id: 15,
+    title: '15. Scalable Distributed Systems & Architecture (HLD/LLD)',
+    coverage:
+      'Consistent Hashing with Virtual Nodes, Token Bucket & Leaky Bucket Rate Limiting, Write-Ahead Logging (WAL) & LSM-Trees, Cache-Aside & Invalidation, Distributed Consensus (Raft / Paxos), Tunable Quorum (R + W > N) & PACELC.',
+    learningOutcomes:
+      'Architect resilient, partition-tolerant distributed backends, design burst-tolerant API rate limiters, eliminate cache stampedes, and implement storage durability engines used in DynamoDB, Cassandra, and Kafka.',
+    alignedDay: 14,
+  },
+  {
+    id: 16,
+    title: '16. Real-World Technical Interview Simulation, Machine Coding & Comprehensive Placement Grand Finale',
+    coverage:
+      '90-minute Machine Coding (SOLID, Design Patterns, Parking Lot), Multi-Threaded Concurrency (Reader-Writer Locks, Producer-Consumer, Condition Variables, Treiber CAS Lock-Free Stack), Expiring In-Memory Cache with TTL & Eviction, Distributed Transactions (2PC & Saga Orchestration), Monotonic Fencing Tokens, and FAANG Technical Interview Synthesis.',
+    learningOutcomes:
+      'Excel in high-stakes 90-minute Machine Coding and Concurrency rounds, write thread-safe and lock-free data structures, design robust distributed transaction handlers, and synthesize complete FAANG technical interview readiness.',
+    alignedDay: 15,
+  },
 ];

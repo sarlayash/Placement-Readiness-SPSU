@@ -178,8 +178,8 @@ try {
     assert(typeof item.correctIndex === 'number' && item.correctIndex >= 0 && item.correctIndex < item.options.length, `DSA Scenario[#${idx+1}]: invalid correctIndex`);
   });
 
-  // Days 1 through 12 pre & post assessments and challenges
-  for (let day = 1; day <= 12; day++) {
+  // Days 1 through 15 pre & post assessments and challenges
+  for (let day = 1; day <= 15; day++) {
     const assessFile = path.join(root, `src/data/day${day}Assessments50.ts`);
     if (fs.existsSync(assessFile)) {
       const preName = `DAY_${day}_PRE_ASSESSMENT_50`;

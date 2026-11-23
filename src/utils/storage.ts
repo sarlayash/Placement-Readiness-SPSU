@@ -120,7 +120,7 @@ export function saveStoredProgress(progress: UserProgress, userEmail?: string): 
   }
 }
 
-export function generateOfficialCertificateId(email: string, days: number = 15): string {
+export function generateOfficialCertificateId(email: string, days: number = 16): string {
   const cleanHash = Array.from(email.toLowerCase())
     .reduce((acc, char) => ((acc << 5) - acc + char.charCodeAt(0)) | 0, 0);
   const absHex = Math.abs(cleanHash).toString(16).toUpperCase().padStart(6, '0');

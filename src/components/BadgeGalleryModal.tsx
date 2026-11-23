@@ -87,10 +87,10 @@ export const BadgeGalleryModal: React.FC<BadgeGalleryModalProps> = ({
           <div>
             <div className="flex items-center gap-2 flex-wrap">
               <span className="px-2.5 py-0.5 rounded-full bg-[#1E3A8A] text-[#BFDBFE] font-mono text-xs font-bold">
-                15-DAY FAANG CURRICULUM • MENTORSHIP BY KAPIL
+                16-DAY FAANG CURRICULUM • MENTORSHIP BY KAPIL
               </span>
               <span className="text-xs font-mono text-white font-extrabold">
-                {unlockedCount} / {badges.length || 15} Daily Badges Unlocked
+                {unlockedCount} / {badges.length || 16} Daily Badges Unlocked
               </span>
               {progress.systemDesignPassed && (
                 <span className="text-xs font-mono text-amber-300 font-extrabold">
@@ -135,7 +135,7 @@ export const BadgeGalleryModal: React.FC<BadgeGalleryModalProps> = ({
               { milestone: 5, label: 'DSA Associate', required: 5 },
               { milestone: 10, label: 'Core Graduate', required: 10 },
               { milestone: 12, label: 'Systems Specialist', required: 12 },
-              { milestone: 15, label: 'FAANG Grandmaster', required: 15 },
+              { milestone: 16, label: 'FAANG Grandmaster', required: 16 },
             ].map((m) => {
               const reached = unlockedCount >= m.required;
               return (

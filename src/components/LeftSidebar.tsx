@@ -85,7 +85,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
                 Day Navigation
               </div>
               <div className="text-[10px] text-[#93C5FD] truncate font-medium">
-                15-Day FAANG Pathway
+                16-Day FAANG Pathway
               </div>
             </div>
           </div>
@@ -122,7 +122,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
               ? 'bg-white text-[#0A192F] shadow-sm font-extrabold'
               : 'text-[#BFDBFE] hover:bg-[#112240] hover:text-white'
           }`}
-          title="Complete 15-Day Pathway Planner Overview"
+          title="Complete 16-Day Pathway Planner Overview"
         >
           <div
             className={`w-8 h-8 rounded-lg flex items-center justify-center shrink-0 ${
@@ -135,7 +135,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
           </div>
           {!isCollapsed && (
             <div className="truncate">
-              <div className="truncate">15-Day Planner</div>
+              <div className="truncate">16-Day Planner</div>
               <div
                 className={`text-[10px] truncate ${
                   activeView === 'planner' ? 'text-slate-600' : 'text-[#93C5FD]'

@@ -78,7 +78,7 @@ export function renderBadgeCanvas(
 
   ctx.fillStyle = '#BFDBFE';
   ctx.font = '600 15px "JetBrains Mono", monospace';
-  ctx.fillText('15-DAY FAANG PLACEMENT & TECHNICAL ASSESSMENT ARCHITECTURE (30% THEORY | 70% PRACTICAL)', width / 2, 130);
+  ctx.fillText('16-DAY FAANG PLACEMENT & TECHNICAL ASSESSMENT ARCHITECTURE (30% THEORY | 70% PRACTICAL)', width / 2, 130);
 
   // Central Navy Blue Medallion Shield
   const centerX = width / 2;
@@ -106,7 +106,7 @@ export function renderBadgeCanvas(
   // Day Number Emblem inside Shield
   ctx.fillStyle = '#BFDBFE';
   ctx.font = '800 22px "JetBrains Mono", monospace';
-  ctx.fillText(`DAY ${badge.day} OF 15`, centerX, centerY - 45);
+  ctx.fillText(`DAY ${badge.day} OF 16`, centerX, centerY - 45);
 
   ctx.fillStyle = '#FFFFFF';
   ctx.font = '900 68px "Inter", sans-serif';
@@ -255,7 +255,7 @@ export interface CertificateMilestoneDetails {
 }
 
 /**
- * Returns dynamic certificate milestone details based on completed days count (1..15)
+ * Returns dynamic certificate milestone details based on completed days count (1..16)
  */
 export function getCertificateMilestoneDetails(
   daysCompleted: number,
@@ -267,18 +267,18 @@ export function getCertificateMilestoneDetails(
     .reduce((acc, char) => ((acc << 5) - acc + char.charCodeAt(0)) | 0, 0);
   const absHex = Math.abs(cleanHash).toString(16).toUpperCase().padStart(6, '0');
 
-  if (daysCompleted >= 15) {
+  if (daysCompleted >= 16) {
     return {
-      daysCompleted: 15,
+      daysCompleted: 16,
       tierName: 'FAANG Grandmaster',
-      headerPill: 'PLACEMENT READINESS • MENTORSHIP BY KAPIL • 15-DAY FAANG MASTER CURRICULUM',
+      headerPill: 'PLACEMENT READINESS • MENTORSHIP BY KAPIL • 16-DAY FAANG MASTER CURRICULUM',
       title: 'CERTIFICATE OF TECHNICAL GRANDMASTERY',
-      subtitle: 'FAANG Grandmaster & Placement Ready Principal Candidate • 30% Theory & 70% Practical IDE Execution',
+      subtitle: 'FAANG Grandmaster & Principal Infrastructure Architect • 30% Theory & 70% Practical IDE Execution',
       citation:
-        'for successfully completing the 15-Day Advanced FAANG Placement & Software Engineering Assessment Curriculum covering all 16 Modules: (1) Programming Fundamentals, (2) Data Structures & Algorithms, (3) Company-oriented Coding Lab, (4) SQL & Database Systems, (5) Object-Oriented Programming, (6) Operating Systems, (7) Computer Networks, (8) Software Engineering & Developer Tools, (9) Development & Project Readiness, (10) AI-assisted Software Development, (11) Technical Interview Preparation, (12) Advanced DP & Distributed Scalability, (13) Concurrency & Cache Protocols, (14) Distributed Systems & High-Throughput Engines, (15) Cloud Infrastructure, and (16) Microservices & Real-Time Resiliency, with daily Pre-Assessments, Post-Assessments, and Hands-on IDE verification.',
-      credentialId: `KAPIL-15D-${absHex}`,
-      sealSubtext: '15D GRANDMASTER',
-      progressSummary: `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 15 Daily Badges Unlocked • ${totalLabsSolved} Practical Labs Solved`,
+        'for successfully completing the 16-Day Advanced FAANG Placement & Software Engineering Assessment Curriculum covering all 17 Modules: (1) Programming Fundamentals, (2) Data Structures & Algorithms, (3) Company-oriented Coding Lab, (4) SQL & Database Systems, (5) Object-Oriented Programming, (6) Operating Systems, (7) Computer Networks, (8) Software Engineering & Developer Tools, (9) Development & Project Readiness, (10) AI-assisted Software Development, (11) Technical Interview Preparation, (12) Advanced Graph Theory & Network Flow, (13) Hard Dynamic Programming & State Optimization, (14) Advanced Range Queries & String Automata, (15) Scalable Distributed Systems & Machine Coding, (16) Real-World Technical Interview Simulation & Concurrency, and (17) Enterprise Real-Time Event Streaming, Vector Search & AI/LLM Infra Engine Architecture, with daily Pre-Assessments, Post-Assessments, and Hands-on IDE verification.',
+      credentialId: `KAPIL-16D-${absHex}`,
+      sealSubtext: '16D GRANDMASTER',
+      progressSummary: `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 16 Daily Badges Unlocked • ${totalLabsSolved} Practical Labs Solved`,
     };
   }
 
@@ -293,7 +293,7 @@ export function getCertificateMilestoneDetails(
         `for successfully completing ${daysCompleted} Days of the Advanced Placement & Software Engineering Assessment Curriculum covering 13+ Modules including Advanced Dynamic Programming, Graph Theory, System Architecture, and Concurrency, with daily Pre-Assessments, Post-Assessments, and Hands-on IDE verification.`,
       credentialId: `KAPIL-${daysCompleted}D-${absHex}`,
       sealSubtext: `${daysCompleted}D SPECIALIST`,
-      progressSummary: `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 15 Daily Badges Unlocked • ${totalLabsSolved} Practical Labs Solved`,
+      progressSummary: `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 16 Daily Badges Unlocked • ${totalLabsSolved} Practical Labs Solved`,
     };
   }
 
@@ -308,7 +308,7 @@ export function getCertificateMilestoneDetails(
         `for successfully completing the ${daysCompleted}-Day Placement & Software Engineering Assessment Curriculum covering the Core 11 Modules: (1) Programming Fundamentals, (2) Data Structures & Algorithms, (3) Company-oriented Coding Lab, (4) SQL & Database Systems, (5) Object-Oriented Programming, (6) Operating Systems, (7) Computer Networks, (8) Software Engineering & Developer Tools, (9) Development & Project Readiness, (10) AI-assisted Software Development, and (11) Technical Interview Preparation, with daily Pre-Assessments, Post-Assessments, and Hands-on IDE verification.`,
       credentialId: `KAPIL-${daysCompleted}D-${absHex}`,
       sealSubtext: `${daysCompleted}D GRADUATE`,
-      progressSummary: `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 15 Daily Badges Unlocked • ${totalLabsSolved} Practical Labs Solved`,
+      progressSummary: `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 16 Daily Badges Unlocked • ${totalLabsSolved} Practical Labs Solved`,
     };
   }
 
@@ -323,7 +323,7 @@ export function getCertificateMilestoneDetails(
         `for successfully completing ${daysCompleted} Days of the Placement & Software Engineering Assessment Curriculum covering Core Programming Fundamentals, Data Structures & Algorithms, SQL & Database Systems, and Object-Oriented Architecture, with daily Pre-Assessments, Post-Assessments, and Hands-on IDE verification.`,
       credentialId: `KAPIL-${daysCompleted}D-${absHex}`,
       sealSubtext: `${daysCompleted}D ASSOCIATE`,
-      progressSummary: `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 15 Daily Badges Unlocked • ${totalLabsSolved} Practical Labs Solved`,
+      progressSummary: `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 16 Daily Badges Unlocked • ${totalLabsSolved} Practical Labs Solved`,
     };
   }
 
@@ -338,7 +338,7 @@ export function getCertificateMilestoneDetails(
       `for active participation and completion of ${effectiveDays} Day${effectiveDays > 1 ? 's' : ''} of the Intensive Placement Engineering Curriculum covering algorithmic problem solving, code traces, and hands-on IDE lab execution.`,
     credentialId: `KAPIL-${effectiveDays}D-${absHex}`,
     sealSubtext: `${effectiveDays}D TRAINEE`,
-    progressSummary: `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 15 Daily Badges Unlocked • ${totalLabsSolved} Practical Labs Solved`,
+    progressSummary: `VERIFIED PROGRESS: ${totalBadgesUnlocked} / 16 Daily Badges Unlocked • ${totalLabsSolved} Practical Labs Solved`,
   };
 }
 
@@ -346,7 +346,7 @@ export function getCertificateMilestoneDetails(
  * Generates an uncropped 1920x1080 Navy Blue & White Certificate Canvas
  * Placement Mentorship By Kapil
  * Sole Signatory: Kapil (Zero fake people as signatories)
- * Dynamically tailored based on days completed (1..15)
+ * Dynamically tailored based on days completed (1..16)
  */
 export function renderCertificateCanvas(
   user: GoogleUser,
@@ -364,10 +364,10 @@ export function renderCertificateCanvas(
   const height = canvas.height;
 
   // Determine completed days count
-  const actualDays = getCompletedDaysCount(progress, 15);
+  const actualDays = getCompletedDaysCount(progress, 16);
   const effectiveDays = overrideDaysCompleted !== undefined
     ? overrideDaysCompleted
-    : (actualDays > 0 ? actualDays : (totalBadgesUnlocked > 0 ? Math.min(15, totalBadgesUnlocked) : 15));
+    : (actualDays > 0 ? actualDays : (totalBadgesUnlocked > 0 ? Math.min(16, totalBadgesUnlocked) : 16));
 
   const totalLabsSolved = progress.completedChallengeIds?.length || 0;
   const milestone = getCertificateMilestoneDetails(

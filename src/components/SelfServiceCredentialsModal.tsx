@@ -76,9 +76,9 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
   const [demoCandidateName, setDemoCandidateName] = useState<string>('Placement Aspirant');
 
   // Milestone Days Selector for Tiered Certificate
-  const actualCompletedDays = getCompletedDaysCount(progress, 15);
+  const actualCompletedDays = getCompletedDaysCount(progress, 16);
   const [selectedCertMilestoneDays, setSelectedCertMilestoneDays] = useState<number>(
-    actualCompletedDays > 0 ? actualCompletedDays : 15
+    actualCompletedDays > 0 ? actualCompletedDays : 16
   );
 
   // Interactive Certificate preview selector
@@ -132,7 +132,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
       canvas = renderCertificateCanvas(
         learnerUser,
         progress,
-        unlockedBadgesCount || (actualCompletedDays > 0 ? actualCompletedDays : 15),
+        unlockedBadgesCount || (actualCompletedDays > 0 ? actualCompletedDays : 16),
         selectedCertMilestoneDays
       );
     }
@@ -1165,7 +1165,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                           : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                       }`}
                     >
-                      15-Day Tiered Curriculum
+                      16-Day Tiered Curriculum
                     </button>
 
                     <button
@@ -1201,13 +1201,13 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                       <Sparkles className="w-4 h-4 text-[#1E3A8A]" />
                       <span className="font-bold text-[#0A192F]">Curriculum Milestone Tier:</span>
                       <span className="text-slate-600">
-                        (Actual completed: <strong>{actualCompletedDays} of 15 Days</strong>)
+                        (Actual completed: <strong>{actualCompletedDays} of 16 Days</strong>)
                       </span>
                     </div>
 
                     <div className="flex items-center gap-1.5 flex-wrap">
                       {[
-                        { days: 15, label: '15D (FAANG Grandmaster)' },
+                        { days: 16, label: '16D (FAANG Grandmaster)' },
                         { days: 12, label: '12D (Advanced)' },
                         { days: 10, label: '10D (Core Graduate)' },
                         { days: 5, label: '5D (DSA Associate)' },
@@ -1226,7 +1226,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                         </button>
                       ))}
 
-                      {actualCompletedDays > 0 && ![15, 12, 10, 5].includes(actualCompletedDays) && (
+                      {actualCompletedDays > 0 && ![16, 12, 10, 5].includes(actualCompletedDays) && (
                         <button
                           type="button"
                           onClick={() => setSelectedCertMilestoneDays(actualCompletedDays)}
@@ -1247,7 +1247,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                           onChange={(e) => setSelectedCertMilestoneDays(Number(e.target.value))}
                           className="bg-white border border-slate-300 rounded-md px-1.5 py-0.5 text-xs font-bold text-[#0A192F]"
                         >
-                          {Array.from({ length: 15 }, (_, i) => i + 1).map((d) => (
+                          {Array.from({ length: 16 }, (_, i) => i + 1).map((d) => (
                             <option key={d} value={d}>
                               Day {d}
                             </option>
@@ -1292,7 +1292,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                           downloadCertificatePNG(
                             learnerUser,
                             progress,
-                            unlockedBadgesCount || (actualCompletedDays > 0 ? actualCompletedDays : 15),
+                            unlockedBadgesCount || (actualCompletedDays > 0 ? actualCompletedDays : 16),
                             selectedCertMilestoneDays
                           );
                         }
@@ -1324,7 +1324,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                           downloadCertificatePDF(
                             learnerUser,
                             progress,
-                            unlockedBadgesCount || (actualCompletedDays > 0 ? actualCompletedDays : 15),
+                            unlockedBadgesCount || (actualCompletedDays > 0 ? actualCompletedDays : 16),
                             selectedCertMilestoneDays
                           );
                         }
@@ -1368,7 +1368,7 @@ export const SelfServiceCredentialsModal: React.FC<SelfServiceCredentialsModalPr
                           : 'bg-slate-100 text-slate-700 hover:bg-slate-200'
                       }`}
                     >
-                      15 Daily Badges
+                      16 Daily Badges
                     </button>
 
                     <button

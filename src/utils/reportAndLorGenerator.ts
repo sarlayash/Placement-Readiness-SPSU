@@ -86,9 +86,9 @@ export function getPersonalizedLearnerProfile(
   const labChallenges = (progress.completedChallengeIds && progress.completedChallengeIds.length > 0)
     ? progress.completedChallengeIds.length
     : 24;
-  const actualDays = getCompletedDaysCount(progress, 15);
-  const badgesCount = Object.keys(progress.unlockedBadges || {}).length || (actualDays > 0 ? actualDays : 15);
-  const completedDaysCount = actualDays > 0 ? actualDays : (badgesCount > 0 ? badgesCount : 15);
+  const actualDays = getCompletedDaysCount(progress, 16);
+  const badgesCount = Object.keys(progress.unlockedBadges || {}).length || (actualDays > 0 ? actualDays : 16);
+  const completedDaysCount = actualDays > 0 ? actualDays : (badgesCount > 0 ? badgesCount : 16);
 
   // Day 1 to 10 Pre & Post Averages
   const preScoresObj = progress.preAssessmentScores || {};
@@ -604,13 +604,13 @@ export function download360DegreeReportPDF(
   doc.setTextColor(255, 255, 255);
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(11);
-  doc.text('15-DAY DAY-BY-DAY AUDIT & VERIFIED ENDORSEMENT', pageWidth / 2, 12, { align: 'center' });
+  doc.text('16-DAY DAY-BY-DAY AUDIT & VERIFIED ENDORSEMENT', pageWidth / 2, 12, { align: 'center' });
 
   // Table Title
   doc.setFont('helvetica', 'bold');
   doc.setFontSize(9.5);
   doc.setTextColor(10, 25, 47);
-  doc.text('5. DAY-BY-DAY 15-DAY ASSESSMENT SCORES & 80% PASS BENCHMARK AUDIT', 14, 28);
+  doc.text('5. DAY-BY-DAY 16-DAY ASSESSMENT SCORES & 80% PASS BENCHMARK AUDIT', 14, 28);
 
   // Table Header
   let tableY = 32;
@@ -628,11 +628,11 @@ export function download360DegreeReportPDF(
 
   tableY += 6.5;
 
-  // Render Day 1 to 15 Rows
+  // Render Day 1 to 16 Rows
   COMPLETE_10_DAY_PLAN.forEach((d, idx) => {
     const isEven = idx % 2 === 0;
     doc.setFillColor(isEven ? 255 : 248, isEven ? 255 : 250, isEven ? 255 : 252);
-    doc.rect(14, tableY, pageWidth - 28, 5.2, 'F');
+    doc.rect(14, tableY, pageWidth - 28, 5.0, 'F');
 
     const pre = progress.preAssessmentScores?.[d.day];
     const post = progress.postAssessmentScores?.[d.day];
@@ -642,23 +642,23 @@ export function download360DegreeReportPDF(
     doc.setFont('helvetica', 'bold');
     doc.setFontSize(6.8);
     doc.setTextColor(10, 25, 47);
-    doc.text(`Day ${d.day}`, 17, tableY + 3.8);
+    doc.text(`Day ${d.day}`, 17, tableY + 3.6);
 
     doc.setFont('helvetica', 'normal');
     doc.setTextColor(51, 65, 85);
     const shortTitle = d.title.length > 40 ? d.title.substring(0, 40) + '...' : d.title;
-    doc.text(shortTitle, 34, tableY + 3.8);
+    doc.text(shortTitle, 34, tableY + 3.6);
 
     doc.setFont('helvetica', 'bold');
     doc.setTextColor(30, 58, 138);
-    doc.text(preText, 112, tableY + 3.8);
-    doc.text(postText, 142, tableY + 3.8);
+    doc.text(preText, 112, tableY + 3.6);
+    doc.text(postText, 142, tableY + 3.6);
 
     doc.setTextColor(16, 185, 129);
     // Use clean ASCII representation to avoid "e80% garble
-    doc.text('PASS (>=80%)', 172, tableY + 3.8);
+    doc.text('PASS (>=80%)', 172, tableY + 3.6);
 
-    tableY += 5.2;
+    tableY += 5.0;
   });
 
   tableY += 4;
@@ -962,7 +962,7 @@ export function downloadBadgeCardImage(
 
   ctx.fillStyle = '#FFFFFF';
   ctx.font = 'bold 22px Arial';
-  ctx.fillText('15-DAY FAANG PLACEMENT READINESS EXCELLENCE BADGE', 400, 105);
+  ctx.fillText('16-DAY FAANG PLACEMENT READINESS EXCELLENCE BADGE', 400, 105);
 
   // Star Emblem (ASCII Stars for 100% canvas stability)
   ctx.fillStyle = '#F59E0B';
@@ -999,7 +999,7 @@ export function downloadBadgeCardImage(
   // Footer
   ctx.fillStyle = '#94A3B8';
   ctx.font = 'normal 13px Arial';
-  ctx.fillText('Placement Mentor – Kapil (Independent Entity) • 15-Day FAANG Placement Boot Camp', 400, 435);
+  ctx.fillText('Placement Mentor – Kapil (Independent Entity) • 16-Day FAANG Placement Boot Camp', 400, 435);
 
   // Trigger Download
   const link = document.createElement('a');

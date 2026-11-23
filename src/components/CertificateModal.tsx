@@ -37,14 +37,14 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
     signedInAt: new Date().toISOString(),
   };
 
-  const actualCompletedDays = getCompletedDaysCount(progress, 15);
+  const actualCompletedDays = getCompletedDaysCount(progress, 16);
   const [selectedDays, setSelectedDays] = useState<number>(
-    actualCompletedDays > 0 ? actualCompletedDays : 15
+    actualCompletedDays > 0 ? actualCompletedDays : 16
   );
 
   const unlockedBadgesCount =
     Object.keys(progress.unlockedBadges || {}).length ||
-    (actualCompletedDays > 0 ? actualCompletedDays : 15);
+    (actualCompletedDays > 0 ? actualCompletedDays : 16);
   const totalLabs = progress.completedChallengeIds?.length || 0;
 
   const milestone = getCertificateMilestoneDetails(
@@ -56,7 +56,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
 
   const certId = effectiveUser
     ? progress.certificateId || milestone.credentialId
-    : 'KAPIL-15D-VERIFIED';
+    : 'KAPIL-16D-VERIFIED';
 
   const systemDesignCertId = `SD-ARCH-${Math.abs(effectiveUser.email.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase()}-2026`;
   const interviewReadinessCertId = `IR-SPEC-${Math.abs(effectiveUser.email.split('').reduce((a, b) => ((a << 5) - a) + b.charCodeAt(0), 0)).toString(16).toUpperCase()}-2026`;
@@ -244,7 +244,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
             }`}
           >
             <Award className="w-3.5 h-3.5" />
-            <span>15-Day Curriculum Certificate (Tiered by Days)</span>
+            <span>16-Day Curriculum Certificate (Tiered by Days)</span>
           </button>
 
           <button
@@ -284,13 +284,13 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                   <Sparkles className="w-4 h-4 text-[#1E3A8A]" />
                   <span className="font-bold text-[#0A192F]">Curriculum Milestone Tier:</span>
                   <span className="text-slate-600">
-                    (Actual completed: <strong>{actualCompletedDays} of 15 Days</strong>)
+                    (Actual completed: <strong>{actualCompletedDays} of 16 Days</strong>)
                   </span>
                 </div>
 
                 <div className="flex items-center gap-1.5 flex-wrap">
                   {[
-                    { days: 15, label: '15D (FAANG Grandmaster)' },
+                    { days: 16, label: '16D (FAANG Grandmaster)' },
                     { days: 12, label: '12D (Advanced)' },
                     { days: 10, label: '10D (Core Graduate)' },
                     { days: 5, label: '5D (DSA Associate)' },
@@ -309,7 +309,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                     </button>
                   ))}
 
-                  {actualCompletedDays > 0 && ![15, 12, 10, 5].includes(actualCompletedDays) && (
+                  {actualCompletedDays > 0 && ![16, 12, 10, 5].includes(actualCompletedDays) && (
                     <button
                       type="button"
                       onClick={() => setSelectedDays(actualCompletedDays)}
@@ -330,7 +330,7 @@ export const CertificateModal: React.FC<CertificateModalProps> = ({
                       onChange={(e) => setSelectedDays(Number(e.target.value))}
                       className="bg-white border border-slate-300 rounded-md px-1.5 py-0.5 text-xs font-bold text-[#0A192F]"
                     >
-                      {Array.from({ length: 15 }, (_, i) => i + 1).map((d) => (
+                      {Array.from({ length: 16 }, (_, i) => i + 1).map((d) => (
                         <option key={d} value={d}>
                           Day {d}
                         </option>

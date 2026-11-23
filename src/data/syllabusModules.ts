@@ -144,4 +144,13 @@ export const SYLLABUS_MODULES: CurriculumModule[] = [
       'Excel in high-stakes 90-minute Machine Coding and Concurrency rounds, write thread-safe and lock-free data structures, design robust distributed transaction handlers, and synthesize complete FAANG technical interview readiness.',
     alignedDay: 15,
   },
+  {
+    id: 17,
+    title: '17. Enterprise Real-Time Event Streaming, Vector Search & AI/LLM Infra Engine Architecture',
+    coverage:
+      'Distributed Commit Logs (Kafka Architecture, Monotonic Offsets, Zero-Copy sendfile), Vector Embeddings & Approximate Nearest Neighbor Search (Cosine Similarity, Euclidean Distance, HNSW Graphs for LLM/RAG Retrieval), LSM-Trees (MemTable, WAL Durability, SSTable Multi-Way Compaction Merge, Bloom Filter Pruning), and Real-Time Event-Time Stream Processing (Tumbling/Sliding Windows, Watermark Latency Bounds, Exactly-Once Semantics EOS).',
+    learningOutcomes:
+      'Architect and implement mission-critical real-time event streaming systems, perform approximate nearest neighbor vector searches for generative AI applications, build durable write-heavy storage engines using LSM-trees, and process out-of-order event streams with watermarks.',
+    alignedDay: 16,
+  },
 ];

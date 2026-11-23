@@ -124,7 +124,7 @@ export function formatDayCountdown(totalSeconds: number): {
 /**
  * Calculates the total number of completed days (1..maxDays) for a learner.
  */
-export function getCompletedDaysCount(progress?: UserProgress | null, maxDays: number = 15): number {
+export function getCompletedDaysCount(progress?: UserProgress | null, maxDays: number = 16): number {
   if (!progress) return 0;
   let count = 0;
   for (let d = 1; d <= maxDays; d++) {

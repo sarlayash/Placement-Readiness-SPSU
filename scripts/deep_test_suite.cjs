@@ -178,8 +178,8 @@ try {
     assert(typeof item.correctIndex === 'number' && item.correctIndex >= 0 && item.correctIndex < item.options.length, `DSA Scenario[#${idx+1}]: invalid correctIndex`);
   });
 
-  // Days 1 through 15 pre & post assessments and challenges
-  for (let day = 1; day <= 15; day++) {
+  // Days 1 through 16 pre & post assessments and challenges
+  for (let day = 1; day <= 16; day++) {
     const assessFile = path.join(root, `src/data/day${day}Assessments50.ts`);
     if (fs.existsSync(assessFile)) {
       const preName = `DAY_${day}_PRE_ASSESSMENT_50`;
@@ -386,14 +386,14 @@ try {
   const dayLockingCode = fs.readFileSync(path.join(root, 'src/utils/dayLocking.ts'), 'utf8');
   assert(dayLockingCode.includes('getCompletedDaysCount'), 'dayLocking.ts missing getCompletedDaysCount');
 
-  // Simulate mock learners with various completion states (15, 12, 10, 5, 0 days)
+  // Simulate mock learners with various completion states (16, 12, 10, 5, 0 days)
   const mockScenarios = [
     {
-      days: 15,
+      days: 16,
       expectedTier: 'FAANG Grandmaster',
       expectedTitle: 'CERTIFICATE OF TECHNICAL GRANDMASTERY',
-      expectedSeal: '15D GRANDMASTER',
-      expectedPrefix: 'KAPIL-15D-'
+      expectedSeal: '16D GRANDMASTER',
+      expectedPrefix: 'KAPIL-16D-'
     },
     {
       days: 12,
@@ -430,13 +430,13 @@ try {
       .reduce((acc, char) => ((acc << 5) - acc + char.charCodeAt(0)) | 0, 0);
     const absHex = Math.abs(cleanHash).toString(16).toUpperCase().padStart(6, '0');
 
-    if (daysCompleted >= 15) {
+    if (daysCompleted >= 16) {
       return {
-        daysCompleted: 15,
+        daysCompleted: 16,
         tierName: 'FAANG Grandmaster',
         title: 'CERTIFICATE OF TECHNICAL GRANDMASTERY',
-        credentialId: `KAPIL-15D-${absHex}`,
-        sealSubtext: '15D GRANDMASTER'
+        credentialId: `KAPIL-16D-${absHex}`,
+        sealSubtext: '16D GRANDMASTER'
       };
     }
     if (daysCompleted >= 12) {
@@ -485,14 +485,18 @@ try {
     assert(res.credentialId.startsWith(scenario.expectedPrefix), `Scenario ${scenario.days}D: expected ID to start with ${scenario.expectedPrefix}, got ${res.credentialId}`);
   });
 
-  // Verify Day 1..15 Badges are present in curriculum
+  // Verify Day 1..16 Badges are present in curriculum
   const days13to15File = fs.readFileSync(path.join(root, 'src/data/days13to15.ts'), 'utf8');
   assert(days13to15File.includes('DAYS_13_TO_15'), 'days13to15.ts missing DAYS_13_TO_15');
   assert(days13to15File.includes('day: 13'), 'days13to15.ts missing day 13');
   assert(days13to15File.includes('day: 14'), 'days13to15.ts missing day 14');
   assert(days13to15File.includes('day: 15'), 'days13to15.ts missing day 15');
 
-  console.log('✅ Dynamic certificate tier logic and mock user scenarios (15, 12, 10, 5, 0 days) verified.');
+  const day16PlanFile = fs.readFileSync(path.join(root, 'src/data/day16Plan.ts'), 'utf8');
+  assert(day16PlanFile.includes('DAY_16_PLAN'), 'day16Plan.ts missing DAY_16_PLAN');
+  assert(day16PlanFile.includes('day: 16'), 'day16Plan.ts missing day: 16');
+
+  console.log('✅ Dynamic certificate tier logic and mock user scenarios (16, 12, 10, 5, 0 days) verified.');
 } catch (err) {
   errors.push(`Dynamic certificate tiers validation error: ${err.message}`);
 }

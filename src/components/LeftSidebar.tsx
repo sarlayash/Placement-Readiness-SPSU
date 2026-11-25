@@ -68,7 +68,7 @@ export const LeftSidebar: React.FC<LeftSidebarProps> = ({
 
   return (
     <aside
-      className={`fixed top-18 bottom-0 left-0 z-30 bg-[#0A192F] text-white border-r-2 border-[#1E3A8A] transition-all duration-300 flex flex-col shadow-xl select-none ${
+      className={`app-sidebar fixed top-[68px] bottom-0 left-0 z-30 bg-[#0A192F] text-white border-r border-[#1E3A8A] transition-all duration-300 flex flex-col shadow-xl select-none ${
         isCollapsed ? 'w-16' : 'w-72'
       }`}
       aria-label="Navigation Sidebar"

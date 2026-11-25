@@ -1,10 +1,22 @@
 @import "tailwindcss";
 
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  --ink: #172b4d;
+  --muted: #62718a;
+  --line: #e2e8f0;
+  --surface: #ffffff;
+  --canvas: #f4f7fb;
+  --accent: #2457c5;
+}
+
 @layer base {
   body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-    background-color: #ffffff;
-    color: #0A192F;
+    font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background-color: var(--canvas);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
   }
 
   code, pre, .font-mono {
@@ -16,7 +28,60 @@
   }
 }
 
-/* Custom Navy Blue Scrollbar */
+button { -webkit-tap-highlight-color: transparent; }
+button:focus-visible, a:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid #80a9ff;
+  outline-offset: 2px;
+}
+
+.app-navbar {
+  background: rgba(255, 255, 255, .96);
+  border-bottom: 1px solid var(--line);
+  box-shadow: 0 2px 12px rgba(24, 43, 77, .045);
+  color: var(--ink);
+  backdrop-filter: blur(14px);
+}
+.app-navbar-inner { max-width: 1800px; margin-inline: auto; }
+.app-brand-mark {
+  display: grid; width: 38px; height: 38px; flex: none; place-items: center;
+  border-radius: 12px; background: #173b79; color: #fff; font-weight: 800;
+  box-shadow: 0 3px 8px rgba(23, 59, 121, .18);
+}
+.app-icon-button {
+  display: inline-flex; min-width: 38px; height: 38px; align-items: center; justify-content: center;
+  border: 1px solid var(--line); border-radius: 11px; background: #fff; color: #52627b;
+  transition: background .16s ease, border-color .16s ease, color .16s ease;
+}
+.app-icon-button:hover { background: #f1f5fb; border-color: #cbd5e1; color: #173b79; }
+.app-primary-button {
+  display: inline-flex; height: 38px; align-items: center; justify-content: center; gap: 8px;
+  padding: 0 14px; border: 0; border-radius: 11px; background: var(--accent); color: #fff;
+  font-size: 13px; font-weight: 700; transition: background .16s ease;
+}
+.app-primary-button:hover { background: #1947a6; }
+.app-sidebar {
+  background: #fff !important; border-color: var(--line) !important; color: var(--ink) !important;
+  box-shadow: 2px 0 14px rgba(24, 43, 77, .04) !important;
+}
+.app-sidebar [class*="text-white"] { color: #233654 !important; }
+.app-sidebar [class*="text-[#BFDBFE]"] { color: #52627b !important; }
+.app-sidebar [class*="bg-[#0A192F]"], .app-sidebar [class*="bg-[#081426]"] { background-color: #f5f7fb !important; }
+.app-sidebar [class*="bg-[#112240]"] { background-color: #f1f5fa !important; }
+.app-sidebar [class*="border-[#1E3A8A]"] { border-color: var(--line) !important; }
+.app-sidebar button:hover [class*="text-white"] { color: #173b79 !important; }
+
+@media (max-width: 767px) {
+  .app-sidebar { width: 4rem !important; }
+  .app-sidebar > div:first-child { justify-content: center !important; }
+  .app-sidebar > div:first-child > div { display: none !important; }
+  .app-sidebar > div:first-child > button { margin-inline: auto !important; }
+  .app-sidebar .custom-scrollbar { padding-inline: .375rem !important; }
+  .app-sidebar button > div:nth-child(2) { display: none !important; }
+  .app-sidebar .custom-scrollbar > div:nth-child(2) { display: none !important; }
+  main { padding-inline: .875rem !important; }
+}
+
+/* Quiet, low contrast scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
   height: 8px;
@@ -27,10 +92,10 @@
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #1E3A8A;
+  background: #b7c4d6;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #0A192F;
+  background: #8294ae;
 }
